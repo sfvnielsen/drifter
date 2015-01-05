@@ -2,7 +2,7 @@
 // Name        : main.cpp
 // Author      : Julian
 // Version     :
-// Copyright   : OURS!!
+// Copyright   : It is OURS!!
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
