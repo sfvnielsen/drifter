@@ -1,5 +1,5 @@
 //============================================================================
-// Name        : code.cpp
+// Name        : main.cpp
 // Author      : Julian
 // Version     :
 // Copyright   : OURS!!
