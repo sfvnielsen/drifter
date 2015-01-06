@@ -10,11 +10,13 @@
 
 #include <unordered_map>
 #include <vector>
+#include <tuple>
+#include <list>
 
 class Tree {
 public:
 	Tree(); // default constructor
-	Tree(something); // some other constructor?
+	Tree (something); // some other constructor?
 
 	Node getRandomNode();
 
@@ -22,7 +24,6 @@ public:
 
 private:
 };
-
 
 class LeafSet { // bitstring referring to leaves of tree
 public:
@@ -34,15 +35,22 @@ private:
 class Node {
 public:
 	Node(); // default constructor
+	Node (something); // other than default constructor
 
+	void setLeaves(LeafSet);
+	void setParent(Node *);
+	void setNumInternalNodes(int);
+
+	LeafSet getLeaves();
+	Node * getParent();
+	int getNumInternalNodes();
 
 private:
 	int num_internal_nodes;
 	LeafSet leaves;
-	std::unordered_map<LeafSet,std::vector<int>> group_parameters;
 	Node *parent;
+	std::unordered_map<LeafSet, std::list<std::tuple<int, int>>> group_parameters; // least common anscestor
 };
 
-
-
 #endif /* TREE_H_ */
+
