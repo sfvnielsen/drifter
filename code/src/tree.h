@@ -15,6 +15,8 @@ public:
 
 	Node getRandomNode();
 
+	Tree getSubtree(Node sub_root); //Returns the subtree at Node sub_node
+
 private:
 };
 
