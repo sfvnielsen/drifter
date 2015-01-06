@@ -28,6 +28,7 @@ public:
 
 	double evaluateLikelihood();
 private:
+
 };
 
 
@@ -54,7 +55,7 @@ private:
 	int num_internal_nodes;
 	boost::dynamic_bitset<> leaves;
 	Node *parent;
-	std::unordered_map<boost::dynamic_bitset<>, std::list<std::tuple<int, int>>> group_edges; // least common anscestor
+	std::unordered_map<boost::dynamic_bitset<>, std::list<std::tuple<int, int>>> group_edges;
 };
 
 #endif /* TREE_H_ */
