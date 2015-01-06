@@ -8,6 +8,9 @@
 #ifndef TREE_H_
 #define TREE_H_
 
+#include <unordered_map>
+#include <vector>
+
 class Tree {
 public:
 	Tree(); // default constructor
@@ -30,8 +33,12 @@ class Node {
 public:
 	Node(); // default constructor
 
+
 private:
 	int num_internal_nodes;
+	LeafSet leaves;
+	std::unordered_map<LeafSet,std::vector<int>> group_parameters;
+	Node *parent;
 };
 
 
