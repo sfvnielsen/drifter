@@ -18,12 +18,15 @@
 class Tree {
 public:
 	Tree(); // default constructor
-	Tree (something); // some other constructor?
+	Tree(something); // some other constructor?
 
-	Node getRandomNode();
+	Tree regraft(); // return new regrafted tree
+	Node * getRandomNode();
+	Tree cutSubtree(Node sub_root); //Returns the subtree at Node sub_node
 
-	Tree getSubtree(Node sub_root); //Returns the subtree at Node sub_node
 
+
+	double evaluateLikelihood();
 private:
 };
 
