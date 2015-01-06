@@ -12,6 +12,8 @@
 #include <vector>
 #include <tuple>
 #include <list>
+#include <bitset>
+#include <boost/dynamic_bitset.hpp>
 
 class Tree {
 public:
@@ -25,31 +27,31 @@ public:
 private:
 };
 
-class LeafSet { // bitstring referring to leaves of tree
-public:
-
-private:
-
-};
 
 class Node {
 public:
 	Node(); // default constructor
-	Node (something); // other than default constructor
+	Node(something); // other than default constructor
 
-	void setLeaves(LeafSet);
+	void setLeaves(boost::dynamic_bitset<>);
 	void setParent(Node *);
 	void setNumInternalNodes(int);
+	void groupAddEdge(boost::dynamic_bitset<>, std::tuple<int,int>);
+	void groupRemoveEdge(boost::dynamic_bitset<>, std::tuple<int,int>);
 
-	LeafSet getLeaves();
+	boost::dynamic_bitset<> getLeaves();
 	Node * getParent();
 	int getNumInternalNodes();
+	int getNumEdges();
+	int getNumPossibleEdges();
+	std::list<std::tuple<int,int>> getGroupEdgeList(boost::dynamic_bitset<>);
+
 
 private:
 	int num_internal_nodes;
-	LeafSet leaves;
+	boost::dynamic_bitset<> leaves;
 	Node *parent;
-	std::unordered_map<LeafSet, std::list<std::tuple<int, int>>> group_parameters; // least common anscestor
+	std::unordered_map<boost::dynamic_bitset<>, std::list<std::tuple<int, int>>> group_edges; // least common anscestor
 };
 
 #endif /* TREE_H_ */
