@@ -41,7 +41,7 @@ private:
 public:
 	Tree(); // default constructor
 	// Tree(something); // some other constructor?
-	Tree(std::list<std::pair<int,int>>); // make the naive tree building in the adjacency matrix.
+	Tree(std::list<std::tuple<int,int>>); // make the naive tree building in the adjacency matrix.
 
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();

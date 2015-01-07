@@ -7,18 +7,22 @@
 
 #include "barebones_tree.h"
 
+using namespace std;
+
+
 Tree::Tree() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Tree::Tree(std::list<std::tuple<int,int>> graph) {
+Tree::Tree(list<tuple<int,int>> graph) {
 	// TODO constructor from graph
 	Node root = Node();
 
-	for(int i=graph.begin(); i != graph.end(); ++i){
-		leafSet.
-	}
+	list<int>::const_iterator iterator;
+    for (iterator = graph.begin(); iterator != graph.end(); ++iterator) {
+        std::cout << *iterator;
+    }
 }
 
 Tree::~Tree() {
