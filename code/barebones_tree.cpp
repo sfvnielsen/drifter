@@ -106,6 +106,14 @@ void Node::addChild(Node * childP) {
 	leaves.splice(leaves.end(),childP->getLeaves());
 }
 
+void removeChild(Node * child){
+    
+}
+
+bool isInternalNode(Node * n){
+    return false;
+}
+
 
 string Node::toString(){
     // Building a string representing the tree by printing all of the leaf-Sets
