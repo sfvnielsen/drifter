@@ -18,7 +18,11 @@ int main() {
     tuple<int,int> g3 (1,3);
     tuple<int,int> g4 (3,2);
 
+    cout << "--- Constructing the tree ---" << endl;
     Tree T = Tree({g1,g2,g3,g4});
+
+    cout << "--- Tree to string ---" << endl;
+
     cout << T.toString() << endl;
 	return 0;
 }
