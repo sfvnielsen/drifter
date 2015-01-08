@@ -28,6 +28,8 @@ public:
     std::list<int> getLeaves();
     std::list<Node *> getChildren();
     void addChild(Node *);
+    void removeChild(Node *);
+    bool isInternalNode(Node *);
 
 	Node * getParent();
 	int getNumInternalNodes();
