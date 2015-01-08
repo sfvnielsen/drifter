@@ -12,36 +12,39 @@ using namespace std;
 
 
 Tree::Tree(list<tuple<int,int>> input_graph) {
-	// TODO constructor from graph
-	Node root = Node();
-
+	root = Node();
     graph = input_graph;
 
-    set<int> leafSet;
-
+    // insert all the indexes from the edge list into leaves
 	for (list<tuple<int,int>>::iterator it = graph.begin(); it != graph.end(); it++){
-        std::cout << '('<<get<0>(*it) << ','<<get<1>(*it)<< ')' << endl;
-        leafSet.insert(get<0>(*it));
-        leafSet.insert(get<1>(*it));
+        leaves.push_back(get<0>(*it));
+        leaves.push_back(get<1>(*it));
     }
 
-    for (set<int>::iterator it = leafSet.begin(); it != leafSet.end(); it++){
-        leaves.push_back(*it);
-        cout << *it << endl;
-    }
+    // Find only the unique elements
+    leaves.sort();
+    leaves.unique();
 
-
+    // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        //Node aNode = Node(*it);
-        //nodes.push_front(aNode);
-        //root.addChild(&aNode);
+        Node aNode = Node(*it);
+        nodes.push_back(aNode);
+        root.addChild(&aNode);
     }
+
+    //root.toString();
+
+    // Node * p = root.children.front();
+
+    // cout << p->toString();
+
+    // gives segfault when acessing the childs leaves list
 
 }
 
 
 string Tree::toString(){
-    return root->toString();
+    return root.toString();
 }
 
 /////////////////////////
@@ -49,20 +52,15 @@ string Tree::toString(){
 //////////////////////////
 
 Node::Node() {
+    // Trivial constructor.
 	parent = nullptr;
 }
 
 Node::Node(int L) {
+    // Construct a node with the leaf L
+    // This defines a leaf-node
 	parent = nullptr;
 	leaves.push_back(L);
-}
-
-void Node::setParent(Node *new_parent) {
-	*parent = *new_parent;
-}
-
-void Node::addChild(Node * child) {
-	children.push_back(child);
 }
 
 list<int> Node::getLeaves() {
@@ -73,31 +71,46 @@ Node * Node::getParent() {
 	return parent;
 }
 
+void Node::setParent(Node * new_parent) {
+    // Set the pointer "parent" to a new value.
+	parent = new_parent;
+}
+
+void Node::addChild(Node * childP) {
+    // Add a child by:
+    //  - Setting the childs parent pointer.
+    //  - Adding the childs pointer to the child list.
+    //  - Inserting the childs leaves-list on to the end of the parents.
+    childP->setParent(this);
+	children.push_back(childP);
+	leaves.splice(leaves.end(),childP->getLeaves());
+}
+
 
 string Node::toString(){
-    string s = "leaves: ";
+    // Building a string representing the tree by printing all of the leaf-Sets
 
-    list<int> L = {2,3,1};
+    string s = "leaves: (";
 
-
-    std::cout << leaves.empty() << endl;
-    list<int>::iterator it = leaves.begin();
-    //std::cout << *it << endl;
-
-
-    // TODO SEGFAULT when acessing leaves ?!?!?!?!?!
-
-    for (list<int>::iterator it = L.begin(); it != L.end(); it++){
-        s += ',' + to_string(*it);
+    if(!leaves.empty()){
+        cout << leaves.size() << endl;
+        for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
+            s += "," + to_string(*it);
+        }
     }
 
-    //for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
-            //Node * childP = *it;
+    s += ")\n";
 
-            //s += childP->toString();
+    // -- Recurse into children to print the entire subtree.
+
+    //for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
+    //    Node * childP = *it;
+        //Node child = *childP;
+//        string s = childP;
+        //s += child.toString();
     //}
 
-    return "Node\n"+s;
+    return s ;
 }
 
 

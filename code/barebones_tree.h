@@ -36,11 +36,11 @@ public:
 
     std::string toString();
 
+    std::list<Node *> children;
 
 
 private:
     Node * parent;
-    std::list<Node *> children;
 	int num_internal_nodes;
     std::list<int> leaves;
 
@@ -48,7 +48,7 @@ private:
 
 class Tree {
 private:
-    Node * root;
+    Node root;
     std::list<Node> nodes;
     std::list<int> leaves;
     std::list<std::tuple<int,int>> graph;
@@ -59,7 +59,6 @@ public:
 	Tree(); // default constructor
 	// Tree(something); // some other constructor?
 	Tree(std::list<std::tuple<int,int>>); // make the naive tree building in the adjacency matrix.
-
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();
 	Tree cutSubtree(Node * sub_root); //Returns the subtree at Node sub_node

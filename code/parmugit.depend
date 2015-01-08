@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1420713054 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
+	"barebones_tree.h"
+	<iostream>
+
+1420709374 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
+	<unordered_map>
+	<vector>
+	<utility>
+	<set>
+	<list>
+	<string>
+
+1420707976 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
+	<iostream>
+	"barebones_tree.h"
+
