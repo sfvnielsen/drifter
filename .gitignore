@@ -3,3 +3,5 @@
 gift/
 giftTest/
 *.DS_STORE
+*.xcsheme
+*.plist
