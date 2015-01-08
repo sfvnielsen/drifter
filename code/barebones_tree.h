@@ -13,28 +13,45 @@
 #include <utility>
 #include <set>
 #include <list>
+#include <string>
+
 	// TODO neccesary libs?
 
 class Node {
 public:
 	Node(); // default constructor
-	// Node(something); // other than default constructor
+    Node(int); // leaf node constructor
 
-	void setParent(Node *);
-	void setNumInternalNodes(int);
+    bool isDescendant(Node *);
+    void setParent(Node *);
+    std::tuple<int,int> getCounts(Node *, Node *);
+    std::list<int> getLeaves();
+    std::list<Node *> getChildren();
+    void addChild(Node *);
 
 	Node * getParent();
 	int getNumInternalNodes();
 	int getNumEdges();
 	int getNumPossibleEdges();
 
+    std::string toString();
+
+
 
 private:
+    Node * parent;
+    std::list<Node *> children;
 	int num_internal_nodes;
+    std::list<int> leaves;
+
 };
 
 class Tree {
 private:
+    Node * root;
+    std::list<Node> nodes;
+    std::list<int> leaves;
+    std::list<std::tuple<int,int>> graph;
 
 	// TODO make functions private when not debugging them.
 
@@ -49,9 +66,7 @@ public:
 
 	void recalculate(); // calculate all of the counts on the tree from the graph
 
-	std::set<int> leafSet;
-
-
+    std::string toString();
 
 	double evaluateLikelihood();
 

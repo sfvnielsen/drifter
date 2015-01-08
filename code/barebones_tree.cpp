@@ -7,62 +7,98 @@
 
 #include "barebones_tree.h"
 
+#include <iostream>
 using namespace std;
 
 
-Tree::Tree() {
-	// TODO Auto-generated constructor stub
-
-}
-
-Tree::Tree(list<tuple<int,int>> graph) {
+Tree::Tree(list<tuple<int,int>> input_graph) {
 	// TODO constructor from graph
 	Node root = Node();
 
-	list<int>::const_iterator iterator;
-    for (iterator = graph.begin(); iterator != graph.end(); ++iterator) {
-        std::cout << *iterator;
+    graph = input_graph;
+
+    set<int> leafSet;
+
+	for (list<tuple<int,int>>::iterator it = graph.begin(); it != graph.end(); it++){
+        std::cout << '('<<get<0>(*it) << ','<<get<1>(*it)<< ')' << endl;
+        leafSet.insert(get<0>(*it));
+        leafSet.insert(get<1>(*it));
     }
+
+    for (set<int>::iterator it = leafSet.begin(); it != leafSet.end(); it++){
+        leaves.push_back(*it);
+        cout << *it << endl;
+    }
+
+
+    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
+        //Node aNode = Node(*it);
+        //nodes.push_front(aNode);
+        //root.addChild(&aNode);
+    }
+
 }
 
-Tree::~Tree() {
-	// TODO Auto-generated destructor stub
+
+string Tree::toString(){
+    return root->toString();
 }
 
-
-
-//////////////////////////
+/////////////////////////
 // Node class functions //
 //////////////////////////
 
-Node::Node(): num_internal_nodes(0) {
-	// First boring default constructor sets every member to respective default values
-
-	// NB! When initializing dynamic_bitset - an allocator object should be used
-	// How should unordered_map be initialized? And do we need to supply special hash-function?
-	*parent = NULL;
-
+Node::Node() {
+	parent = nullptr;
 }
 
-
-
-void Node::setLeaves(boost::dynamic_bitset<> new_leaves) {
-	leaves = new_leaves;
+Node::Node(int L) {
+	parent = nullptr;
+	leaves.push_back(L);
 }
 
 void Node::setParent(Node *new_parent) {
 	*parent = *new_parent;
 }
 
-void Node::setNumInternalNodes(int new_num_internal_nodes) {
-	num_internal_nodes = new_num_internal_nodes;
+void Node::addChild(Node * child) {
+	children.push_back(child);
 }
 
-
-boost::dynamic_bitset<> Node::getLeaves() {
+list<int> Node::getLeaves() {
 	return leaves;
 }
 
 Node * Node::getParent() {
-	return *parent;
+	return parent;
 }
+
+
+string Node::toString(){
+    string s = "leaves: ";
+
+    list<int> L = {2,3,1};
+
+
+    std::cout << leaves.empty() << endl;
+    list<int>::iterator it = leaves.begin();
+    //std::cout << *it << endl;
+
+
+    // TODO SEGFAULT when acessing leaves ?!?!?!?!?!
+
+    for (list<int>::iterator it = L.begin(); it != L.end(); it++){
+        s += ',' + to_string(*it);
+    }
+
+    //for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
+            //Node * childP = *it;
+
+            //s += childP->toString();
+    //}
+
+    return "Node\n"+s;
+}
+
+
+
