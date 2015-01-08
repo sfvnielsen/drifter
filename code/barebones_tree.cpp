@@ -24,7 +24,11 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
-
+    
+    /*
+     * Initialisation step, here init is worse case (IRM model),
+     * another appoarch is a binary tree (TBI)
+     */
     // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         Node aNode = Node(*it);
