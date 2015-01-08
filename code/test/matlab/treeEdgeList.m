@@ -1,4 +1,4 @@
-function [TEL,leaves] = treeEdgeList(T,I)
+function [TEL,LEL] = treeEdgeList(T,I)
 
 numberOfNodes = length(T);
 TEL = nan(numberOfNodes-1,2);
@@ -11,7 +11,9 @@ for i = 2:numberOfNodes
     end
 end
 
-leaves = sort(I-1);
+[leaves,dataID] = sort(I-1);
+
+LEL = [leaves',dataID'-1];
 
 %eof
 end
