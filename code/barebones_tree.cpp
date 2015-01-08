@@ -32,11 +32,27 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
         root.addChild(&aNode);
     }
 
-    //root.toString();
 
-    // Node * p = root.children.front();
+    cout << "--- After constructing the tree (in the constructor) ---" << endl;
 
-    // cout << p->toString();
+    cout << root.toString();
+
+    Node * p = root.children.front();
+    Node c = *p;
+
+    cout << "Size of child.leaves: " << p->getLeaves().size() << endl;
+
+
+    list<int> L = p->getLeaves();
+
+
+    cout << "Size of copy of child.leaves: " << L.size() << endl;
+        for (list<int>::iterator it = L.begin(); it != L.end(); it++){
+            cout << "," << to_string(*it) ;
+        }
+
+
+    cout << "the child.toString:" <<p->toString();
 
     // gives segfault when acessing the childs leaves list
 
@@ -54,12 +70,14 @@ string Tree::toString(){
 Node::Node() {
     // Trivial constructor.
 	parent = nullptr;
+	num_internal_nodes = 0;
 }
 
 Node::Node(int L) {
     // Construct a node with the leaf L
     // This defines a leaf-node
 	parent = nullptr;
+    num_internal_nodes = 0;
 	leaves.push_back(L);
 }
 
@@ -93,7 +111,7 @@ string Node::toString(){
     string s = "leaves: (";
 
     if(!leaves.empty()){
-        cout << leaves.size() << endl;
+        cout << "Size of leaves:" <<leaves.size() << endl;
         for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
             s += "," + to_string(*it);
         }
@@ -103,13 +121,12 @@ string Node::toString(){
 
     // -- Recurse into children to print the entire subtree.
 
-    //for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
-    //    Node * childP = *it;
-        //Node child = *childP;
-//        string s = childP;
-        //s += child.toString();
-    //}
-
+//    if(!leaves.empty()){
+//        for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
+//            Node * childP = *it;
+//            s += childP->toString();
+//        }
+//    }
     return s ;
 }
 
