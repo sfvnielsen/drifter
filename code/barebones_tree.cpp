@@ -24,18 +24,16 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
-    
+
     /*
      * Initialisation step, here init is worse case (IRM model),
      * another appoarch is a binary tree (TBI)
      */
     // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        Node aNode = Node(*it);
-        nodes.push_back(aNode);
-        root.addChild(&aNode);
+        nodes.push_back(Node(*it));
+        root.addChild(&(*nodes.end()));
     }
-
 
     cout << "--- After constructing the tree (in the constructor) ---" << endl;
 
@@ -125,12 +123,12 @@ string Node::toString(){
 
     // -- Recurse into children to print the entire subtree.
 
-//    if(!leaves.empty()){
-//        for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
-//            Node * childP = *it;
-//            s += childP->toString();
-//        }
-//    }
+    if(!leaves.empty()){
+        for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
+            Node * childP = *it;
+            s += childP->toString();
+        }
+    }
     return s ;
 }
 

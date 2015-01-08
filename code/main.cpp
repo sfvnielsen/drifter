@@ -13,8 +13,19 @@ using namespace std;
 int main() {
 
     cout << "--- TESTING the node class ---" <<endl;
+
+    list<Node> nodes;
+
     Node A = Node(2);
     cout << A.toString() << endl;
+    Node B = Node(19);
+
+
+    Node R = Node();
+    cout << R.toString() << endl;
+    R.addChild(&A);
+    R.addChild(&B);
+    cout << R.toString() << endl;
 
 
 
