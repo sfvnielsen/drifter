@@ -32,29 +32,29 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
     // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         nodes.push_back(Node(*it));
+        //cout << (*nodes.back())
         root.addChild(&(*nodes.end()));
     }
 
-    cout << "--- After constructing the tree (in the constructor) ---" << endl;
+//    cout << "--- After constructing the tree (in the constructor) ---" << endl;
+//
+//    Node * p = root.children.front();
+//    Node c = *p;
+//
+//    cout << "Size of child.leaves: " << p->getLeaves().size() << endl;
+//
+//
+//    list<int> L = p->getLeaves();
+//
+//
+//    cout << "Size of copy of child.leaves: " << L.size() << endl;
+//        for (list<int>::iterator it = L.begin(); it != L.end(); it++){
+//            cout << "," << to_string(*it) ;
+//        }
+//        cout << endl;
 
-    cout << root.toString();
 
-    Node * p = root.children.front();
-    Node c = *p;
-
-    cout << "Size of child.leaves: " << p->getLeaves().size() << endl;
-
-
-    list<int> L = p->getLeaves();
-
-
-    cout << "Size of copy of child.leaves: " << L.size() << endl;
-        for (list<int>::iterator it = L.begin(); it != L.end(); it++){
-            cout << "," << to_string(*it) ;
-        }
-
-
-    cout << "the child.toString:" <<p->toString();
+//    cout << "the child.toString:" <<p->toString();
 
     // gives segfault when acessing the childs leaves list
 
@@ -81,6 +81,7 @@ Node::Node(int L) {
 	parent = nullptr;
     num_internal_nodes = 0;
 	leaves.push_back(L);
+	children.clear();
 }
 
 list<int> Node::getLeaves() {
@@ -131,7 +132,14 @@ string Node::toString(){
 
     // -- Recurse into children to print the entire subtree.
 
-    if(!children.empty()){
+    cout << "number of children: " << children.size()<< endl;
+    cout << "number of leaves: " << leaves.size()<< endl;
+
+    cout << "first child: " << children.front() << endl;
+    cout << "first leaf: " << leaves.front()<< endl;
+
+
+    if(children.front()!=0){
         for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
             Node * childP = *it;
             s += childP->toString();

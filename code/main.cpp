@@ -14,18 +14,18 @@ int main() {
 
     cout << "--- TESTING the node class ---" <<endl;
 
-    list<Node> nodes;
-
-    Node A = Node(2);
-    cout << A.toString() << endl;
-    Node B = Node(19);
-
-
-    Node R = Node();
-    cout << R.toString() << endl;
-    R.addChild(&A);
-    R.addChild(&B);
-    cout << R.toString() << endl;
+//    list<Node> nodes;
+//
+//    Node A = Node(2);
+//    cout << A.toString() << endl;
+//    Node B = Node(19);
+//
+//
+//    Node R = Node();
+//    cout << R.toString() << endl;
+//    R.addChild(&A);
+//    R.addChild(&B);
+//    cout << R.toString() << endl;
 
 
 
@@ -41,7 +41,7 @@ int main() {
     Tree T = Tree({g1,g2,g3,g4});
 
     cout << "--- Tree to string ---" << endl;
-    //cout << T.toString() << endl;
+    cout << T.toString() << endl;
 
 	return 0;
 }
