@@ -11,6 +11,13 @@
 using namespace std;
 
 int main() {
+
+    cout << "--- TESTING the node class ---" <<endl;
+    Node A = Node(2);
+    cout << A.toString() << endl;
+
+
+
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 
     // Building a tree with a graph defined by an edge list

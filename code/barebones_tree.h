@@ -39,12 +39,12 @@ public:
     std::string toString();
 
     std::list<Node *> children;
+    std::list<int> leaves;
 
 
 private:
     Node * parent;
 	int num_internal_nodes;
-    std::list<int> leaves;
 
 };
 
