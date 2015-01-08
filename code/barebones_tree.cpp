@@ -93,7 +93,7 @@ string Node::toString(){
     string s = "leaves: (";
 
     if(!leaves.empty()){
-        cout << leaves.size();
+        cout << leaves.size() << endl;
         for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
             cout << *it << endl;
             //s += "," + ;
