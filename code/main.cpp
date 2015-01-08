@@ -14,20 +14,56 @@ int main() {
 
     cout << "--- TESTING the node class ---" <<endl;
 
-//    list<Node> nodes;
-//
+
+    // Doing is manually
+    // No nodes list
+
 //    Node A = Node(2);
-//    cout << A.toString() << endl;
+//    cout << "A: " << A.toString() << endl;
 //    Node B = Node(19);
-//
+//    cout << "B: " << B.toString() << endl;
 //
 //    Node R = Node();
-//    cout << R.toString() << endl;
+//    cout << "R: " << R.toString() << endl;
 //    R.addChild(&A);
 //    R.addChild(&B);
-//    cout << R.toString() << endl;
+//    cout << "R: " << R.toString() << endl;
 
+    // WORKS
 
+//// With a nodes list
+//    list<Node> nodes;
+//    Node R = Node();
+//
+//    nodes.push_back(Node(2));
+//    cout << "A: " << nodes.back().toString() << endl;
+//    R.addChild(&(nodes.back()));
+//
+//    cout << "R: " << R.toString() << endl;
+//
+//    nodes.push_back(Node(19));
+//    cout << "B: " << nodes.back().toString() << endl;
+//    R.addChild(&(nodes.back()));
+//
+//    cout << "R: " << R.toString() << endl;
+
+    // WORKS
+
+//// with a loop
+//list<int> leaves;
+//leaves.push_back(3);
+//leaves.push_back(17);
+//list<Node> nodes;
+//Node R = Node();
+//
+//for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
+//        nodes.push_back(Node(*it));
+//        cout << *it << ": " <<nodes.back().toString() << endl;
+//        R.addChild(&(nodes.back()));
+//        cout << "R: " << R.toString() << endl;
+//    }
+//
+//
 
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 

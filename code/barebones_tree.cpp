@@ -32,32 +32,8 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
     // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         nodes.push_back(Node(*it));
-        //cout << (*nodes.back())
-        root.addChild(&(*nodes.end()));
+        root.addChild(&(nodes.back()));
     }
-
-//    cout << "--- After constructing the tree (in the constructor) ---" << endl;
-//
-//    Node * p = root.children.front();
-//    Node c = *p;
-//
-//    cout << "Size of child.leaves: " << p->getLeaves().size() << endl;
-//
-//
-//    list<int> L = p->getLeaves();
-//
-//
-//    cout << "Size of copy of child.leaves: " << L.size() << endl;
-//        for (list<int>::iterator it = L.begin(); it != L.end(); it++){
-//            cout << "," << to_string(*it) ;
-//        }
-//        cout << endl;
-
-
-//    cout << "the child.toString:" <<p->toString();
-
-    // gives segfault when acessing the childs leaves list
-
 }
 
 
@@ -73,6 +49,8 @@ Node::Node() {
     // Trivial constructor.
 	parent = nullptr;
 	num_internal_nodes = 0;
+	leaves.clear();
+    children.clear();
 }
 
 Node::Node(int L) {
@@ -80,6 +58,7 @@ Node::Node(int L) {
     // This defines a leaf-node
 	parent = nullptr;
     num_internal_nodes = 0;
+    leaves.clear();
 	leaves.push_back(L);
 	children.clear();
 }
@@ -122,7 +101,6 @@ string Node::toString(){
     string s = "leaves: (";
 
     if(!leaves.empty()){
-        cout << "Size of leaves:" <<leaves.size() << endl;
         for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
             s += "," + to_string(*it);
         }
@@ -132,14 +110,9 @@ string Node::toString(){
 
     // -- Recurse into children to print the entire subtree.
 
-    cout << "number of children: " << children.size()<< endl;
-    cout << "number of leaves: " << leaves.size()<< endl;
+    s+= "number of children: " + to_string(children.size()) + "\n";
 
-    cout << "first child: " << children.front() << endl;
-    cout << "first leaf: " << leaves.front()<< endl;
-
-
-    if(children.front()!=0){
+    if(!children.empty()){
         for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
             Node * childP = *it;
             s += childP->toString();
