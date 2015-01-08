@@ -1,0 +1,25 @@
+Data Edge List
+Number of nodes in data: 4
+0 1
+1 2
+0 3
+1 3
+2 3
+Tree structure - Parent-Child edge list
+Number of nodes in tree: 7
+0 1
+0 2
+1 3
+1 4
+2 5
+2 6
+Leaf->Data node pairs
+2 2
+4 0
+5 1
+6 3
+Hyperparameters from likelihood calc
+Order: alpha,beta,rho_plus,rho_minus
+5.000000e-01 5.000000e-01 1 1 
+True log-likelihood
+-8.776476e+00
