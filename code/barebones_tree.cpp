@@ -13,35 +13,48 @@ using namespace std;
 
 Tree::Tree(list<tuple<int,int>> input_graph) {
 	// TODO constructor from graph
-	Node root = Node();
+	root = Node();
 
     graph = input_graph;
 
-    set<int> leafSet;
 
 	for (list<tuple<int,int>>::iterator it = graph.begin(); it != graph.end(); it++){
-        std::cout << '('<<get<0>(*it) << ','<<get<1>(*it)<< ')' << endl;
-        leafSet.insert(get<0>(*it));
-        leafSet.insert(get<1>(*it));
+        //std::cout << '('<<get<0>(*it) << ','<<get<1>(*it)<< ')' << endl;
+        leaves.push_back(get<0>(*it));
+        leaves.push_back(get<1>(*it));
     }
 
-    for (set<int>::iterator it = leafSet.begin(); it != leafSet.end(); it++){
-        leaves.push_back(*it);
-        cout << *it << endl;
-    }
-
+    leaves.sort();
+    leaves.unique();
 
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        //Node aNode = Node(*it);
-        //nodes.push_front(aNode);
-        //root.addChild(&aNode);
+        Node aNode = Node(*it);
+        nodes.push_back(aNode);
+        root.addChild(&aNode);
     }
+
+    //root.toString();
+
+    Node * p = root.children.front();
+
+    cout << p->toString();
+
+    //list<Node *> C = root.children;
+    //list<Node *>::iterator it = C.begin();
+
+   // for (list<Node *>::iterator it = C.begin(); it != C.end(); it++){
+        //cout << (*it)->toString();
+        //Node * childP = *it;
+        //Node child = *childP;
+//        string s = childP;
+        //s += child.toString();
+    //}
 
 }
 
 
 string Tree::toString(){
-    return root->toString();
+    return root.toString();
 }
 
 /////////////////////////
@@ -54,15 +67,7 @@ Node::Node() {
 
 Node::Node(int L) {
 	parent = nullptr;
-	leaves.push_back(L);
-}
-
-void Node::setParent(Node *new_parent) {
-	*parent = *new_parent;
-}
-
-void Node::addChild(Node * child) {
-	children.push_back(child);
+	leaves.push_front(L);
 }
 
 list<int> Node::getLeaves() {
@@ -73,28 +78,35 @@ Node * Node::getParent() {
 	return parent;
 }
 
+void Node::setParent(Node * new_parent) {
+	parent = new_parent;
+}
+
+void Node::addChild(Node * childP) {
+    childP->setParent(this);
+	children.push_back(childP);
+	leaves.splice(leaves.end(),childP->getLeaves());
+}
+
 
 string Node::toString(){
-    string s = "leaves: ";
+    string s = "leaves: (";
 
-    list<int> L = {2,3,1};
-
-
-    std::cout << leaves.empty() << endl;
-    list<int>::iterator it = leaves.begin();
-    //std::cout << *it << endl;
-
-
-    // TODO SEGFAULT when acessing leaves ?!?!?!?!?!
-
-    for (list<int>::iterator it = L.begin(); it != L.end(); it++){
-        s += ',' + to_string(*it);
+    if(!leaves.empty()){
+        cout << leaves.size();
+        for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
+            cout << *it << endl;
+            //s += "," + ;
+        }
     }
 
-    //for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
-            //Node * childP = *it;
+    s += ")\n";
 
-            //s += childP->toString();
+    //for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
+    //    Node * childP = *it;
+        //Node child = *childP;
+//        string s = childP;
+        //s += child.toString();
     //}
 
     return "Node\n"+s;
