@@ -1,0 +1,15 @@
+function TEL = treeEdgeList(T,I)
+
+numberOfNodes = length(T);
+TEL = nan(numberOfNodes,2);
+
+for i = 1:numberOfNodes-1
+    if T(i) == 0
+        TEL(i,:) = [0,i];
+    else
+        TEL(i,:)= [T(T(i)),i];
+    end
+end
+
+%eof
+end
