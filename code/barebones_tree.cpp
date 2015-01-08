@@ -107,7 +107,7 @@ void Node::addChild(Node * childP) {
 }
 
 void removeChild(Node * child){
-    
+
 }
 
 bool isInternalNode(Node * n){
@@ -131,7 +131,7 @@ string Node::toString(){
 
     // -- Recurse into children to print the entire subtree.
 
-    if(!leaves.empty()){
+    if(!children.empty()){
         for (list<Node *>::iterator it = children.begin(); it != children.end(); it++){
             Node * childP = *it;
             s += childP->toString();

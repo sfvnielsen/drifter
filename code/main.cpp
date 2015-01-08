@@ -41,7 +41,7 @@ int main() {
     Tree T = Tree({g1,g2,g3,g4});
 
     cout << "--- Tree to string ---" << endl;
-    cout << T.toString() << endl;
+    //cout << T.toString() << endl;
 
 	return 0;
 }
