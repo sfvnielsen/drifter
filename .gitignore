@@ -1,7 +1,6 @@
 *.layout
 *.xcworkspace
 gift/
-giftTest/
 *.DS_STORE
 *.xcsheme
 *.plist

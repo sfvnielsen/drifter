@@ -28,6 +28,8 @@ public:
     std::list<int> getLeaves();
     std::list<Node *> getChildren();
     void addChild(Node *);
+    void removeChild(Node *);
+    bool isInternalNode(Node *);
 
 	Node * getParent();
 	int getNumInternalNodes();
@@ -35,14 +37,14 @@ public:
 	int getNumPossibleEdges();
 
     std::string toString();
-
-    std::list<Node *> children;
+    std::list<int> leaves;
 
 
 private:
     Node * parent;
 	int num_internal_nodes;
-    std::list<int> leaves;
+    std::list<Node *> children;
+
 
 };
 
