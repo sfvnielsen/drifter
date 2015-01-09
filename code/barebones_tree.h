@@ -61,6 +61,7 @@ public:
 	Tree(); // default constructor
 	// Tree(something); // some other constructor?
 	Tree(std::list<std::tuple<int,int>>); // make the naive tree building in the adjacency matrix.
+    Tree(std::list<std::tuple<int,int>> data_graph, std::list<std::tuple<int,int>> tree_struct_graph);
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();
 	Tree cutSubtree(Node * sub_root); //Returns the subtree at Node sub_node

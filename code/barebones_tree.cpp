@@ -13,7 +13,7 @@ using namespace std;
 
 Tree::Tree(list<tuple<int,int>> input_graph) {
 	root = Node();
-    graph = input_graph;
+    graph = input_graph; //New name and is it neccesary
 
     // insert all the indexes from the edge list into leaves
 	for (list<tuple<int,int>>::iterator it = graph.begin(); it != graph.end(); it++){
@@ -36,6 +36,15 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
     }
 }
 
+//Add constructer Tree(input_graph, arbitrary tree structure)
+Tree::Tree(list<tuple<int,int>> data_graph, list<tuple<int,int>> tree_struct_graph) {
+    //Construct tree from tree_struct_graph
+    //Construct adj list from data_graph
+
+}
+
+
+
 
 string Tree::toString(){
     return root.toString();
@@ -49,8 +58,8 @@ Node::Node() {
     // Trivial constructor.
 	parent = nullptr;
 	num_internal_nodes = 0;
-	leaves.clear();
-    children.clear();
+	leaves.clear(); //redundant??
+    children.clear(); //redundant??
 }
 
 Node::Node(int L) {
@@ -58,9 +67,9 @@ Node::Node(int L) {
     // This defines a leaf-node
 	parent = nullptr;
     num_internal_nodes = 0;
-    leaves.clear();
+    leaves.clear(); //redundant??
 	leaves.push_back(L);
-	children.clear();
+	children.clear(); //redundant??
 }
 
 list<int> Node::getLeaves() {
@@ -74,6 +83,7 @@ Node * Node::getParent() {
 void Node::setParent(Node * new_parent) {
     // Set the pointer "parent" to a new value.
 	parent = new_parent;
+    //
 }
 
 void Node::addChild(Node * childP) {
