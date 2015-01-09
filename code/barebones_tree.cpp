@@ -6,7 +6,7 @@
  */
 
 #include "barebones_tree.h"
-#include "adjacency_list.h"
+
 
 #include <iostream>
 #include <cmath>
@@ -15,9 +15,9 @@ using namespace std;
 /**
  * Construct flat tree
  */
-Tree::Tree(list<tuple<int,int>> input_graph) {
-	root = Node();
-    graph = input_graph; //New name and is it neccesary
+Tree::Tree(list<tuple<int,int>> data_graph) {
+
+    graph = data_graph; //New name and is it neccesary
 
     // insert all the indexes from the edge list into leaves
 	for (list<tuple<int,int>>::iterator it = graph.begin(); it != graph.end(); it++){
@@ -29,19 +29,20 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
     leaves.sort();
     leaves.unique();
 
+    int N = leaves.size();
+    A = Adj_list(N,graph);
+
+    root = Node(&A);
+
     /*
      * Initialisation step, here init is worse case (IRM model),
      * another appoarch is a binary tree (TBI)
      */
     // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        nodes.push_back(Node(*it));
+        nodes.push_back(Node(&A,*it));
         root.addChild(&(nodes.back()));
     }
-
-    int N = leaves.size();
-    Adj_list A = Adj_list(N,graph);
-
 }
 
 //Add constructer Tree(input_graph, arbitrary tree structure)
@@ -51,6 +52,9 @@ Tree::Tree(list<tuple<int,int>> data_graph, list<tuple<int,int>> tree_struct_gra
 
 }
 
+list<tuple<int, int>> Tree::getCountsAll(){
+    return root.getCountsAll();
+}
 
 /**
  *
@@ -72,12 +76,12 @@ double Tree::evaluateLikelihood(){
 
     double log_likelihood;
 
-    list<tuple<int,int>> all_pair_counts = this->root->getCountsAll();
-    list<tuple<int,int>>::iterator it;
-
-    for(it = all_pair_counts.begin(); it!=all_pair_counts.end(); ++it) {
-        // Calculate contribution to likelihood...
-    }
+//    list<tuple<int,int>> all_pair_counts = this->root->getCountsAll();
+//    list<tuple<int,int>>::iterator it;
+//
+//    for(it = all_pair_counts.begin(); it!=all_pair_counts.end(); ++it) {
+//        // Calculate contribution to likelihood...
+//    }
 }
 
 /**

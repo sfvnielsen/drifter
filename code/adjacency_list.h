@@ -16,16 +16,19 @@
 //#include <math.h>
 #include <list>
 #include <algorithm> //std::binary_search, std::sort
+
+//    struct neighbor;
+//    struct neighbor {
+//        int id;
+//        //Potential to add a weight
+//    };
+
 class Adj_list {
 
 public:
-//    struct neighbor;
-    struct neighbor {
-        int id;
-        //Potential to add a weight
-        neighbor(int arg_target) : id(arg_target){}; //Its a function
-    };
-    std::vector<std::vector<neighbor> > adjacency_list;
+
+//    std::vector<std::vector<neighbor> > adjacency_list;
+
 
     Adj_list();
     Adj_list(int,std::list<std::tuple<int,int>>);
@@ -37,7 +40,7 @@ public:
 
 
 private:
-
+    std::vector<std::list<int>> adjacency_list;
 };
 
 
