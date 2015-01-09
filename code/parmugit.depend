@@ -16,21 +16,22 @@
 	<iostream>
 	"barebones_tree.h"
 
-1420736451 source:/home/sfvn/Documents/parmugit/code/test.cpp
+1420800765 source:/home/sfvn/Documents/parmugit/code/test.cpp
 	<iostream>
 	<fstream>
 	<stdexcept>
-	<boost/filesystem.hpp>
 	<dirent.h>
+	<cmath>
 	"barebones_tree.h"
 
-1420715027 /home/sfvn/Documents/parmugit/code/barebones_tree.h
+1420802880 /home/sfvn/Documents/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
 	<set>
 	<list>
 	<string>
+	"node.h"
 
 1420801501 /home/julian/Dropbox/skole/parmugit/code/node.h
 	<list>
@@ -39,4 +40,8 @@
 1420799916 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
 	"node.h"
 	<iostream>
+
+1420801980 /home/sfvn/Documents/parmugit/code/node.h
+	<list>
+	<tuple>
 
