@@ -10,7 +10,9 @@
 #include <iostream>
 using namespace std;
 
-
+/**
+ * Construct flat tree
+ */
 Tree::Tree(list<tuple<int,int>> input_graph) {
 	root = Node();
     graph = input_graph; //New name and is it neccesary
@@ -41,6 +43,13 @@ Tree::Tree(list<tuple<int,int>> data_graph, list<tuple<int,int>> tree_struct_gra
     //Construct tree from tree_struct_graph
     //Construct adj list from data_graph
 
+}
+
+/**
+ *
+ */
+Tree Tree::regraft(){
+    return Tree();
 }
 
 
@@ -80,10 +89,11 @@ Node * Node::getParent() {
 	return parent;
 }
 
+/**
+ * Set the pointer "parent" to a new value.
+ */
 void Node::setParent(Node * new_parent) {
-    // Set the pointer "parent" to a new value.
 	parent = new_parent;
-    //
 }
 
 void Node::addChild(Node * childP) {
@@ -92,7 +102,7 @@ void Node::addChild(Node * childP) {
     //  - Adding the childs pointer to the child list.
     //  - Inserting the childs leaves-list on to the end of the parents.
     childP->setParent(this);
-	children.push_back(childP);
+    children.push_back(childP);
 	leaves.splice(leaves.end(),childP->getLeaves());
 }
 
