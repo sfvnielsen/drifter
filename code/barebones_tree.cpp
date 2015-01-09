@@ -6,6 +6,7 @@
  */
 
 #include "barebones_tree.h"
+#include "adjacency_list.h"
 
 #include <iostream>
 #include <cmath>
@@ -37,6 +38,10 @@ Tree::Tree(list<tuple<int,int>> input_graph) {
         nodes.push_back(Node(*it));
         root.addChild(&(nodes.back()));
     }
+
+    int N = leaves.size();
+    Adj_list A = Adj_list(N,graph);
+
 }
 
 //Add constructer Tree(input_graph, arbitrary tree structure)
@@ -65,7 +70,7 @@ string Tree::toString(){
 
 double Tree::evaluateLikelihood(){
     // Something
-
+return 0.0;
 }
 
 /**

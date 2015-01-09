@@ -41,6 +41,9 @@ private:
     int leafId;
     bool isInternal;
 
+
+// TODO pointer to adjacency list of the tree
+
 };
 
 #endif /* NODE_H_ */

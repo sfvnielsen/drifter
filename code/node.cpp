@@ -62,18 +62,18 @@ void Node::addChild(Node * childP) {
     // Add a child by:
     //  - Setting the childs parent pointer.
     //  - Adding the childs pointer to the child list.
-    //  - Inserting the childs leaves-list on to the end of the parents.
     childP->setParent(this);
     children.push_back(childP);
 }
 
 void Node::removeChild(Node * child) {
-    cout << "These arent the droids youre looking for" << endl; // TEST
+
 }
 
 bool Node::isInternalNode() {
     return isInternal;
 }
+
 string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
 
@@ -87,7 +87,7 @@ string Node::toString() {
     }
     s += ")\n";
     // -- Recurse into children to print the entire subtree.
-    s += "number of children: " + to_string(children.size()) + "\n";
+    // s += "number of children: " + to_string(children.size()) + "\n";
     if(!children.empty()) {
         for (list<Node *>::iterator it = children.begin(); it != children.end(); it++) {
             Node * childP = *it;
