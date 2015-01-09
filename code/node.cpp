@@ -33,6 +33,10 @@ Node::Node(Adj_list * AP, int L) {
     isInternal = false;
 }
 
+list<Node *> Node::getChildren(){
+return children;
+}
+
 
 list<int> Node::getLeaves() {
     list<int> leaves;
@@ -198,22 +202,22 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
     list<Node *> list_of_children = this->getChildren();
     for (list<Node *>::iterator it = list_of_children.begin();
              it!= list_of_children.end(); ++it) {
-        int num_leaves = (it->getLeaves()).size(); // Might not work!!!
+        int num_leaves = ((*it)->getLeaves()).size(); // Might not work!!!
         num_leaves_each_child.push_back(num_leaves);
     }
 
     // - First term - each child
     for (list<int>::iterator it = num_leaves_each_child.begin();
          it!= num_leaves_each_child.end(); ++it){
-        loglike += loggamma_r(*it,-alpha);
-        num_leavs_total += *it;
+        log_like += loggamma_r(*it,-alpha);
+        num_leaves_total += *it;
     }
     // - Second term
-    loglike += log(alpha+beta) + alpha*(num_children-2)
+    log_like += log(alpha+beta) + alpha*(num_children-2)
                 -log_diff(loggamma_r(num_leaves_total,beta),
                 loggamma_r(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
-    return loglike;
+    return log_like;
 };
 
 
@@ -232,8 +236,8 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
             // Evaluate each childs contribution
             // And evaluate subtree rooted at childs contribution
             // (recursion)
-            log_like += it->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
-            log_like += it->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
+            log_like += (*it)->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
+            log_like += (*it)->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
         }
     } else {
         log_like = 0;

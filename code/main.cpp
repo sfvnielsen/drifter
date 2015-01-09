@@ -26,16 +26,9 @@ int main() {
     cout << "--- Tree to string ---" << endl;
     cout << T.toString() << endl;
 
-    cout << "--- getCountsAll ---" << endl;
-//
-//    Adj_list A = Adj_list(4,{g1,g2,g3,g4});
-//
-//    cout << A.isConnected(1,1) << endl;
+    cout << "--- Likelihood ---" << endl;
 
-    list<tuple<int,int>> L = T.getCountsAll();
-    for (list<tuple<int,int>>::iterator it = L.begin(); it != L.end(); it++){
-        cout << "(" << get<0>(*it) << ","<< get<1>(*it) << ")" << endl;
-    }
+    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
 	return 0;
 }
