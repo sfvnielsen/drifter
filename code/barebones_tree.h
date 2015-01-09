@@ -38,12 +38,10 @@ public:
 
     std::string toString();
 
-	double evaluateLikelihood();
+	double evaluateLogLikeTimesPrior(double,double,int,int);
 
 };
 
-
-double logbeta(double,double);
 
 
 #endif /* TREE_H_ */
