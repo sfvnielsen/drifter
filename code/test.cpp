@@ -27,8 +27,8 @@ int main() {
 
         while ((ent = readdir (dir)) != NULL) {
             string test_file_name(ent->d_name);
-            if (test_file_name == "." || test_file_name == "..") {
-                cout << "Skipping . or .." << endl;
+            if (test_file_name == "." || test_file_name == ".." || test_file_name.back() == '~' ){
+                cout << "Skipping non-interesting stuff.." << endl;
                 continue;
             }
             // Read in test file
@@ -67,12 +67,14 @@ int main() {
                     tree_edge_list.push_back(edge);
             }
 
-            // Reading in relation between data nodes and tree leaves
-            list<pair<int,int>> data_leaf_relation;
+            // Reading in relation between tree leaves and data nodes
+            // - Two lists are created
+            list<int> leaf_data_relation, data_leaf_relation;
+            // consider using vectors instead?
             for (int i=0; i!=number_data_nodes; ++i) {
                     inStream >> e1 >> e2;
-                    pair<int,int> edge (e1,e2);
-                    data_leaf_relation.push_back(edge);
+                    leaf_data_relation.push_back(e1);
+                    data_leaf_relation.push_back(e2);
             }
 
             // Reading in hyperparameters
@@ -83,10 +85,15 @@ int main() {
             double llike;
             inStream >> llike;
 
-            // DEBUG; PRINTING WHOLE EDGE LIST
-            //for (list<pair<int,int>>::iterator it = data_leaf_relation.begin(); it!=data_leaf_relation.end(); ++it ){
-            //    cout << "(" << it->first << "," << it->second << ")"  << endl;
-            //}
+            //DEBUG; PRINTING WHOLE EDGE LIST
+//            for (list<int>::iterator it = leaf_data_relation.begin(); it!=leaf_data_relation.end(); ++it ){
+//                cout << *it;
+//            }
+//            cout << endl;
+//            for (list<int>::iterator it = data_leaf_relation.begin(); it!=data_leaf_relation.end(); ++it ){
+//                cout << *it;
+//            }
+//            cout << endl;
 
             //TODO: Format into tree-class structure (approriate constructors)
 
