@@ -174,8 +174,6 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 
     list<tuple<int,int>> allCountPairs = this->getCountsAll();
     int num_links, num_pos_links; // number of links and possible links
-    int num_children,num_leaves_total;
-    list<int> num_leaves_each_child; //TODO: get somehow!
 
     // Likelihood contribution
     for (list<tuple<int,int>>::iterator it = allCountPairs.begin();
@@ -188,6 +186,14 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 
     // Prior contribution
     //TODO: Add special case when alpha = 0!
+    int num_children,num_leaves_total;
+    list<int> num_leaves_each_child;
+    list<Node *> list_of_children = this->getChildren();
+    for (list<Node *>::iterator it = list_of_children.begin();
+             it!= list_of_children.end(); ++it) {
+        int num_leaves = (it->getLeaves()).size(); // Might not work!!!
+        num_leaves_each_child.push_back(num_leaves);
+    }
 
     // - First term - each child
     for (list<int>::iterator it = num_leaves_each_child.begin();
@@ -207,5 +213,25 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 /**
 * Evaluate entire subtree's contribution to likelihood
 */
-double evaluateSubtreeLogLike(double alpha, double beta, int rho_plus, int rho_minus);
+double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
+                              , int rho_minus){
+    double log_like;
+
+    if (this->isInternal) {
+        list<Node *> list_of_children = this->getChildren();
+        for (list<Node *>::iterator it = list_of_children.begin();
+             it!= list_of_children.end(); ++it) {
+            // Iterate through list of children
+            // Evaluate each childs contribution
+            // And evaluate subtree rooted at childs contribution
+            // (recursion)
+            log_like += it->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
+            log_like += it->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
+        }
+    } else {
+        log_like = 0;
+    }
+
+    return log_like;
+}
 

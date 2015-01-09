@@ -69,10 +69,11 @@ string Tree::toString(){
 */
 
 double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, int rho_minus){
+    double root_node_contribution = this->root.evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
+    double root_subtree_contribution = this->root.evaluateSubtreeLogLike(alpha
+                                                    ,beta,rho_plus,rho_minus);
 
-    double log_likelihood;
-
-    // call root->evaluateSubtreeLikelihood()
+    return root_node_contribution + root_subtree_contribution;
 }
 
 
