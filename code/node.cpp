@@ -102,13 +102,15 @@ string Node::toString() {
  * Get counts of links and non-links between the pair of children
  */
 tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
-
+/*
     list<int> LA = childAP getLeaves()
     list<int> LB = childBP getLeaves()
 
     cout << "fst:" << childAP->toString() ;
     cout << "snd:" << childBP->toString() ;
+  */
     tuple<int, int> result;
+
     return result;
 }
 
