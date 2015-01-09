@@ -8,13 +8,16 @@
 #include <list>
 #include <tuple>
 
+#include "adjacency_list.h"
+
 #ifndef NODE_H_
 #define NODE_H_
 
 class Node {
 public:
-	Node(); // default constructor
-    Node(int); // leaf node constructor
+    Node();
+	Node(Adj_list *); // default constructor
+    Node(Adj_list *, int); // leaf node constructor
 
     bool isDescendant(Node *);
     void setParent(Node *);
@@ -42,6 +45,7 @@ private:
     std::list<Node *> children;
     int leafId;
     bool isInternal;
+    Adj_list * AP;
 
 
 // TODO pointer to adjacency list of the tree

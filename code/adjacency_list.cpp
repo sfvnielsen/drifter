@@ -10,23 +10,20 @@
 
 
 using namespace std;
-struct neighbor {
-    int id;
-    //Potential to add a weight
-    neighbor(int arg_target) : id(arg_target){}; //Its a function
-};
-vector<vector<neighbor>> adjacency_list;
+
+Adj_list::Adj_list(){}
 
 /**
  * N size of leaves
  *
  */
 Adj_list::Adj_list(int N, std::list<std::tuple<int,int>> edge_list){
-    adjacency_list = vector<vector<neighbor>>(N);
+    //adjacency_list (N, vector<neighbor>(N));
+    adjacency_list = vector<list<int>>(N, list<int>());
 
     for (list<tuple<int,int>>::iterator it = edge_list.begin();
          it != edge_list.end(); it++){
-        addUndirectedEdge(get<0>(*it), get<1>(*it));
+            addUndirectedEdge(get<0>(*it), get<1>(*it));
     }
 
 };
@@ -34,7 +31,8 @@ Adj_list::Adj_list(int N, std::list<std::tuple<int,int>> edge_list){
  * Adds an directed edge in the adjacency list
  */
 int Adj_list::addDirectedEdge(int from, int to){
-    adjacency_list[from].push_back(neighbor(to));
+    //adjacency_list[from].push_back(neighbor(to));
+    adjacency_list[from].push_back(to);
     return 0;
 }
 
@@ -65,16 +63,20 @@ int Adj_list::removeUndirectedEdge(int from, int to){
  */
 bool Adj_list::isConnected(int current, int target){
     bool existsConnection = false;
-    for (vector<neighbor>::iterator it = adjacency_list[current].begin();
-         it != adjacency_list[current].end(); it++) {
-        //See if the current element matches the target
-        //(i.e. there is an edge)
-        if (it->id == target) {
-            existsConnection = true;
-            it = adjacency_list[current].end();
-        }
+//    for (vector<neighbor>::iterator it = adjacency_list[current].begin();
+//         it != adjacency_list[current].end(); it++) {
+//        //See if the current element matches the target
+//        //(i.e. there is an edge)
+//        if ((it->id) == target) {
+//            existsConnection = true;
+//            break;
+//        }
+//    }
 
-    }
+    list<int> L =  adjacency_list[current];
+
+    existsConnection = find(L.begin(),L.end(),target) != L.end();
+
     return existsConnection;
 };
 

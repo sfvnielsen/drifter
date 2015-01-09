@@ -12,26 +12,6 @@ using namespace std;
 
 int main() {
 
-    cout << "--- TESTING the node class ---" <<endl;
-
-// with a loop
-list<int> leaves;
-leaves.push_back(16);
-leaves.push_back(17);
-leaves.push_back(18);
-leaves.push_back(19);
-list<Node> nodes;
-Node R = Node();
-
-for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        nodes.push_back(Node(*it));
-//        cout << *it << ": " <<nodes.back().toString() << endl;
-        R.addChild(&(nodes.back()));
-//        cout << "R: " << R.toString() << endl;
-    }
-
-R.getCountsAll();
-
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 
     // Building a tree with a graph defined by an edge list
@@ -45,6 +25,17 @@ R.getCountsAll();
 
     cout << "--- Tree to string ---" << endl;
     cout << T.toString() << endl;
+
+    cout << "--- getCountsAll ---" << endl;
+//
+//    Adj_list A = Adj_list(4,{g1,g2,g3,g4});
+//
+//    cout << A.isConnected(1,1) << endl;
+
+    list<tuple<int,int>> L = T.getCountsAll();
+    for (list<tuple<int,int>>::iterator it = L.begin(); it != L.end(); it++){
+        cout << "(" << get<0>(*it) << ","<< get<1>(*it) << ")" << endl;
+    }
 
 	return 0;
 }

@@ -14,20 +14,25 @@ using namespace std;
 // Node class functions //
 //////////////////////////
 
-Node::Node() {
+Node::Node(){}
+
+Node::Node(Adj_list * AP) {
     // Trivial constructor.
     parent = nullptr;
     isInternal = true;
+    this->AP = AP;
 }
 
-Node::Node(int L) {
+Node::Node(Adj_list * AP, int L) {
     // Construct a node with the leaf L
     // This defines a leaf-node
+    this->AP = AP;
     parent = nullptr;
     num_internal_nodes = 0;
     leafId = L;
     isInternal = false;
 }
+
 
 list<int> Node::getLeaves() {
     list<int> leaves;
@@ -116,7 +121,9 @@ tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
     for (list<int>::iterator fst = LA.begin(); fst != LA.end(); fst++) {
         for (list<int>::iterator snd = LB.begin(); snd != LB.end(); snd++) {
-            //result.push_back(this->getCountsPair(*fst, *snd));
+            if(AP->isConnected(*fst,*snd)){
+                nLinks += 1;
+            }
         }
     }
 

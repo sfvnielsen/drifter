@@ -16,12 +16,14 @@
 #include <string>
 #include "node.h"
 
+
 class Tree {
 private:
     Node root;
     std::list<Node> nodes;
     std::list<int> leaves;
     std::list<std::tuple<int,int>> graph;
+    Adj_list A;
 
 	// TODO make functions private when not debugging them.
 
@@ -39,6 +41,8 @@ public:
     std::string toString();
 
 	double evaluateLogLikeTimesPrior(double,double,int,int);
+
+    std::list<std::tuple<int,int>> getCountsAll();
 
 };
 
