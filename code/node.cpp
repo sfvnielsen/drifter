@@ -13,8 +13,6 @@ Node::Node() {
     // Trivial constructor.
 	parent = nullptr;
 	num_internal_nodes = 0;
-	leaves.clear(); //redundant??
-    children.clear(); //redundant??
 }
 
 Node::Node(int L) {
@@ -22,9 +20,7 @@ Node::Node(int L) {
     // This defines a leaf-node
 	parent = nullptr;
     num_internal_nodes = 0;
-    leaves.clear(); //redundant??
 	leaves.push_back(L);
-	children.clear(); //redundant??
 }
 
 list<int> Node::getLeaves() {
@@ -60,8 +56,33 @@ bool isInternalNode(Node * n){
     return false;
 }
 
-
 string Node::toString(){
+
+
+/**
+ * Get counts of links and non-links between the pair of children
+ */
+tuple<int,int> Node::getCountsPair(Node * childAP, Node * childBP){
+}
+
+
+/**
+ * Get counts of links and non-links between all pairs of children
+ */
+list<tuple<int,int>> getCountsAll(){
+    // Loop through each child
+    for (list<Node *>::iterator fst = children.begin(); fst != children.end(); fst++){
+        // Loop through each child after it in the list
+        for (list<Node *>::iterator snd = fst ; snd != children.end(); snd++){
+
+        cout << fst->toString() ;
+        }
+    }
+}
+
+
+
+
     // Building a string representing the tree by printing all of the leaf-Sets
 
     string s = "leaves: (";
