@@ -97,7 +97,7 @@ void Node::addChild(Node * childP) {
 }
 
 void removeChild(Node * child){
-
+    cout << "These arent the droids youre looking for" << endl; // TEST
 }
 
 bool isInternalNode(Node * n){
