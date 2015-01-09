@@ -65,12 +65,19 @@ string Tree::toString(){
 
 
 /**
-* Evaluating likelihood x prior of tree
+* Evaluating log-likelihood x prior of tree
 */
 
 double Tree::evaluateLikelihood(){
-    // Something
-return 0.0;
+
+    double log_likelihood;
+
+    list<tuple<int,int>> all_pair_counts = this->root->getCountsAll();
+    list<tuple<int,int>>::iterator it;
+
+    for(it = all_pair_counts.begin(); it!=all_pair_counts.end(); ++it) {
+        // Calculate contribution to likelihood...
+    }
 }
 
 /**
