@@ -8,6 +8,7 @@
 #include "barebones_tree.h"
 
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 /**
@@ -55,4 +56,21 @@ Tree Tree::regraft(){
 
 string Tree::toString(){
     return root.toString();
+}
+
+
+/**
+* Evaluating likelihood x prior of tree
+*/
+
+double Tree::evaluateLikelihood(){
+    // Something
+
+}
+
+/**
+* Log-Beta function
+*/
+double logbeta(double a, double b){
+    return lgamma(a)+lgamma(b)-lgamma(a+b);
 }
