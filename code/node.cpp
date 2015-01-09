@@ -150,4 +150,69 @@ list<tuple<int, int>> Node::getCountsAll() {
     return result;
 }
 
+/**
+* Log-Beta function
+*/
+double logbeta(double a, double b){
+    return lgamma(a)+lgamma(b)-lgamma(a+b);
+}
+
+/**
+* Log-Gamma Ratio Function
+*/
+double loggamma_r(double a, double b) {
+    return lgamma(a+b)-lgamma(1+b);
+}
+
+/**
+* Log of Difference (numerically stable)
+*/
+double log_diff(double a, double b) {
+    double maxAB = max(a,b);
+    return maxAB + log(exp(a-maxAB)-exp(b-max(a,b)));
+}
+
+/**
+* Evaluate nodes contribution to likelihood - NOT TESTED!
+*/
+double Node::evaluateNodeLogLike(double alpha, double beta,
+                                 int rho_plus, int rho_minus) {
+    double log_like = 0;
+
+    list<tuple<int,int>> allCountPairs = this->getCountsAll();
+    int num_links, num_pos_links; // number of links and possible links
+    int num_children,num_leaves_total;
+    list<int> num_leaves_each_child; //TODO: get somehow!
+
+    // Likelihood contribution
+    for (list<tuple<int,int>>::iterator it = allCountPairs.begin();
+         it!=allCountPairs.end(); ++it) {
+            num_links = get<0>(*it);
+            num_pos_links = get<1>(*it);
+            log_like += logbeta(num_links+rho_plus,
+                        num_pos_links-num_links+rho_minus);
+    }
+
+    // Prior contribution
+    //TODO: Add special case when alpha = 0!
+
+    // - First term - each child
+    for (list<int>::iterator it = num_leaves_each_child.begin();
+         it!= num_leaves_each_child.end(); ++it){
+        loglike += loggamma_r(*it,-alpha);
+        num_leavs_total += *it;
+    }
+    // - Second term
+    loglike += log(alpha+beta) + alpha*(num_children-2)
+                -log_diff(loggamma_r(num_leaves_total,beta),
+                loggamma_r(num_leaves_total,-alpha))
+                + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
+    return loglike;
+};
+
+
+/**
+* Evaluate entire subtree's contribution to likelihood
+*/
+double evaluateSubtreeLogLike(double alpha, double beta, int rho_plus, int rho_minus);
 

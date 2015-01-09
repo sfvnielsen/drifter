@@ -36,6 +36,8 @@ public:
 
     std::string toString();
 
+    double evaluateNodeLogLike(double,double,int,int);
+    double evaluateSubtreeLogLike(double,double,int,int);
 
 private:
     Node * parent;
@@ -49,5 +51,9 @@ private:
 // TODO pointer to adjacency list of the tree
 
 };
+
+double logbeta(double,double);
+double loggamma_r(double, double);
+double log_diff(double a, double b)
 
 #endif /* NODE_H_ */

@@ -40,14 +40,12 @@ public:
 
     std::string toString();
 
-	double evaluateLikelihood();
+	double evaluateLogLikeTimesPrior(double,double,int,int);
 
     std::list<std::tuple<int,int>> getCountsAll();
 
 };
 
-
-double logbeta(double,double);
 
 
 #endif /* TREE_H_ */
