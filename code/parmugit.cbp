@@ -64,6 +64,8 @@
 			<Option target="Debug" />
 			<Option target="Release" />
 		</Unit>
+		<Unit filename="node.cpp" />
+		<Unit filename="node.h" />
 		<Unit filename="test.cpp">
 			<Option target="Test" />
 		</Unit>
