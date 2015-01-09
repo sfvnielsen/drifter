@@ -35,10 +35,11 @@ Node * Node::getParent() {
 	return parent;
 }
 
+/**
+ * Set the pointer "parent" to a new value.
+ */
 void Node::setParent(Node * new_parent) {
-    // Set the pointer "parent" to a new value.
 	parent = new_parent;
-    //
 }
 
 void Node::addChild(Node * childP) {
@@ -47,15 +48,15 @@ void Node::addChild(Node * childP) {
     //  - Adding the childs pointer to the child list.
     //  - Inserting the childs leaves-list on to the end of the parents.
     childP->setParent(this);
-	children.push_back(childP);
+    children.push_back(childP);
 	leaves.splice(leaves.end(),childP->getLeaves());
 }
 
-void Node::removeChild(Node * child){
+void removeChild(Node * child){
     cout << "These arent the droids youre looking for" << endl; // TEST
 }
 
-bool Node::isInternalNode(Node * n){
+bool isInternalNode(Node * n){
     return false;
 }
 
@@ -85,4 +86,3 @@ string Node::toString(){
     }
     return s ;
 }
-
