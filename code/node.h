@@ -5,6 +5,9 @@
  *      Author: Julian
  */
 
+#include <list>
+#include <tuple>
+
 #ifndef NODE_H_
 #define NODE_H_
 
@@ -21,7 +24,7 @@ public:
     std::list<Node *> getChildren();
     void addChild(Node *);
     void removeChild(Node *);
-    bool isInternalNode(Node *);
+    bool isInternalNode();
 
 	Node * getParent();
 	int getNumInternalNodes();
@@ -29,14 +32,14 @@ public:
 	int getNumPossibleEdges();
 
     std::string toString();
-    std::list<int> leaves;
 
 
 private:
     Node * parent;
 	int num_internal_nodes;
     std::list<Node *> children;
-
+    int leafId;
+    bool isInternal;
 
 };
 

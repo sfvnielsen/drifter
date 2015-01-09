@@ -16,19 +16,21 @@ int main() {
 
 // with a loop
 list<int> leaves;
-leaves.push_back(3);
+leaves.push_back(16);
 leaves.push_back(17);
+leaves.push_back(18);
+leaves.push_back(19);
 list<Node> nodes;
 Node R = Node();
 
 for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         nodes.push_back(Node(*it));
-        cout << *it << ": " <<nodes.back().toString() << endl;
+//        cout << *it << ": " <<nodes.back().toString() << endl;
         R.addChild(&(nodes.back()));
-        cout << "R: " << R.toString() << endl;
+//        cout << "R: " << R.toString() << endl;
     }
 
-R.getCountsAll()
+R.getCountsAll();
 
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 

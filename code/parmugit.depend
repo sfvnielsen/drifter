@@ -1,17 +1,18 @@
 # depslib dependency file v1.0
-1420721225 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
+1420798696 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 
-1420715162 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
+1420796406 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
 	<set>
 	<list>
 	<string>
+	"node.h"
 
-1420721292 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
+1420799950 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
 	<iostream>
 	"barebones_tree.h"
 
@@ -30,4 +31,12 @@
 	<set>
 	<list>
 	<string>
+
+1420801501 /home/julian/Dropbox/skole/parmugit/code/node.h
+	<list>
+	<tuple>
+
+1420799916 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
+	"node.h"
+	<iostream>
 

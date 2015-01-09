@@ -50,7 +50,7 @@ Tree::Tree(list<tuple<int,int>> data_graph, list<tuple<int,int>> tree_struct_gra
  *
  */
 Tree Tree::regraft(){
-    return Tree();
+    return *this;
 }
 
 string Tree::toString(){
