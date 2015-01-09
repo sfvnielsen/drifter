@@ -64,7 +64,8 @@ string Tree::toString(){
 */
 
 double Tree::evaluateLikelihood(){
-    // Something
+    list<tuple<int,int>> all_pair_counts = this->root->getCountsAll();
+
 
 }
 
