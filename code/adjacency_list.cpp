@@ -13,10 +13,14 @@ using namespace std;
 struct neighbor {
     int id;
     //Potential to add a weight
-    neighbor(int arg_target) : target(arg_target){}; //Its a function
+    neighbor(int arg_target) : id(arg_target){}; //Its a function
 };
 vector<vector<neighbor>> adjacency_list;
 
+/**
+ * N size of leaves
+ * 
+ */
 Adj_list::Adj_list(int N, std::list<std::tuple<int,int>> edge_list){
     adjacency_list = vector<vector<neighbor>>(N);
     

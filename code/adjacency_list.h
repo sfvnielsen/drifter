@@ -19,7 +19,12 @@
 class Adj_list {
 
 public:
-    struct neighbor;
+//    struct neighbor;
+    struct neighbor {
+        int id;
+        //Potential to add a weight
+        neighbor(int arg_target) : id(arg_target){}; //Its a function
+    };
     std::vector<std::vector<neighbor> > adjacency_list;
     
     Adj_list();
