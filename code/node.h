@@ -43,6 +43,9 @@ private:
     int leafId;
     bool isInternal;
 
+
+// TODO pointer to adjacency list of the tree
+
 };
 
 double logbeta(double,double);

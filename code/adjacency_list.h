@@ -26,16 +26,16 @@ public:
         neighbor(int arg_target) : id(arg_target){}; //Its a function
     };
     std::vector<std::vector<neighbor> > adjacency_list;
-    
+
     Adj_list();
     Adj_list(int,std::list<std::tuple<int,int>>);
     int addDirectedEdge(int, int);
     int addUndirectedEdge(int, int);
     int removeDirectedEdge(int, int);
     int removeUndirectedEdge(int, int);
-    bool existsConnection(int, int);
-    
-    
+    bool isConnected(int, int);
+
+
 private:
 
 };
