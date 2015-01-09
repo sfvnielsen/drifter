@@ -121,6 +121,7 @@ tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
     }
 
     tuple<int, int> result (nLinks,nPossible);
+
     return result;
 }
 

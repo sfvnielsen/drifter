@@ -42,5 +42,9 @@ public:
 
 };
 
+
+double logbeta(double,double);
+
+
 #endif /* TREE_H_ */
 
