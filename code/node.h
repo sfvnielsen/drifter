@@ -54,6 +54,6 @@ private:
 
 double logbeta(double,double);
 double loggamma_r(double, double);
-double log_diff(double a, double b)
+double log_diff(double a, double b);
 
 #endif /* NODE_H_ */
