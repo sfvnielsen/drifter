@@ -197,12 +197,14 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 
     // Prior contribution
     //TODO: Add special case when alpha = 0!
-    int num_children,num_leaves_total;
+    int num_children = (this->getChildren()).size();
+    int num_leaves_total = (this->getLeaves()).size();
     list<int> num_leaves_each_child;
     list<Node *> list_of_children = this->getChildren();
+
     for (list<Node *>::iterator it = list_of_children.begin();
              it!= list_of_children.end(); ++it) {
-        int num_leaves = ((*it)->getLeaves()).size(); // Might not work!!!
+        int num_leaves = ((*it)->getLeaves()).size();
         num_leaves_each_child.push_back(num_leaves);
     }
 
@@ -217,6 +219,7 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                 -log_diff(loggamma_r(num_leaves_total,beta),
                 loggamma_r(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
+    // cout << "Log_Like_contribution of "<<this->toString() << " : " << log_like << endl; // DEBUG!!!
     return log_like;
 };
 
@@ -226,23 +229,23 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 */
 double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
                               , int rho_minus){
-    double log_like;
+    double log_like = 0;
 
     if (this->isInternal) {
+        log_like += this->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
         list<Node *> list_of_children = this->getChildren();
+
         for (list<Node *>::iterator it = list_of_children.begin();
              it!= list_of_children.end(); ++it) {
             // Iterate through list of children
             // Evaluate each childs contribution
             // And evaluate subtree rooted at childs contribution
             // (recursion)
-            log_like += (*it)->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
             log_like += (*it)->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
         }
     } else {
         log_like = 0;
     }
-
     return log_like;
 }
 

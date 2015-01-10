@@ -17,10 +17,8 @@ using namespace std;
  */
 Tree::Tree(list<tuple<int,int>> data_graph) {
 
-    graph = data_graph; //New name and is it neccesary
-
     // insert all the indexes from the edge list into leaves
-	for (list<tuple<int,int>>::iterator it = graph.begin(); it != graph.end(); it++){
+	for (list<tuple<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(get<0>(*it));
         leaves.push_back(get<1>(*it));
     }
@@ -30,7 +28,7 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
     leaves.unique();
 
     int N = leaves.size();
-    A = Adj_list(N,graph);
+    A = Adj_list(N,data_graph);
 
     root = Node(&A);
 
@@ -49,6 +47,23 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
 Tree::Tree(list<tuple<int,int>> data_graph, list<tuple<int,int>> tree_struct_graph) {
     //Construct tree from tree_struct_graph
     //Construct adj list from data_graph
+
+    // Tree structure -
+    // TODO: - Also load in relation between data graph and tree_struct_graph???
+    //
+    for (list<tuple<int,int>>::iterator it = tree_struct_graph.begin();
+            it!= tree_struct_graph.end(); ++it ) {
+        if
+    }
+
+    // insert all the indexes from the edge list into leaves
+	// - Loop over "relation-list" ??
+
+
+    // Adjacency list
+    int N = ??
+    A = Adj_list(N,data_graph);
+
 
 }
 
@@ -73,11 +88,12 @@ string Tree::toString(){
 */
 
 double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, int rho_minus){
-    double root_node_contribution = this->root.evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
-    double root_subtree_contribution = this->root.evaluateSubtreeLogLike(alpha
-                                                    ,beta,rho_plus,rho_minus);
-
-    return root_node_contribution + root_subtree_contribution;
+//    double root_node_contribution = this->root.evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
+//    double root_subtree_contribution = this->root.evaluateSubtreeLogLike(alpha
+//                                                    ,beta,rho_plus,rho_minus);
+//
+//    return root_node_contribution + root_subtree_contribution;
+    return this->root.evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
 }
 
 
