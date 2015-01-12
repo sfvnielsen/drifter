@@ -44,10 +44,27 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
 }
 
 //Add constructer Tree(input_graph, arbitrary tree structure)
-//Tree::Tree(list<tuple<int,int>> data_graph, list<tuple<int,int>> tree_struct_graph
- //          list<tuple<int,int>> data_leaf_relation) {
-    // - Construct tree from tree_struct_graph
+Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
+           list<pair<int,int>> data_leaf_relation) {
+    // 1.0: Construct tree from tree_struct_graph
+/*    tuple<int,int> element = tree_struct_graph.front();
+    tree_struct_graph.pop_front(); //Remove element
+    root = get<0>(element);
+    root.addChild(element.get(1))
+    
+    while (!tree_struct_graph.empty()) {
+        element = tree_struct_graph.pop_front();
+        //Find element.get(0) // parrent
+        //Insert element.get(1) as child
+    }
+    */
+    // 1.1:
+        //Update leaf id
+        //update internal id and status
+    
+    
     // - Construct adj list from data_graph
+//    N =
     // - Leaves should know what node in the data_graph
 
     // Tree structure -
@@ -61,13 +78,12 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
     // insert all the indexes from the edge list into leaves
 	// - Loop over "relation-list" ??
 
+    
 
     // Adjacency list
     //int N = ??
     //A = Adj_list(N,data_graph);
-
-
-//}
+}
 
 list<tuple<int, int>> Tree::getCountsAll(){
     return root.getCountsAll();
