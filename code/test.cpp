@@ -86,12 +86,16 @@ int main()
             // Reading in relation between tree leaves and data nodes
             // - Two lists are created
             list<int> leaf_data_relation, data_leaf_relation;
+            list<pair<int,int>> leaf_data; //
             // consider using vectors instead?
             for (int i=0; i!=number_data_nodes; ++i)
             {
                 inStream >> e1 >> e2;
                 leaf_data_relation.push_back(e1);
                 data_leaf_relation.push_back(e2);
+                
+                pair<int,int> edge (e1,e2);
+                leaf_data.push_back(edge); //
             }
 
             // Reading in hyperparameters
@@ -113,6 +117,8 @@ int main()
 //            cout << endl;
 
             //TODO: Format into tree-class structure (approriate constructors)
+            Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data);
+            test_tree.toString();
 
             //TODO: Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test...";

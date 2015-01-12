@@ -21,6 +21,8 @@ public:
 
     bool isDescendant(Node *);
     void setParent(Node *);
+    int getLeafId();
+    void setLeafId(int);
     std::list<std::pair<int,int>> getCountsAll();
     std::pair<int,int> getCountsPair(Node *, Node *);
     std::list<int> getLeaves();

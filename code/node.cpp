@@ -67,6 +67,14 @@ void Node::setParent(Node * new_parent) {
     parent = new_parent;
 }
 
+int Node::getLeafId(){
+    return leafId;
+}
+void Node::setLeafId(int new_id){
+    leafId = new_id;
+}
+
+
 void Node::addChild(Node * childP) {
     // Add a child by:
     //  - Setting the childs parent pointer.
