@@ -98,4 +98,36 @@ double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, 
     return this->root.evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
 }
 
+Node * Tree::getRandomNode(){
+    return root.getChildren().back();
+}
 
+void Tree::cutSubtree(Node * scionP){
+    Node * parentP = scionP->getParent();
+    parentP->removeChild(scionP);
+    scionP->setParent(nullptr);
+}
+
+Node * Tree::getRoot(){
+    return &root;
+}
+
+void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
+    if(asChild){
+        stockP->addChild(scionP);
+    }else{
+        // cut the stock
+        Node * parent = stockP->getParent();
+        parent -> removeChild(stockP);
+
+        // add a new parent
+        nodes.push_back(Node());
+        Node * new_parent = &(nodes.back());
+        parent->addChild(new_parent);
+
+        // add graft both stock and scion to the new parent
+        new_parent->addChild(stockP);
+        new_parent->addChild(scionP);
+
+    }
+}

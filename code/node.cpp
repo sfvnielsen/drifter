@@ -76,7 +76,7 @@ void Node::addChild(Node * childP) {
 }
 
 void Node::removeChild(Node * child) {
-
+    children.remove(child);
 }
 
 bool Node::isInternalNode() {

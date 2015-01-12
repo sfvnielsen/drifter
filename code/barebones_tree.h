@@ -36,7 +36,9 @@ public:
          std::list<std::tuple<int,int>> data_leaf_relation); // Builds tree based on data, tree and data-tree relation
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();
-	Tree cutSubtree(Node * sub_root); //Returns the subtree at Node sub_node
+	Node * getRoot();
+	void cutSubtree(Node * scion_node); //Returns the subtree at Node sub_node
+    void insertSubtree(Node * stockP, Node * scionP, bool asChild);
 
 	void recalculate(); // calculate all of the counts on the tree from the graph
 
