@@ -46,26 +46,31 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
 //Add constructer Tree(input_graph, arbitrary tree structure)
 Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
            list<pair<int,int>> data_leaf_relation) {
+    
+    // - Construct adj list from data_graph
+    int N = data_leaf_relation.size();
+    adjacent = Adj_list(N, data_graph);
+    
     // 1.0: Construct tree from tree_struct_graph
     
-/*    tuple<int,int> element = tree_struct_graph.front();
+    pair<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front(); //Remove element
-    root = get<0>(element);
-    root.addChild(element.get(1))
+    root = Node(adjacent); //Root node
+    //Add the first node as a child
+    Node child = Node(adjacent);
+    root.addChild(& child);
     
     while (!tree_struct_graph.empty()) {
-        element = tree_struct_graph.pop_front();
+//        element = tree_struct_graph.pop_front();
         //Find element.get(0) // parrent
         //Insert element.get(1) as child
+        break;
     }
-    */
     // 1.1:
         //Update leaf id
         //update internal id and status
     
     
-    // - Construct adj list from data_graph
-//    N =
     // - Leaves should know what node in the data_graph
 
     // Tree structure -
