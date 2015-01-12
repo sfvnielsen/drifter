@@ -31,7 +31,7 @@ public:
 
 
     Adj_list();
-    Adj_list(int,std::list<std::tuple<int,int>>);
+    Adj_list(int,std::list<std::pair<int,int>>);
     int addDirectedEdge(int, int);
     int addUndirectedEdge(int, int);
     int removeDirectedEdge(int, int);

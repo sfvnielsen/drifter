@@ -110,7 +110,7 @@ string Node::toString() {
 /**
  * Get counts of links and non-links between the pair of children
  */
-tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
+pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
     list<int> LA = childAP->getLeaves();
     list<int> LB = childBP->getLeaves();
@@ -131,7 +131,7 @@ tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
         }
     }
 
-    tuple<int, int> result (nLinks,nPossible);
+    pair<int, int> result (nLinks,nPossible);
 
     return result;
 }
@@ -140,8 +140,8 @@ tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 /**
  * Get counts of links and non-links between all pairs of children
  */
-list<tuple<int, int>> Node::getCountsAll() {
-    list<tuple<int, int>> result;
+list<pair<int, int>> Node::getCountsAll() {
+    list<pair<int, int>> result;
     // Loop through each child
     for (list<Node *>::iterator fst = children.begin(); fst != children.end(); fst++) {
         // iterator for the next child
@@ -184,14 +184,14 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
     double log_like = 0;
     double log_prior = 0;
 
-    list<tuple<int,int>> allCountPairs = this->getCountsAll();
+    list<pair<int,int>> allCountPairs = this->getCountsAll();
     int num_links, num_pos_links; // number of links and possible links
 
     // Likelihood contribution
-    for (list<tuple<int,int>>::iterator it = allCountPairs.begin();
+    for (list<pair<int,int>>::iterator it = allCountPairs.begin();
          it!=allCountPairs.end(); ++it) {
-            num_links = get<0>(*it);
-            num_pos_links = get<1>(*it);
+            num_links = it->first;
+            num_pos_links = it->second;
             log_like += logbeta(num_links+rho_plus,
                         num_pos_links-num_links+rho_minus)-
                         logbeta(rho_plus,rho_minus);
