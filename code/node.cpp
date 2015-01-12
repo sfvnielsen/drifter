@@ -164,7 +164,7 @@ double logbeta(double a, double b){
 /**
 * Log-Gamma Ratio Function
 */
-double loggamma_r(double a, double b) {
+double lgamma_ratio(double a, double b) {
     return lgamma(a+b)-lgamma(1+b);
 }
 
@@ -214,12 +214,12 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
     // - First term - each child
     for (list<int>::iterator it = num_leaves_each_child.begin();
          it!= num_leaves_each_child.end(); ++it){
-        log_prior += loggamma_r(*it,-alpha);
+        log_prior += lgamma_ratio(*it,-alpha);
     }
     // - Second term
     log_prior += log(alpha+beta) + log(alpha)*(num_children-2)
-                -log_diff(loggamma_r(num_leaves_total,beta),
-                loggamma_r(num_leaves_total,-alpha))
+                -log_diff(lgamma_ratio(num_leaves_total,beta),
+                lgamma_ratio(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
     return log_like+log_prior;
 };
@@ -239,7 +239,7 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
         // Iterate through list of children
         for (list<Node *>::iterator it = list_of_children.begin();
              it!= list_of_children.end(); ++it) {
-            // Evaluate each childs contribution
+            // Evaluate each childs subtree-contribution
             log_like += (*it)->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
         }
     } else {
