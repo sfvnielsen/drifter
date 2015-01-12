@@ -90,6 +90,17 @@ list<pair<int, int>> Tree::getCountsAll(){
     return root.getCountsAll();
 }
 
+
+/**
+* Get random node in tree (recursive operation)
+* - Chooses internal nodes with weight 2 and leaves with weight 1
+* - calls getRandomChild from node-class
+*/
+
+Node * Tree::getRandomNode() {
+    return root->getRandomDescendant();
+}
+
 /**
  *
  */

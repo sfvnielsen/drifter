@@ -34,6 +34,7 @@ public:
 	int getNumEdges();
 	int getNumPossibleEdges();
 
+    Node * getRandomDescendant();
     std::string toString();
 
     double evaluateNodeLogLike(double,double,int,int);
