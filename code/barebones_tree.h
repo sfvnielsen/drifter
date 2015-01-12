@@ -36,6 +36,7 @@ public:
          std::list<std::pair<int,int>> data_leaf_relation); // Builds tree based on data, tree and data-tree relation
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();
+    Node * getNode(int);
 	Tree cutSubtree(Node * sub_root); //Returns the subtree at Node sub_node
 
 	void recalculate(); // calculate all of the counts on the tree from the graph
