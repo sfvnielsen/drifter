@@ -15,12 +15,12 @@ using namespace std;
 /**
  * Construct flat tree
  */
-Tree::Tree(list<tuple<int,int>> data_graph) {
+Tree::Tree(list<pair<int,int>> data_graph) {
 
     // insert all the indexes from the edge list into leaves
-	for (list<tuple<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
-        leaves.push_back(get<0>(*it));
-        leaves.push_back(get<1>(*it));
+	for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
+        leaves.push_back(it->first);
+        leaves.push_back(it->second);
     }
 
     // Find only the unique elements
@@ -84,14 +84,14 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
     // insert all the indexes from the edge list into leaves
 	// - Loop over "relation-list" ??
 
-    
+
 
     // Adjacency list
     //int N = ??
     //A = Adj_list(N,data_graph);
 }
 
-list<tuple<int, int>> Tree::getCountsAll(){
+list<pair<int, int>> Tree::getCountsAll(){
     return root.getCountsAll();
 }
 

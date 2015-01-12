@@ -15,11 +15,11 @@ int main() {
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 
     // Building a tree with a graph defined by an edge list
-	tuple<int,int> g1 (0,1);
-    tuple<int,int> g2 (1,2);
-    tuple<int,int> g3 (0,3);
-    tuple<int,int> g4 (1,3);
-    tuple<int,int> g5 (2,3);
+	pair<int,int> g1 (0,1);
+    pair<int,int> g2 (1,2);
+    pair<int,int> g3 (0,3);
+    pair<int,int> g4 (1,3);
+    pair<int,int> g5 (2,3);
 
     cout << "--- Constructing the tree ---" << endl;
     Tree T = Tree({g1,g2,g3,g4,g5});

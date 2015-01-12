@@ -22,7 +22,7 @@ private:
     Node root;
     std::list<Node> nodes;
     std::list<int> leaves;
-    std::list<std::tuple<int,int>> graph;
+    std::list<std::pair<int,int>> graph;
     Adj_list A;
 
 	// TODO make functions private when not debugging them.
@@ -30,7 +30,7 @@ private:
 public:
 	Tree(); // default constructor
 	// Tree(something); // some other constructor?
-	Tree(std::list<std::tuple<int,int>>); // make the naive tree building in the adjacency matrix.
+	Tree(std::list<std::pair<int,int>>); // make the naive tree building in the adjacency matrix.
     Tree(std::list<std::pair<int,int>> data_graph,
          std::list<std::pair<int,int>> tree_struct_graph,
          std::list<std::pair<int,int>> data_leaf_relation); // Builds tree based on data, tree and data-tree relation
@@ -44,7 +44,7 @@ public:
 
 	double evaluateLogLikeTimesPrior(double,double,int,int);
 
-    std::list<std::tuple<int,int>> getCountsAll();
+    std::list<std::pair<int,int>> getCountsAll();
 
 };
 
