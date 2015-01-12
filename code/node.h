@@ -7,6 +7,7 @@
 
 #include <list>
 #include <tuple>
+#include <cmath>
 
 #include "adjacency_list.h"
 
