@@ -93,7 +93,7 @@ int main()
                 inStream >> e1 >> e2;
                 leaf_data_relation.push_back(e1);
                 data_leaf_relation.push_back(e2);
-                
+
                 pair<int,int> edge (e1,e2);
                 leaf_data.push_back(edge); //
             }
@@ -118,7 +118,7 @@ int main()
 
             //TODO: Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data);
-            test_tree.toString();
+            //test_tree.toString();
 
             //TODO: Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test...";

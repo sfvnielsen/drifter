@@ -31,9 +31,8 @@ public:
 	Tree(); // default constructor
 	// Tree(something); // some other constructor?
 	Tree(std::list<std::pair<int,int>>); // make the naive tree building in the adjacency matrix.
-    Tree(std::list<std::pair<int,int>> data_graph,
-         std::list<std::pair<int,int>> tree_struct_graph,
-         std::list<std::pair<int,int>> data_leaf_relation); // Builds tree based on data, tree and data-tree relation
+    Tree(std::list<std::pair<int,int>>, std::list<std::pair<int,int>>
+         ,std::list<std::pair<int,int>>); // Builds tree based on data, tree and data-tree relation
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();
     Node * getNode(int);

@@ -46,40 +46,45 @@ Tree::Tree(list<pair<int,int>> data_graph) {
 //Add constructer Tree(input_graph, arbitrary tree structure)
 Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
            list<pair<int,int>> data_leaf_relation) {
-    
+
     // - Construct adj list from data_graph
     int N = (int) data_leaf_relation.size();
     Adj_list adjacent = Adj_list(N, data_graph);
-    
+
     // 1.0 Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
     pair<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front();
-    
+
     root = Node(& adjacent,element.first); //set root node
     //Add the first node as a child
     Node new_child = Node(& adjacent,element.second);
     new_child.setParent(& root);
     root.addChild(& new_child);
-    
+    nodes.push_back(new_child);
+
     while (!tree_struct_graph.empty()) {
         //Get next relation parrent --> child
         element = tree_struct_graph.front();
         tree_struct_graph.pop_front();
-        
-        Node * parrent = getNode(element.first);
-        
-        Node new_child = Node(& adjacent,element.second);
-        new_child.setParent(parrent);
-        
-        parrent->addChild(& new_child);
+
+        Node * parent = this->getNode(element.first);
+        cout << "Is null?: " << (parent == nullptr) << endl;
+        cout << "Found node: " << parent->getLeafId() << endl;
+        new_child = Node(& adjacent,element.second);
+        new_child.setParent(parent);
+        if (this->getNode(element.second)==nullptr) {
+            nodes.push_back(new_child);
+        }
+        cout << "First: " << element.first << " Second: " << element.second << endl;
+        parent->addChild(& new_child);
     }
     // 1.1:
         //Update leaf info
         //Update internal and count?
-    
-    
-    
+
+
+
     // - Leaves should know what node in the data_graph
 
     // Tree structure -
@@ -103,25 +108,29 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
  * Finds a specific node and returns a pointer to this node
  * (Basic implementation!)
  */
-Node * Tree::getNode(int id){
+Node * Tree::getNode(int leaf_id){
     //Iterates over all internal and leaf nodes
+    if (leaf_id == 0) { // is root?
+        return &(this->root);
+    }
+    cout << "getNode::: Size of nodes: "<<nodes.size() << endl;
     for(list<Node>::iterator it = nodes.begin();
         it != nodes.end(); it++){
-        
-        if (it->getLeafId() == 1) {
+
+        if (it->getLeafId() == leaf_id) {
             return &(* it);
         }
-        
+
     }
 
-    
+
 /*    while (first!=last) {
         if (*first==val) return first;
         ++first;
     }
     return last;*/
-    
-    
+
+    cout << "getNode: Found nothing" << endl; // DEBUG!!!
     return nullptr;
 }
 
@@ -136,9 +145,9 @@ list<pair<int, int>> Tree::getCountsAll(){
 * - calls getRandomChild from node-class
 */
 
-Node * Tree::getRandomNode() {
-    return root->getRandomDescendant();
-}
+//Node * Tree::getRandomNode() {
+//    return root->getRandomDescendant();
+//}
 
 /**
  *

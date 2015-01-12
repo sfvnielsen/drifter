@@ -118,26 +118,26 @@ string Node::toString() {
 * Samples random node from subtree rooted at this node
 * - chooses internal nodes with weight 2 and leaves with weight 1
 */
-Node * Node::getRandomDescendant() { // OBS! NOT DONE!!!!
-    if (isInternal){
-        list<Node *> list_children = this->getChildren();
-        int num_children = (int)(this->getChildren().size());
-        list<double> p_vals(num_children+1,0);
-        double p_choose_root = 2.0/(2*this->getNumInternalNodes()
-                                +(int)this->getChildren().size());
-
-        list<Node *>::iterator it = list_children.begin();
-        for (it; it!=list_children.end(); ++it) {
-                sampled_node = this->getRandomDescendant();
-            return
-
-        }
-            double u = (double)rand() / RAND_MAX;
-        }
-    } else { // if we are at leaf node choose that
-        return this;
-    }
-}
+//Node * Node::getRandomDescendant() { // OBS! NOT DONE!!!!
+//    if (isInternal){
+//        list<Node *> list_children = this->getChildren();
+//        int num_children = (int)(this->getChildren().size());
+//        list<double> p_vals(num_children+1,0);
+//        double p_choose_root = 2.0/(2*this->getNumInternalNodes()
+//                                +(int)this->getChildren().size());
+//
+//        list<Node *>::iterator it = list_children.begin();
+//        for (it; it!=list_children.end(); ++it) {
+//                sampled_node = this->getRandomDescendant();
+//            return
+//
+//        }
+//            double u = (double)rand() / RAND_MAX;
+//        }
+//    } else { // if we are at leaf node choose that
+//        return this;
+//    }
+//}
 
 /**
  * Get counts of links and non-links between the pair of children
