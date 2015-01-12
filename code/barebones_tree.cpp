@@ -47,6 +47,7 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
 Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
            list<pair<int,int>> data_leaf_relation) {
     // 1.0: Construct tree from tree_struct_graph
+    
 /*    tuple<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front(); //Remove element
     root = get<0>(element);
