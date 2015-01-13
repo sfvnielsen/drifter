@@ -85,12 +85,13 @@ for l = find(nchildren>0)
 %        Lp = Lp + (K-1)*log(b)-lsub(lg(N,b),lg(N,0)) + sum(lg(m,0));
         Lp = Lp + (K-1)*log(b)-lsub(gammaln(N+b)-gammaln(1+b),gammaln(N)) + sum(gammaln(m));
     else % Two-parameter CRP
-        Lp = Lp + lg(K,b/a)+(K-1).*log(a)-lsub(lg(N,b),lg(N,-a))
+        % DEBUG for C++
+        %prior_cont = lg(K,b/a)+(K-1).*log(a)-lsub(lg(N,b),lg(N,-a)) ...
+        %        + sum(lg(m,-a));
+        Lp = Lp + lg(K,b/a)+(K-1).*log(a)-lsub(lg(N,b),lg(N,-a))...
                 + sum(lg(m,-a));
     end
 end
 
 % --- Posterior cx Likelihood x Prior --- 
-Ll
-Lp
 L = Ll + Lp;

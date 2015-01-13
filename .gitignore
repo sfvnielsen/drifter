@@ -7,5 +7,5 @@ gift/
 *.o
 *~
 giftTest
-code/bin/
-code/obj/
+code/bin/*
+code/obj/*
