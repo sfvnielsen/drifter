@@ -27,7 +27,7 @@ Tree::Tree(list<pair<int,int>> data_graph) {
     leaves.sort();
     leaves.unique();
 
-    int N = leaves.size();
+    int N = (int) leaves.size();
     A = Adj_list(N,data_graph);
 
     root = Node(&A);
@@ -66,7 +66,8 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
     nodes.push_back(new_child);
     root.addChild(&(nodes.back()));
-
+    
+    //Insert parrent-->child relations for the rest
     while (!tree_struct_graph.empty()) {
         //Get next relation parrent --> child
         element = tree_struct_graph.front();
@@ -87,6 +88,11 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         cout << "First: " << element.first << " Second: " << element.second << endl; // DEBUG
 
     }
+    
+    root.updateNumInternalNodes();
+    cout << "Num of internal nodes incl. root: " << root.getNumInternalNodes() << endl;
+    
+    
     // 1.1:
         //Update leaf info
         //Update internal and count?

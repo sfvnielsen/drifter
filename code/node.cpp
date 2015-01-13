@@ -93,6 +93,31 @@ bool Node::isInternalNode() {
     return isInternal;
 }
 
+int Node::getNumInternalNodes(){
+    return num_internal_nodes;
+}
+
+/**
+ * Recursively recalculates the number of internal nodes at each node
+ * below the provide node.
+ */
+int Node::updateNumInternalNodes() {
+    int num_internal_below = 0;
+    //If the node has children recurse
+    if (!this->children.empty()){
+        for (auto it = this->children.begin(); it != this->children.end(); it++){
+            num_internal_below += (*it)->updateNumInternalNodes();
+        }
+        num_internal_nodes = num_internal_below+1; //Current node is also internal
+        isInternal = true;
+    } else { //it is a leaf
+        num_internal_nodes = 0;
+        isInternal = false;
+    }
+   return num_internal_nodes; //exited ok
+}
+
+
 string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
 
@@ -150,8 +175,8 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
     list<int> LB = childBP->getLeaves();
 
     // Number of possible links
-    int nA = LA.size();
-    int nB = LB.size();
+    int nA = (int) LA.size();
+    int nB = (int) LB.size();
 
     int nPossible = nA*nB;
 
@@ -233,15 +258,15 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 
     // Prior contribution
     //TODO: Add special case when alpha = 0!
-    int num_children = (this->getChildren()).size();
-    int num_leaves_total = (this->getLeaves()).size();
+    int num_children = (int) (this->getChildren()).size();
+    int num_leaves_total = (int) (this->getLeaves()).size();
     list<int> num_leaves_each_child;
     list<Node *> list_of_children = this->getChildren();
 
     // Get number of leaves for each child
     for (list<Node *>::iterator it = list_of_children.begin();
              it!= list_of_children.end(); ++it) {
-        int num_leaves = ((*it)->getLeaves()).size();
+        int num_leaves = (int) ((*it)->getLeaves()).size();
         num_leaves_each_child.push_back(num_leaves);
     }
 

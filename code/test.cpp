@@ -40,7 +40,7 @@ int main()
         while ((ent = readdir (dir)) != NULL)
         {
             string test_file_name(ent->d_name);
-            if (test_file_name == "." || test_file_name == ".." || test_file_name.back() == '~' )
+            if (test_file_name == "." || test_file_name == ".." || test_file_name.back() == '~' || test_file_name[0] == '.')
             {
                 cout << "Skipping non-interesting stuff.." << endl;
                 continue;
