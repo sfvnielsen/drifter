@@ -6,3 +6,5 @@ gift/
 *.plist
 *.o
 *~
+giftTest
+code/bin/

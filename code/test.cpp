@@ -19,7 +19,7 @@ int main()
 {
     cout << "!!!Hello Test-World!!!" << endl;
     // Tolerance on likelihood result
-    double epsilon = 1e-4;
+    double epsilon = 1e-6;
 
     string dir_str =  "test/test_files/";
     // For each test file in test_files directory
@@ -110,16 +110,6 @@ int main()
             double llike_true;
             inStream >> llike_true;
 
-            //DEBUG; PRINTING WHOLE EDGE LIST
-//            for (list<int>::iterator it = leaf_data_relation.begin(); it!=leaf_data_relation.end(); ++it ){
-//                cout << *it;
-//            }
-//            cout << endl;
-//            for (list<int>::iterator it = data_leaf_relation.begin(); it!=data_leaf_relation.end(); ++it ){
-//                cout << *it;
-//            }
-//            cout << endl;
-
             //Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_da);
             //cout << test_tree.toString() << endl;
@@ -138,7 +128,7 @@ int main()
             }
             else
             {
-                cout << "FAILED!" << endl;
+                cout << "FAILED with difference:  " << llike_true-llike_test << endl;
                 num_failed++;
             }
 

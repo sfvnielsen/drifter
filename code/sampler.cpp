@@ -1,4 +1,5 @@
 #include "sampler.h"
+
 using namespace std;
 
 Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus):

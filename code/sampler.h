@@ -2,6 +2,7 @@
 #define SAMPLER_H
 
 #include "barebones_tree.h"
+#include <cstdlib>
 
 class Sampler
 {
