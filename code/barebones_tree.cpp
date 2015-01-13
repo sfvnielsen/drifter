@@ -158,7 +158,8 @@ Tree Tree::regraft(){
 }
 
 string Tree::toString(){
-    return root.toString();
+    string sAdj = A.toString();
+    return root.toString() + sAdj ;
 }
 
 
@@ -179,6 +180,7 @@ void Tree::cutSubtree(Node * scionP){
     Node * parentP = scionP->getParent();
     parentP->removeChild(scionP);
     scionP->setParent(nullptr);
+    // TODO: remove obsoleted internal nodes
 }
 
 Node * Tree::getRoot(){
@@ -189,6 +191,9 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     if(asChild){
         stockP->addChild(scionP);
     }else{
+
+        // TODO: Replacing the root node.
+
         // cut the stock
         Node * parent = stockP->getParent();
         parent -> removeChild(stockP);

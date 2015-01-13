@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1421075786 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
+1421152923 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
 
-1421075791 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
+1421149217 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
@@ -13,9 +13,12 @@
 	<string>
 	"node.h"
 
-1421139814 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
+1421149247 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
 	<iostream>
+	<cstdlib>
+	<time.h>
 	"barebones_tree.h"
+	"sampler.h"
 
 1421148571 source:/home/sfvn/Documents/parmugit/code/test.cpp
 	<iostream>
@@ -34,22 +37,23 @@
 	<string>
 	"node.h"
 
-1421070136 /home/julian/Dropbox/skole/parmugit/code/node.h
+1421149217 /home/julian/Dropbox/skole/parmugit/code/node.h
 	<list>
-	<tuple>
 	<cmath>
 	"adjacency_list.h"
 
-1421074780 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
+1421149217 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
 	"node.h"
 	<iostream>
+	<numeric>
+	<cassert>
 
 1420804361 D
 
-1420817073 source:/home/julian/Dropbox/skole/parmugit/code/adjacency_list.cpp
+1421152832 source:/home/julian/Dropbox/skole/parmugit/code/adjacency_list.cpp
 	"adjacency_list.h"
 
-1420814248 /home/julian/Dropbox/skole/parmugit/code/adjacency_list.h
+1421151138 /home/julian/Dropbox/skole/parmugit/code/adjacency_list.h
 	<stdio.h>
 	<string>
 	<vector>
@@ -89,4 +93,18 @@
 
 1421070966 source:/home/sfvn/Documents/parmugit/code/adjacency_list.cpp
 	"adjacency_list.h"
+
+1421149641 source:/home/julian/Dropbox/skole/parmugit/code/sampler.cpp
+	"sampler.h"
+
+1421146247 /home/julian/Dropbox/skole/parmugit/code/sampler.h
+	"barebones_tree.h"
+
+1421152858 source:/home/julian/Dropbox/skole/parmugit/code/test.cpp
+	<iostream>
+	<fstream>
+	<stdexcept>
+	<dirent.h>
+	<cmath>
+	"barebones_tree.h"
 
