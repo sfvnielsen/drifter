@@ -9,3 +9,4 @@ gift/
 giftTest
 code/bin/*
 code/obj/*
+code/test.build/*
