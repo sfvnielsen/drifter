@@ -31,6 +31,11 @@ int main() {
 
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
+
+    cout << "--------Get Random Node -------" << endl;
+    Node * random_node = T.getRandomNode();
+    cout << random_node->toString() << endl;
+
     cout << "--- Remove rightmost subtree of root ---" << endl;
 
     Node * r = T.getRandomNode();
@@ -63,7 +68,6 @@ int main() {
 
     T.insertSubtree(t, r, true);
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-
 
 
 	return 0;
