@@ -65,12 +65,13 @@ int Adj_list::removeUndirectedEdge(int from, int to){
  * Search for an element (TODO: in a sorted list)
  */
 bool Adj_list::isConnected(int current, int target){
-    /* Linear search for element */
+    /* Linear search for element *
      bool existsConnection = false;
      existsConnection = find(adjacency_list[current].begin(),
                             adjacency_list[current].end(),target) != adjacency_list[current].end();
     return existsConnection;
-    /* .. *
+    /* .. */
+    cout << "current: " << current << " , target: " << target << endl;
     //Binary search for element
     return binary_search(adjacency_list[current].begin(),
                          adjacency_list[current].end(), target);

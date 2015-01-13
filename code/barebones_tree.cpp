@@ -97,7 +97,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
     /*
      * For each leaf node, correct the leaf ID, so it correspond to the data ID
      *  each internal node is assigned a unique negative number.
-     *
+     */
     int new_id =-1;
     root.setLeafId(new_id);
 
