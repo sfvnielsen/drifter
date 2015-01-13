@@ -19,7 +19,7 @@
 
 class Tree {
 private:
-    Node root;
+    Node * root;
     std::list<Node> nodes;
     std::list<int> leaves;
     std::list<std::pair<int,int>> graph;
