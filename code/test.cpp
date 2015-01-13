@@ -126,8 +126,9 @@ int main()
 
 
             // Perform tests - evaluate likelihood of tree
-            cout << "Local-Likelihood test...";
-            double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
+            cout << "Local-Likelihood test..." << endl << flush ;
+
+            double llike_test = 0.0;//test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
 
 
             if (abs(llike_test-llike_true)<epsilon)

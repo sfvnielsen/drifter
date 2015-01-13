@@ -80,4 +80,16 @@ bool Adj_list::isConnected(int current, int target){
     return existsConnection;
 };
 
+string Adj_list::toString(){
+    string s = "adj:\n";
+    for(vector<list<int>>::size_type i = 0; i != adjacency_list.size(); i++) {
+    /* std::cout << someVector[i]; ... */
+    s += to_string(i) + ":";
+        for (auto snd = adjacency_list[i].begin(); snd != adjacency_list[i].end(); snd++){
+            s += "  ("+to_string(i)+","+to_string(*snd)+")\n";
+        }
+    }
+    return s;
+}
+
 

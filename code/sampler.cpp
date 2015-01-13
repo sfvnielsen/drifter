@@ -16,12 +16,12 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int 
 /**
 *Initialize with tree based on data, tree and data-tree relation
 */
-Sampler::Sampler(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
-                 list<pair<int,int>> data_leaf_relation, double alpha, double beta, int rho_plus, int rho_minus):
-                                                          alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
-    Tree T = Tree(data_graph,tree_struct_graph,data_leaf_relation);
-    chain.push_back(T);
-}
+//Sampler::Sampler(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
+//                 list<pair<int,int>> data_leaf_relation, double alpha, double beta, int rho_plus, int rho_minus):
+//                                                          alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
+//    Tree T = Tree(data_graph,tree_struct_graph,data_leaf_relation);
+//    chain.push_back(T);
+//}
 
 
 Sampler::~Sampler()

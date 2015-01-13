@@ -158,7 +158,8 @@ Tree Tree::regraft(){
 }
 
 string Tree::toString(){
-    return root.toString();
+    string sAdj = A.toString();
+    return root.toString() +sAdj ;
 }
 
 

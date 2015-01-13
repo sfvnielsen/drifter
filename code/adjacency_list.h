@@ -26,10 +26,7 @@
 class Adj_list {
 
 public:
-
 //    std::vector<std::vector<neighbor> > adjacency_list;
-
-
     Adj_list();
     Adj_list(int,std::list<std::pair<int,int>>);
     int addDirectedEdge(int, int);
@@ -38,6 +35,7 @@ public:
     int removeUndirectedEdge(int, int);
     bool isConnected(int, int);
 
+    std::string toString();
 
 private:
     std::vector<std::list<int>> adjacency_list;
