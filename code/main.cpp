@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "barebones_tree.h"
+#include "sampler.h"
 using namespace std;
 
 int main() {
@@ -64,6 +65,10 @@ int main() {
     T.insertSubtree(t, r, true);
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
+    cout << "--- Using the sampler object---" << endl;
+    Sampler S = Sampler(T,0.5, 0.5, 1, 1);
+
+    cout << "L:" << S.getLastLikelihood() << endl;
 
 
 	return 0;
