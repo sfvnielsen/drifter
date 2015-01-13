@@ -33,6 +33,7 @@ public:
 
 	Node * getParent();
 	int getNumInternalNodes();
+    int updateNumInternalNodes();
 	int getNumEdges();
 	int getNumPossibleEdges();
 

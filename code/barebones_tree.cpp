@@ -27,7 +27,7 @@ Tree::Tree(list<pair<int,int>> data_graph) {
     leaves.sort();
     leaves.unique();
 
-    int N = leaves.size();
+    int N = (int) leaves.size();
     A = Adj_list(N,data_graph);
 
     root = Node(&A);
@@ -66,7 +66,8 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
     nodes.push_back(new_child);
     root.addChild(&(nodes.back()));
-
+    
+    //Insert parrent-->child relations for the rest
     while (!tree_struct_graph.empty()) {
         //Get next relation parrent --> child
         element = tree_struct_graph.front();
@@ -87,6 +88,11 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         cout << "First: " << element.first << " Second: " << element.second << endl; // DEBUG
 
     }
+    
+    root.updateNumInternalNodes();
+    cout << "Num of internal nodes incl. root: " << root.getNumInternalNodes() << endl;
+    
+    
     // 1.1:
         //Update leaf info
         //Update internal and count?
@@ -183,4 +189,36 @@ double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, 
     return this->root.evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
 }
 
+Node * Tree::getRandomNode(){
+    return root.getChildren().back();
+}
 
+void Tree::cutSubtree(Node * scionP){
+    Node * parentP = scionP->getParent();
+    parentP->removeChild(scionP);
+    scionP->setParent(nullptr);
+}
+
+Node * Tree::getRoot(){
+    return &root;
+}
+
+void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
+    if(asChild){
+        stockP->addChild(scionP);
+    }else{
+        // cut the stock
+        Node * parent = stockP->getParent();
+        parent -> removeChild(stockP);
+
+        // add a new parent
+        nodes.push_back(Node());
+        Node * new_parent = &(nodes.back());
+        parent->addChild(new_parent);
+
+        // add graft both stock and scion to the new parent
+        new_parent->addChild(stockP);
+        new_parent->addChild(scionP);
+
+    }
+}
