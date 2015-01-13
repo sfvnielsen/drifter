@@ -28,7 +28,6 @@ Adj_list::Adj_list(int N, std::list<std::pair<int,int>> edge_list){
     for (auto it = adjacency_list.begin(); it != adjacency_list.end(); it++) {
         sort(it->begin(),it->end());
     }
-    cout << this->toString() << endl;
 
 };
 /*
