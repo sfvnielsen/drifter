@@ -67,6 +67,16 @@ void Node::setParent(Node * new_parent) {
     parent = new_parent;
 }
 
+int Node::getLeafId(){
+    return leafId;
+}
+void Node::setLeafId(int new_id){
+    leafId = new_id;
+}
+
+/**
+* Adds child..
+*/
 void Node::addChild(Node * childP) {
     // Add a child by:
     //  - Setting the childs parent pointer.
@@ -87,7 +97,6 @@ string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
 
     list<int> leaves = this->getLeaves();
-
     string s = "leaves: (";
     if(!leaves.empty()) {
         for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++) {
@@ -95,6 +104,7 @@ string Node::toString() {
         }
     }
     s += ")\n";
+
     // -- Recurse into children to print the entire subtree.
     // s += "number of children: " + to_string(children.size()) + "\n";
     if(!children.empty()) {
@@ -106,11 +116,35 @@ string Node::toString() {
     return s ;
 }
 
+/**
+* Samples random node from subtree rooted at this node
+* - chooses internal nodes with weight 2 and leaves with weight 1
+*/
+//Node * Node::getRandomDescendant() { // OBS! NOT DONE!!!!
+//    if (isInternal){
+//        list<Node *> list_children = this->getChildren();
+//        int num_children = (int)(this->getChildren().size());
+//        list<double> p_vals(num_children+1,0);
+//        double p_choose_root = 2.0/(2*this->getNumInternalNodes()
+//                                +(int)this->getChildren().size());
+//
+//        list<Node *>::iterator it = list_children.begin();
+//        for (it; it!=list_children.end(); ++it) {
+//                sampled_node = this->getRandomDescendant();
+//            return
+//
+//        }
+//            double u = (double)rand() / RAND_MAX;
+//        }
+//    } else { // if we are at leaf node choose that
+//        return this;
+//    }
+//}
 
 /**
  * Get counts of links and non-links between the pair of children
  */
-tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
+pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
     list<int> LA = childAP->getLeaves();
     list<int> LB = childBP->getLeaves();
@@ -131,7 +165,7 @@ tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
         }
     }
 
-    tuple<int, int> result (nLinks,nPossible);
+    pair<int, int> result (nLinks,nPossible);
 
     return result;
 }
@@ -140,8 +174,8 @@ tuple<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 /**
  * Get counts of links and non-links between all pairs of children
  */
-list<tuple<int, int>> Node::getCountsAll() {
-    list<tuple<int, int>> result;
+list<pair<int, int>> Node::getCountsAll() {
+    list<pair<int, int>> result;
     // Loop through each child
     for (list<Node *>::iterator fst = children.begin(); fst != children.end(); fst++) {
         // iterator for the next child
@@ -184,14 +218,14 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
     double log_like = 0;
     double log_prior = 0;
 
-    list<tuple<int,int>> allCountPairs = this->getCountsAll();
+    list<pair<int,int>> allCountPairs = this->getCountsAll();
     int num_links, num_pos_links; // number of links and possible links
 
     // Likelihood contribution
-    for (list<tuple<int,int>>::iterator it = allCountPairs.begin();
+    for (list<pair<int,int>>::iterator it = allCountPairs.begin();
          it!=allCountPairs.end(); ++it) {
-            num_links = get<0>(*it);
-            num_pos_links = get<1>(*it);
+            num_links = it->first;
+            num_pos_links = it->second;
             log_like += logbeta(num_links+rho_plus,
                         num_pos_links-num_links+rho_minus)-
                         logbeta(rho_plus,rho_minus);

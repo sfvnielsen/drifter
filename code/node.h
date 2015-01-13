@@ -6,7 +6,6 @@
  */
 
 #include <list>
-#include <tuple>
 #include <cmath>
 
 #include "adjacency_list.h"
@@ -22,8 +21,10 @@ public:
 
     bool isDescendant(Node *);
     void setParent(Node *);
-    std::list<std::tuple<int,int>> getCountsAll();
-    std::tuple<int,int> getCountsPair(Node *, Node *);
+    int getLeafId();
+    void setLeafId(int);
+    std::list<std::pair<int,int>> getCountsAll();
+    std::pair<int,int> getCountsPair(Node *, Node *);
     std::list<int> getLeaves();
     std::list<Node *> getChildren();
     void addChild(Node *);
@@ -35,6 +36,7 @@ public:
 	int getNumEdges();
 	int getNumPossibleEdges();
 
+    Node * getRandomDescendant();
     std::string toString();
 
     double evaluateNodeLogLike(double,double,int,int);

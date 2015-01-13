@@ -15,12 +15,12 @@ using namespace std;
 /**
  * Construct flat tree
  */
-Tree::Tree(list<tuple<int,int>> data_graph) {
+Tree::Tree(list<pair<int,int>> data_graph) {
 
     // insert all the indexes from the edge list into leaves
-	for (list<tuple<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
-        leaves.push_back(get<0>(*it));
-        leaves.push_back(get<1>(*it));
+	for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
+        leaves.push_back(it->first);
+        leaves.push_back(it->second);
     }
 
     // Find only the unique elements
@@ -43,11 +43,56 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
     }
 }
 
-//Add constructer Tree(input_graph, arbitrary tree structure)
-//Tree::Tree(list<tuple<int,int>> data_graph, list<tuple<int,int>> tree_struct_graph
- //          list<tuple<int,int>> data_leaf_relation) {
-    // - Construct tree from tree_struct_graph
+/**
+* Special test constructor
+* (First element in tree_struct_graph must contain root)
+*/
+Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
+           list<pair<int,int>> data_leaf_relation) {
+
     // - Construct adj list from data_graph
+    int N = (int) data_leaf_relation.size();
+    Adj_list adjacent = Adj_list(N, data_graph);
+
+    // 1.0 Construct the tree from tree_struct_graph
+    //Get first relation parrent --> child, assumption the root is first
+    pair<int,int> element = tree_struct_graph.front();
+    tree_struct_graph.pop_front();
+
+    root = Node(& adjacent,element.first); //set root node
+    //Add the first node as a child
+    Node new_child = Node(&adjacent,element.second);
+    //new_child.setParent(&root);
+
+    nodes.push_back(new_child);
+    root.addChild(&(nodes.back()));
+
+    while (!tree_struct_graph.empty()) {
+        //Get next relation parrent --> child
+        element = tree_struct_graph.front();
+        tree_struct_graph.pop_front();
+
+        Node * parent = this->getNode(element.first);
+        cout << "Is null?: " << (parent == nullptr) << endl; // DEBUG
+        cout << "Found node: " << parent->getLeafId() << endl; // DEBUG
+        new_child = Node(& adjacent,element.second);
+        //new_child.setParent(parent);
+        Node* existing_nodeP = this->getNode(element.second);
+        if (existing_nodeP==nullptr) {
+            nodes.push_back(new_child);
+            parent->addChild(& (nodes.back()));
+        } else{
+            parent->addChild(existing_nodeP);
+        }
+        cout << "First: " << element.first << " Second: " << element.second << endl; // DEBUG
+
+    }
+    // 1.1:
+        //Update leaf info
+        //Update internal and count?
+
+
+
     // - Leaves should know what node in the data_graph
 
     // Tree structure -
@@ -62,16 +107,56 @@ Tree::Tree(list<tuple<int,int>> data_graph) {
 	// - Loop over "relation-list" ??
 
 
+
     // Adjacency list
     //int N = ??
     //A = Adj_list(N,data_graph);
+}
+/**
+ * Finds a specific node (characterized by an id) and
+ * returns a pointer to this node
+ * (Basic implementation!)
+ */
+Node * Tree::getNode(int leaf_id){
+    //Iterates over all internal and leaf nodes
+    if (leaf_id == 0) { // is root?
+        return &(this->root);
+    }
+    cout << "getNode::: Size of nodes: "<<nodes.size() << endl;
+    for(list<Node>::iterator it = nodes.begin();
+        it != nodes.end(); it++){
+
+        if (it->getLeafId() == leaf_id) {
+            return &(* it);
+        }
+
+    }
 
 
-//}
+/*    while (first!=last) {
+        if (*first==val) return first;
+        ++first;
+    }
+    return last;*/
 
-list<tuple<int, int>> Tree::getCountsAll(){
+    cout << "getNode: Found nothing" << endl; // DEBUG!!!
+    return nullptr;
+}
+
+list<pair<int, int>> Tree::getCountsAll(){
     return root.getCountsAll();
 }
+
+
+/**
+* Get random node in tree (recursive operation)
+* - Chooses internal nodes with weight 2 and leaves with weight 1
+* - calls getRandomChild from node-class
+*/
+
+//Node * Tree::getRandomNode() {
+//    return root->getRandomDescendant();
+//}
 
 /**
  *

@@ -17,13 +17,13 @@ Adj_list::Adj_list(){}
  * N size of leaves
  *
  */
-Adj_list::Adj_list(int N, std::list<std::tuple<int,int>> edge_list){
+Adj_list::Adj_list(int N, std::list<std::pair<int,int>> edge_list){
     //adjacency_list (N, vector<neighbor>(N));
     adjacency_list = vector<list<int>>(N, list<int>());
 
-    for (list<tuple<int,int>>::iterator it = edge_list.begin();
+    for (list<pair<int,int>>::iterator it = edge_list.begin();
          it != edge_list.end(); it++){
-            addUndirectedEdge(get<0>(*it), get<1>(*it));
+            addUndirectedEdge(it->first, it->second);
     }
 
 };

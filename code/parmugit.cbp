@@ -54,10 +54,7 @@
 		</Compiler>
 		<Unit filename="adjacency_list.cpp" />
 		<Unit filename="adjacency_list.h" />
-		<Unit filename="barebones_tree.cpp">
-			<Option target="Debug" />
-			<Option target="Release" />
-		</Unit>
+		<Unit filename="barebones_tree.cpp" />
 		<Unit filename="barebones_tree.h" />
 		<Unit filename="main.cpp">
 			<Option target="Debug" />
