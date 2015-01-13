@@ -59,4 +59,6 @@ double logbeta(double,double);
 double lgamma_ratio(double, double);
 double log_diff(double a, double b);
 
+Node * multinomialSampling(std::list<Node *>, std::list<double>);
+
 #endif /* NODE_H_ */

@@ -31,5 +31,9 @@ int main() {
 
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
+    cout << "--------Get Random Node -------" << endl;
+    Node * random_node = T.getRandomNode();
+    cout << random_node->toString() << endl;
+
 	return 0;
 }

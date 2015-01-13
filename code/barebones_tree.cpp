@@ -154,9 +154,9 @@ list<pair<int, int>> Tree::getCountsAll(){
 * - calls getRandomChild from node-class
 */
 
-//Node * Tree::getRandomNode() {
-//    return root->getRandomDescendant();
-//}
+Node * Tree::getRandomNode() {
+    return root.getRandomDescendant();
+}
 
 /**
  *
