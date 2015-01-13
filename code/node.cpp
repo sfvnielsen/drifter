@@ -270,8 +270,8 @@ double log_diff(double a, double b) {
 */
 double Node::evaluateNodeLogLike(double alpha, double beta,
                                  int rho_plus, int rho_minus) {
-    double log_like = 0;
-    double log_prior = 0;
+    double log_like = 0.0;
+    double log_prior = 0.0;
 
     list<pair<int,int>> allCountPairs = this->getCountsAll();
     int num_links, num_pos_links; // number of links and possible links
@@ -310,7 +310,7 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                 -log_diff(lgamma_ratio(num_leaves_total,beta),
                 lgamma_ratio(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
-    cout << "Like: " << log_like << "  Prior: " << log_prior << endl;
+    // cout << "Like: " << log_like << "  Prior: " << log_prior << endl;
     return log_like+log_prior;
 };
 
@@ -320,7 +320,7 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 */
 double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
                               , int rho_minus){
-    double log_like = 0;
+    double log_like = 0.0;
 
     if (this->isInternal) {
         // First add this nodes contribution
@@ -333,7 +333,7 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
             log_like += (*it)->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
         }
     } else {
-        log_like = 0;
+        log_like = 0.0;
     }
     return log_like;
 }
