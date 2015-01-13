@@ -43,7 +43,10 @@ Tree::Tree(list<pair<int,int>> data_graph) {
     }
 }
 
-//Add constructer Tree(input_graph, arbitrary tree structure)
+/**
+* Special test constructor
+* (First element in tree_struct_graph must contain root)
+*/
 Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
            list<pair<int,int>> data_leaf_relation) {
 
@@ -58,10 +61,11 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
     root = Node(& adjacent,element.first); //set root node
     //Add the first node as a child
-    Node new_child = Node(& adjacent,element.second);
-    new_child.setParent(& root);
-    root.addChild(& new_child);
+    Node new_child = Node(&adjacent,element.second);
+    //new_child.setParent(&root);
+
     nodes.push_back(new_child);
+    root.addChild(&(nodes.back()));
 
     while (!tree_struct_graph.empty()) {
         //Get next relation parrent --> child
@@ -69,15 +73,19 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         tree_struct_graph.pop_front();
 
         Node * parent = this->getNode(element.first);
-        cout << "Is null?: " << (parent == nullptr) << endl;
-        cout << "Found node: " << parent->getLeafId() << endl;
+        cout << "Is null?: " << (parent == nullptr) << endl; // DEBUG
+        cout << "Found node: " << parent->getLeafId() << endl; // DEBUG
         new_child = Node(& adjacent,element.second);
-        new_child.setParent(parent);
-        if (this->getNode(element.second)==nullptr) {
+        //new_child.setParent(parent);
+        Node* existing_nodeP = this->getNode(element.second);
+        if (existing_nodeP==nullptr) {
             nodes.push_back(new_child);
+            parent->addChild(& (nodes.back()));
+        } else{
+            parent->addChild(existing_nodeP);
         }
-        cout << "First: " << element.first << " Second: " << element.second << endl;
-        parent->addChild(& new_child);
+        cout << "First: " << element.first << " Second: " << element.second << endl; // DEBUG
+
     }
     // 1.1:
         //Update leaf info
@@ -105,7 +113,8 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
     //A = Adj_list(N,data_graph);
 }
 /**
- * Finds a specific node and returns a pointer to this node
+ * Finds a specific node (characterized by an id) and
+ * returns a pointer to this node
  * (Basic implementation!)
  */
 Node * Tree::getNode(int leaf_id){

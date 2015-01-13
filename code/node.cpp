@@ -74,7 +74,9 @@ void Node::setLeafId(int new_id){
     leafId = new_id;
 }
 
-
+/**
+* Adds child..
+*/
 void Node::addChild(Node * childP) {
     // Add a child by:
     //  - Setting the childs parent pointer.
@@ -95,7 +97,6 @@ string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
 
     list<int> leaves = this->getLeaves();
-
     string s = "leaves: (";
     if(!leaves.empty()) {
         for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++) {
@@ -103,6 +104,7 @@ string Node::toString() {
         }
     }
     s += ")\n";
+
     // -- Recurse into children to print the entire subtree.
     // s += "number of children: " + to_string(children.size()) + "\n";
     if(!children.empty()) {

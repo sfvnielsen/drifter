@@ -118,7 +118,7 @@ int main()
 
             //TODO: Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data);
-            //test_tree.toString();
+            cout << test_tree.toString() << endl;
 
             //TODO: Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test...";
