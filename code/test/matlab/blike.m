@@ -2,7 +2,7 @@ function L = blike(T, I, A, rho_plus, rho_minus, beta, alpha)
 % TLIKE Compute tree likelihood using Bernoulli-Beta distributions
 % 
 % Usage:
-%   L = tlike(T, I, A);
+%   L = blike(T, I, A,rho_plus,rho_minus,beta,alpha);
 %
 % Arguments
 %   T : Tree structure: Vector of parent indices for each node (root=0)
@@ -91,4 +91,6 @@ for l = find(nchildren>0)
 end
 
 % --- Posterior cx Likelihood x Prior --- 
+Ll
+Lp
 L = Ll + Lp;

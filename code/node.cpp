@@ -310,6 +310,7 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                 -log_diff(lgamma_ratio(num_leaves_total,beta),
                 lgamma_ratio(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
+    cout << "Like: " << log_like << "  Prior: " << log_prior << endl;
     return log_like+log_prior;
 };
 
