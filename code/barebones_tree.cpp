@@ -52,10 +52,10 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
            vector<int> data_leaf_relation) {
 
     // - Construct adj list from data_graph
-    int N = (int) data_leaf_relation.size();
+    int N = ((int) data_leaf_relation.size())/2; //Number of leaves in graph
     A = Adj_list(N, data_graph);
 
-    // 1.0 Construct the tree from tree_struct_graph
+    // - Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
     pair<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front();
@@ -77,10 +77,10 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         Node * parent = this->getNode(element.first);
 //        cout << "Is null?: " << (parent == nullptr) << endl; // DEBUG
 //        cout << "Found node: " << parent->getLeafId() << endl; // DEBUG
-        new_child = Node(& A,element.second);
 
         Node* existing_nodeP = this->getNode(element.second);
         if (existing_nodeP==nullptr) {
+            new_child = Node(& A,element.second);
             nodes.push_back(new_child);
             parent->addChild(& (nodes.back()));
         } else{
@@ -97,7 +97,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
     /*
      * For each leaf node, correct the leaf ID, so it correspond to the data ID
      *  each internal node is assigned a unique negative number.
-     */
+     *
     int new_id =-1;
     root.setLeafId(new_id);
 
@@ -111,7 +111,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
             int fake_id = it->getLeafId();
             it->setLeafId(data_leaf_relation[fake_id]);
         }
-    }
+    }/* .. */
 
 }
 /**
@@ -121,7 +121,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
  */
 Node * Tree::getNode(int leaf_id){
     //Iterates over all internal and leaf nodes
-    if (leaf_id == 0) { // is root?
+    if (leaf_id == root.getLeafId()) { // is root?
         return &(this->root);
     }
     for(list<Node>::iterator it = nodes.begin();

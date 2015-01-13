@@ -107,8 +107,8 @@ int Node::getNumInternalNodes(){
 int Node::updateNumInternalNodes() {
     int num_internal_below = 0;
     //If the node has children recurse
-    if (!this->children.empty()){
-        for (auto it = this->children.begin(); it != this->children.end(); it++){
+    if (!children.empty()){ //Then it is an internal node
+        for (auto it = children.begin(); it != children.end(); it++){
             num_internal_below += (*it)->updateNumInternalNodes();
         }
         num_internal_nodes = num_internal_below+1; //Current node is also internal
