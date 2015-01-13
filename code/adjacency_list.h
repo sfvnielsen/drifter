@@ -38,7 +38,7 @@ public:
     std::string toString();
 
 private:
-    std::vector<std::list<int>> adjacency_list;
+    std::vector<std::vector<int>> adjacency_list;
 };
 
 

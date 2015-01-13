@@ -154,7 +154,15 @@ Node * Tree::getRandomNode() {
  *
  */
 Tree Tree::regraft(){
-    return *this;
+    Tree new_Tree = *this;
+// TODO: finish the regrafting
+//    Node * scion = new_Tree.getRandomNode();
+//    new_Tree.cutSubtree(scion);
+//
+//    Node * stock = new_Tree.getRandomNode();
+//    new_Tree.insertSubtree(stock, scion, true);
+
+    return new_Tree;
 }
 
 string Tree::toString(){

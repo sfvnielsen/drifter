@@ -7,7 +7,8 @@
 //
 
 #include "adjacency_list.h"
-
+#include <iostream>
+#include <algorithm> //std::binary_search, std::sort
 
 using namespace std;
 
@@ -18,13 +19,16 @@ Adj_list::Adj_list(){}
  *
  */
 Adj_list::Adj_list(int N, std::list<std::pair<int,int>> edge_list){
-    //adjacency_list (N, vector<neighbor>(N));
-    adjacency_list = vector<list<int>>(N, list<int>());
+    adjacency_list = vector<vector<int>>(N);
 
     for (list<pair<int,int>>::iterator it = edge_list.begin();
          it != edge_list.end(); it++){
             addUndirectedEdge(it->first, it->second);
     }
+    for (auto it = adjacency_list.begin(); it != adjacency_list.end(); it++) {
+        sort(it->begin(),it->end());
+    }
+    cout << this->toString() << endl;
 
 };
 /*
@@ -62,22 +66,16 @@ int Adj_list::removeUndirectedEdge(int from, int to){
  * Search for an element (TODO: in a sorted list)
  */
 bool Adj_list::isConnected(int current, int target){
-    bool existsConnection = false;
-//    for (vector<neighbor>::iterator it = adjacency_list[current].begin();
-//         it != adjacency_list[current].end(); it++) {
-//        //See if the current element matches the target
-//        //(i.e. there is an edge)
-//        if ((it->id) == target) {
-//            existsConnection = true;
-//            break;
-//        }
-//    }
-
-    list<int> L =  adjacency_list[current];
-
-    existsConnection = find(L.begin(),L.end(),target) != L.end();
-
+    /* Linear search for element
+     bool existsConnection = false;
+     existsConnection = find(adjacency_list[current].begin(),
+                            adjacency_list[current].end(),target) != adjacency_list[current].end();
     return existsConnection;
+    */
+    //Binary search for element
+    return binary_search(adjacency_list[current].begin(),
+                         adjacency_list[current].end(), target);
+
 };
 
 string Adj_list::toString(){
