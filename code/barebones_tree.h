@@ -32,7 +32,7 @@ public:
 	// Tree(something); // some other constructor?
 	Tree(std::list<std::pair<int,int>>); // make the naive tree building in the adjacency matrix.
     Tree(std::list<std::pair<int,int>>, std::list<std::pair<int,int>>
-         ,std::list<std::pair<int,int>>); // Builds tree based on data, tree and data-tree relation
+         ,std::vector<int>); // Builds tree based on data, tree and data-tree relation
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();
 	Node * getRoot();
