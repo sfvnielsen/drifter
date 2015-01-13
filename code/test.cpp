@@ -19,7 +19,7 @@ int main()
 {
     cout << "!!!Hello Test-World!!!" << endl;
     // Tolerance on likelihood result
-    double epsilon = 1e-12;
+    double epsilon = 1e-4;
 
     string dir_str =  "test/test_files/";
     // For each test file in test_files directory
@@ -122,7 +122,7 @@ int main()
 
             //Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_da);
-            cout << test_tree.toString() << endl;
+            //cout << test_tree.toString() << endl;
 
 
             // Perform tests - evaluate likelihood of tree
@@ -152,11 +152,6 @@ int main()
                 llike_all_n4.push_back(llike_test);
                 llike_all_n4_true.push_back(llike_true);
             }
-            else
-            {
-                cout << "This number of data nodes is not in stock..." << endl;
-            }
-
             number_files_read++;
         }
         closedir (dir);
