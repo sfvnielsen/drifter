@@ -28,13 +28,13 @@ int main() {
     pair<int,int> g5 (2,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
 
-    // tree
+    // tree - (binary )
     pair<int,int> t1 (0,1);
     pair<int,int> t2 (0,2);
     pair<int,int> t3 (1,3);
     pair<int,int> t4 (1,4);
-    pair<int,int> t5 (1,5);
-    pair<int,int> t6 (1,6);
+    pair<int,int> t5 (2,5);
+    pair<int,int> t6 (2,6);
     list<pair<int,int>> tree_edge_list = {t1,t2,t3,t4,t5,t6};
 
     // data-leaf relation - convention
