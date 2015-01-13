@@ -69,13 +69,25 @@ bool Adj_list::isConnected(int current, int target){
      bool existsConnection = false;
      existsConnection = find(adjacency_list[current].begin(),
                             adjacency_list[current].end(),target) != adjacency_list[current].end();
-    return existsConnection;
-    /* .. */
-    cout << "current: " << current << " , target: " << target << endl;
-    //Binary search for element
-    return binary_search(adjacency_list[current].begin(),
-                         adjacency_list[current].end(), target);
-    /* .. */
+     return existsConnection;
+     */
+
+
+    try {
+        //Binary search for element
+        return binary_search(adjacency_list[current].begin(),
+                             adjacency_list[current].end(), target);
+    // If something goes wrong, tell why, an make sure that the input given were valid
+    } catch (exception e) {
+        if (current < 0 || current > (int) adjacency_list.size()-1 ||
+            target < 0 || target > (int) adjacency_list.size()-1) {
+            cout << "ERROR: Trying to look up element beyond adjacency list " << endl;
+            cout << "current: " << current << " , target: " << target <<
+            " : adj_list_size: " << (int) adjacency_list.size() << endl;
+        }
+        throw e;
+    }
+    
 };
 
 string Adj_list::toString(){
