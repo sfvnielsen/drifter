@@ -63,7 +63,6 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
     root = Node(& A,element.first); //set root node
     //Add the first node as a child
     Node new_child = Node(&A,element.second);
-    //new_child.setParent(&root);
 
     nodes.push_back(new_child);
     root.addChild(&(nodes.back()));
@@ -75,24 +74,22 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         tree_struct_graph.pop_front();
 
         Node * parent = this->getNode(element.first);
-//        cout << "Is null?: " << (parent == nullptr) << endl; // DEBUG
-//        cout << "Found node: " << parent->getLeafId() << endl; // DEBUG
-
+        
+        //Check if the child node is already created,
+        //  then it is a nullptr if it does not exist
         Node* existing_nodeP = this->getNode(element.second);
         if (existing_nodeP==nullptr) {
             new_child = Node(& A,element.second);
             nodes.push_back(new_child);
             parent->addChild(& (nodes.back()));
-        } else{
+        } else{ //Exists, and we just need to add a pointer to its child
             parent->addChild(existing_nodeP);
         }
-//        cout << "First: " << element.first << " Second: " << element.second << endl; // DEBUG
 
     }
 
     //Updates internal count.
     root.updateNumInternalNodes();
-
 
     /*
      * For each leaf node, correct the leaf ID, so it correspond to the data ID
@@ -111,7 +108,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
             int fake_id = it->getLeafId();
             it->setLeafId(data_leaf_relation[fake_id]);
         }
-    }/* .. */
+    }
 
 }
 /**
