@@ -53,16 +53,16 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
     // - Construct adj list from data_graph
     int N = (int) data_leaf_relation.size();
-    Adj_list adjacent = Adj_list(N, data_graph);
+    A = Adj_list(N, data_graph);
 
     // 1.0 Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
     pair<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front();
 
-    root = Node(& adjacent,element.first); //set root node
+    root = Node(& A,element.first); //set root node
     //Add the first node as a child
-    Node new_child = Node(&adjacent,element.second);
+    Node new_child = Node(&A,element.second);
     //new_child.setParent(&root);
 
     nodes.push_back(new_child);
@@ -77,7 +77,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         Node * parent = this->getNode(element.first);
 //        cout << "Is null?: " << (parent == nullptr) << endl; // DEBUG
 //        cout << "Found node: " << parent->getLeafId() << endl; // DEBUG
-        new_child = Node(& adjacent,element.second);
+        new_child = Node(& A,element.second);
 
         Node* existing_nodeP = this->getNode(element.second);
         if (existing_nodeP==nullptr) {
