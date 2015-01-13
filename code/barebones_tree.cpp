@@ -41,6 +41,7 @@ Tree::Tree(list<pair<int,int>> data_graph) {
         nodes.push_back(Node(&A,*it));
         root.addChild(&(nodes.back()));
     }
+    root.updateNumInternalNodes();
 }
 
 /**
@@ -66,7 +67,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
     nodes.push_back(new_child);
     root.addChild(&(nodes.back()));
-    
+
     //Insert parrent-->child relations for the rest
     while (!tree_struct_graph.empty()) {
         //Get next relation parrent --> child
@@ -88,11 +89,11 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         cout << "First: " << element.first << " Second: " << element.second << endl; // DEBUG
 
     }
-    
+
     root.updateNumInternalNodes();
     cout << "Num of internal nodes incl. root: " << root.getNumInternalNodes() << endl;
-    
-    
+
+
     // 1.1:
         //Update leaf info
         //Update internal and count?
@@ -187,10 +188,6 @@ double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, 
 //
 //    return root_node_contribution + root_subtree_contribution;
     return this->root.evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
-}
-
-Node * Tree::getRandomNode(){
-    return root.getChildren().back();
 }
 
 void Tree::cutSubtree(Node * scionP){

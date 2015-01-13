@@ -118,11 +118,11 @@ int main()
 
             //TODO: Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data);
-            cout << test_tree.toString() << endl;
+            //cout << test_tree.toString() << endl;
 
             //TODO: Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test...";
-            double llike_test = -2.3; // TEMP
+            double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
 
             // SOMETHING like test_tree.evaluateLikelihood();
 

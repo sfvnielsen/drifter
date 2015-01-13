@@ -10,6 +10,7 @@
 #include <iostream> // should be removed at some point
 #include <numeric> // lets us use cumulative sum
 #include <cassert> // for assert statements
+
 using namespace std;
 
 /////////////////////////
@@ -153,24 +154,23 @@ Node * Node::getRandomDescendant() {
         list<Node *> node_list = this->getChildren();
         list<int> subtree_weight;
         for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
-            // Each subtree has weight according to two times the number of
-            // internal nodes plus the number of leaves
-            subtree_weight.push_back(2*(it->getNumInternalNodes())+
-                                     (int)(it->getLeaves().size()) );
-        }
+        // Each subtree has weight according to two times the number of
+        // internal nodes plus the number of leaves
+            subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
+                                 (int)((*it)->getLeaves().size()) );
 
+        }
         // DEBUGGING CHECK SUM! ---
         int sum_weight = (int)(this->getLeaves().size())
                           +2*this->getNumInternalNodes();
         int subtree_sum = 2;
-        accumulate(subtree_weight.begin(),subtree_weight.end(),subtree_sum);
+        subtree_sum = accumulate(subtree_weight.begin(),subtree_weight.end(),subtree_sum);
         assert(subtree_sum == sum_weight);
         // -------
 
         list<double> p_vals; // probability vector for each node + root
         for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
             p_vals.push_back((double)*it/sum_weight);
-
         }
 
         p_vals.push_back((double)2/sum_weight); // root probability
@@ -179,7 +179,7 @@ Node * Node::getRandomDescendant() {
 
         // DEBUGGING CHECK!! -------
         double p_val_sum = 0;
-        accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
+        p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
         assert(abs(p_val_sum-1.0)<1e-12);
         // -------
 
@@ -266,7 +266,7 @@ double log_diff(double a, double b) {
 }
 
 /**
-* Evaluate nodes contribution to likelihood - NOT TESTED!
+* Evaluate nodes contribution to likelihood
 */
 double Node::evaluateNodeLogLike(double alpha, double beta,
                                  int rho_plus, int rho_minus) {
@@ -344,17 +344,18 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
 
 Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
     list<double> cumulative_sum(p_vals.size(),0);
-    list<double>::iterator it = partial_sum( // returns iterator to cumlulative.begin()
-                                p_vals.begin(),p_vals.end(),cumulative_sum);
+    partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
 
-    assert(abs(*cumulative_sum.back()-1.0 < 1e-12)); // check that p_vals is valid
+    assert(abs(cumulative_sum.back()-1.0 < 1e-12)); // check that p_vals is valid
     assert(node_list.size() == p_vals.size());
     list<Node *>::iterator it_result = node_list.begin();
+    Node * result;
     double u = (double)rand()/RAND_MAX; // uniform [0,1] random number
-    for (it; it!=cumulative_sum; ++it) { //TODO:!!!  Turn into while loop !! A GULL!?!?
+    cout << "Random number generated: " << u << endl;
+    for (auto it = cumulative_sum.begin(); it!=cumulative_sum.end(); ++it) { //TODO:!!!  Turn into while loop !! A GULL!?!?
     // finds cumlative interval (correspondng to node a node)
     // in which random number belongs
-        if(u>it*) {
+        if(u>*it) {
             it_result++;
         } else{
             result = *it_result;
