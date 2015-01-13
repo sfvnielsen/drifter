@@ -345,23 +345,20 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
 
 Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
     list<double> cumulative_sum(p_vals.size(),0);
+    // finding cumulative sum (partial sum) of p_vals
     partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
-
+    // asserts..
     assert(abs(cumulative_sum.back()-1.0 < 1e-12)); // check that p_vals is valid
     assert(node_list.size() == p_vals.size());
+
     list<Node *>::iterator it_result = node_list.begin();
-    Node * result;
+    list<double>::iterator it = cumulative_sum.begin();
     double u = (double)rand()/RAND_MAX; // uniform [0,1] random number
-    cout << "Random number generated: " << u << endl;
-    for (auto it = cumulative_sum.begin(); it!=cumulative_sum.end(); ++it) { //TODO:!!!  Turn into while loop !! A GULL!?!?
-    // finds cumlative interval (correspondng to node a node)
-    // in which random number belongs
-        if(u>*it) {
-            it_result++;
-        } else{
-            result = *it_result;
-            break;
-        }
+
+    while (u>*it) { // finds interval (node) that u corresponds to
+                    // i.e. the first time u is smaller than the cumulative element
+        it_result++;
+        it++;
     }
-    return result;
+    return *it_result;
 }

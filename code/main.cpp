@@ -55,6 +55,11 @@ int main() {
     cout << "--- Likelihood ---" << endl;
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
+
+    cout << "--- Get Random Node ---- " << endl;
+    Node * random_node = T.getRandomNode();
+    cout << random_node->toString();
+
     cout << "--- New Tree ---" << endl;
 
     Tree T2 = T.regraft();
