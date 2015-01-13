@@ -41,9 +41,9 @@ int main() {
     // data-leaf relation - convention
     vector<int> data_leaf_relation(2*4,-1);
     data_leaf_relation[3] = 0;
-    data_leaf_relation[4] = 2;
+    data_leaf_relation[4] = 3;
     data_leaf_relation[5] = 1;
-    data_leaf_relation[6] = 3;
+    data_leaf_relation[6] = 2;
 
 
     cout << "--- Constructing the tree ---" << endl;
