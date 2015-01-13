@@ -40,7 +40,7 @@ int main()
         while ((ent = readdir (dir)) != NULL)
         {
             string test_file_name(ent->d_name);
-            if (test_file_name == "." || test_file_name == ".." || test_file_name.back() == '~' )
+            if (test_file_name == "." || test_file_name == ".." || test_file_name.back() == '~' || test_file_name[0] == '.')
             {
                 cout << "Skipping non-interesting stuff.." << endl;
                 continue;
@@ -88,6 +88,8 @@ int main()
             list<int> leaf_data_relation, data_leaf_relation;
             list<pair<int,int>> leaf_data; //
             // consider using vectors instead?
+            vector<int> leaf_da = vector<int>(number_data_nodes*2);
+
             for (int i=0; i!=number_data_nodes; ++i)
             {
                 inStream >> e1 >> e2;
@@ -96,6 +98,8 @@ int main()
 
                 pair<int,int> edge (e1,e2);
                 leaf_data.push_back(edge); //
+
+                leaf_da[e1] = e2;
             }
 
             // Reading in hyperparameters
@@ -116,15 +120,15 @@ int main()
 //            }
 //            cout << endl;
 
-            //TODO: Format into tree-class structure (approriate constructors)
-            Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data);
+            //Format into tree-class structure (approriate constructors)
+            Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_da);
             cout << test_tree.toString() << endl;
 
-            //TODO: Perform tests - evaluate likelihood of tree
-            cout << "Local-Likelihood test...";
-            double llike_test = -2.3; // TEMP
 
-            // SOMETHING like test_tree.evaluateLikelihood();
+            // Perform tests - evaluate likelihood of tree
+            cout << "Local-Likelihood test...";
+            double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
+
 
             if (abs(llike_test-llike_true)<epsilon)
             {

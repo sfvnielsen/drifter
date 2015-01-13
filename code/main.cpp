@@ -7,11 +7,16 @@
 //============================================================================
 
 #include <iostream>
+#include <cstdlib> // setting random seed
+#include <time.h> // ----
+
 #include "barebones_tree.h"
 #include "sampler.h"
 using namespace std;
 
 int main() {
+    srand (time(NULL)); // set random seed
+
 
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 
@@ -32,44 +37,47 @@ int main() {
 
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
-    cout << "--- Remove rightmost subtree of root ---" << endl;
-
-    Node * r = T.getRandomNode();
-    T.cutSubtree(r);
-    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-
-    cout << "--- Insert as child of root---" << endl;
-    T.insertSubtree(T.getRoot(), r, true);
-
-    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-    r = T.getRandomNode();
-    T.cutSubtree(r);
-
-
-    cout << T.toString();
-
-    cout << "--- Insert as sibling of rightmost subtree of root---" << endl;
-    Node * t = T.getRandomNode();
-    T.insertSubtree(t, r, false);
-
-    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-
-    cout << T.toString();
-
-
-    r = T.getRandomNode();
-    T.cutSubtree(r);
-
-    cout << "--- Insert as child of rightmost subtree of root---" << endl;
-
-    T.insertSubtree(t, r, true);
-    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-
     cout << "--- Using the sampler object---" << endl;
     Sampler S = Sampler(T,0.5, 0.5, 1, 1);
 
     cout << "L:" << S.getLastLikelihood() << endl;
 
+    cout << "--------Get Random Node -------" << endl;
+    Node * random_node = T.getRandomNode();
+    cout << random_node->toString() << endl;
+
+//    cout << "--- Remove rightmost subtree of root ---" << endl;
+//
+//    Node * r = T.getRandomNode();
+//    T.cutSubtree(r);
+//    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
+//
+//    cout << "--- Insert as child of root---" << endl;
+//    T.insertSubtree(T.getRoot(), r, true);
+//
+//    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
+//    r = T.getRandomNode();
+//    T.cutSubtree(r);
+//
+//
+//    cout << T.toString();
+//
+//    cout << "--- Insert as sibling of rightmost subtree of root---" << endl;
+//    Node * t = T.getRandomNode();
+//    T.insertSubtree(t, r, false);
+//
+//    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
+//
+//    cout << T.toString();
+//
+//
+//    r = T.getRandomNode();
+//    T.cutSubtree(r);
+//
+//    cout << "--- Insert as child of rightmost subtree of root---" << endl;
+//
+//    T.insertSubtree(t, r, true);
+//    cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
 	return 0;
 }

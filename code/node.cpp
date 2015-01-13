@@ -8,6 +8,9 @@
 #include "node.h"
 
 #include <iostream> // should be removed at some point
+#include <numeric> // lets us use cumulative sum
+#include <cassert> // for assert statements
+
 using namespace std;
 
 /////////////////////////
@@ -93,6 +96,31 @@ bool Node::isInternalNode() {
     return isInternal;
 }
 
+int Node::getNumInternalNodes(){
+    return num_internal_nodes;
+}
+
+/**
+ * Recursively recalculates the number of internal nodes at each node
+ * below the provide node.
+ */
+int Node::updateNumInternalNodes() {
+    int num_internal_below = 0;
+    //If the node has children recurse
+    if (!this->children.empty()){
+        for (auto it = this->children.begin(); it != this->children.end(); it++){
+            num_internal_below += (*it)->updateNumInternalNodes();
+        }
+        num_internal_nodes = num_internal_below+1; //Current node is also internal
+        isInternal = true;
+    } else { //it is a leaf
+        num_internal_nodes = 0;
+        isInternal = false;
+    }
+   return num_internal_nodes; //exited ok
+}
+
+
 string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
 
@@ -118,28 +146,55 @@ string Node::toString() {
 
 /**
 * Samples random node from subtree rooted at this node
+* - NB! Including root node!!
 * - chooses internal nodes with weight 2 and leaves with weight 1
 */
-//Node * Node::getRandomDescendant() { // OBS! NOT DONE!!!!
-//    if (isInternal){
-//        list<Node *> list_children = this->getChildren();
-//        int num_children = (int)(this->getChildren().size());
-//        list<double> p_vals(num_children+1,0);
-//        double p_choose_root = 2.0/(2*this->getNumInternalNodes()
-//                                +(int)this->getChildren().size());
-//
-//        list<Node *>::iterator it = list_children.begin();
-//        for (it; it!=list_children.end(); ++it) {
-//                sampled_node = this->getRandomDescendant();
-//            return
-//
-//        }
-//            double u = (double)rand() / RAND_MAX;
-//        }
-//    } else { // if we are at leaf node choose that
-//        return this;
-//    }
-//}
+Node * Node::getRandomDescendant() {
+    if (isInternal){
+        list<Node *> node_list = this->getChildren();
+        list<int> subtree_weight;
+        for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
+        // Each subtree has weight according to two times the number of
+        // internal nodes plus the number of leaves
+            subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
+                                 (int)((*it)->getLeaves().size()) );
+
+        }
+        // DEBUGGING CHECK SUM! ---
+        int sum_weight = (int)(this->getLeaves().size())
+                          +2*this->getNumInternalNodes();
+        int subtree_sum = 2;
+        subtree_sum = accumulate(subtree_weight.begin(),subtree_weight.end(),subtree_sum);
+        assert(subtree_sum == sum_weight);
+        // -------
+
+        list<double> p_vals; // probability vector for each node + root
+        for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
+            p_vals.push_back((double)*it/sum_weight);
+        }
+
+        p_vals.push_back((double)2/sum_weight); // root probability
+        node_list.push_back(this);
+
+
+        // DEBUGGING CHECK!! -------
+        double p_val_sum = 0;
+        p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
+        assert(abs(p_val_sum-1.0)<1e-12);
+        // -------
+
+
+        Node * sampled_node = multinomialSampling(node_list,p_vals);
+        if (sampled_node!=this) { // recurse into chosen subtree
+            return sampled_node->getRandomDescendant();
+        } else { // else return this node
+            return this;
+        }
+
+    } else { // if we are at leaf node choose that
+        return this;
+    }
+}
 
 /**
  * Get counts of links and non-links between the pair of children
@@ -150,8 +205,8 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
     list<int> LB = childBP->getLeaves();
 
     // Number of possible links
-    int nA = LA.size();
-    int nB = LB.size();
+    int nA = (int) LA.size();
+    int nB = (int) LB.size();
 
     int nPossible = nA*nB;
 
@@ -211,7 +266,7 @@ double log_diff(double a, double b) {
 }
 
 /**
-* Evaluate nodes contribution to likelihood - NOT TESTED!
+* Evaluate nodes contribution to likelihood
 */
 double Node::evaluateNodeLogLike(double alpha, double beta,
                                  int rho_plus, int rho_minus) {
@@ -233,15 +288,15 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
 
     // Prior contribution
     //TODO: Add special case when alpha = 0!
-    int num_children = (this->getChildren()).size();
-    int num_leaves_total = (this->getLeaves()).size();
+    int num_children = (int) (this->getChildren()).size();
+    int num_leaves_total = (int) (this->getLeaves()).size();
     list<int> num_leaves_each_child;
     list<Node *> list_of_children = this->getChildren();
 
     // Get number of leaves for each child
     for (list<Node *>::iterator it = list_of_children.begin();
              it!= list_of_children.end(); ++it) {
-        int num_leaves = ((*it)->getLeaves()).size();
+        int num_leaves = (int) ((*it)->getLeaves()).size();
         num_leaves_each_child.push_back(num_leaves);
     }
 
@@ -282,3 +337,30 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
     return log_like;
 }
 
+/**
+* Sampling a random node from a list using a Multinomial distribution
+* - p_vals
+*/
+
+Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
+    list<double> cumulative_sum(p_vals.size(),0);
+    partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
+
+    assert(abs(cumulative_sum.back()-1.0 < 1e-12)); // check that p_vals is valid
+    assert(node_list.size() == p_vals.size());
+    list<Node *>::iterator it_result = node_list.begin();
+    Node * result;
+    double u = (double)rand()/RAND_MAX; // uniform [0,1] random number
+    cout << "Random number generated: " << u << endl;
+    for (auto it = cumulative_sum.begin(); it!=cumulative_sum.end(); ++it) { //TODO:!!!  Turn into while loop !! A GULL!?!?
+    // finds cumlative interval (correspondng to node a node)
+    // in which random number belongs
+        if(u>*it) {
+            it_result++;
+        } else{
+            result = *it_result;
+            break;
+        }
+    }
+    return result;
+}
