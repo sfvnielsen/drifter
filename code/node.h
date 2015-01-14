@@ -23,12 +23,14 @@ public:
 
     bool isDescendant(Node *);
     void setParent(Node *);
+    void setTreePointer(Tree *);
     int getLeafId();
     void setLeafId(int);
     std::list<std::pair<int,int>> getCountsAll();
     std::pair<int,int> getCountsPair(Node *, Node *);
     std::list<int> getLeaves();
     std::list<Node *> getChildren();
+    void setChildren(std::list<Node *>);
     void addChild(Node *);
     void removeChild(Node *);
     bool isInternalNode();

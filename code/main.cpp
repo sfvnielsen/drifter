@@ -55,14 +55,30 @@ int main() {
     cout << "--- Likelihood ---" << endl;
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
-
-    cout << "--- Get Random Node ---- " << endl;
-    Node * random_node = T.getRandomNode();
-    cout << random_node->toString();
-
     cout << "--- New Tree ---" << endl;
 
-    T.regraft();
+    Tree new_tree(T);
+    new_tree.regraft();
+    cout << "--- After regrafting 1---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 2---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 3---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 4---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 5---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 6---" << endl;
+    cout << new_tree.toString() << endl;
+    
+    
+//    T.regraft();
 //
 //    Node * scionP = T.getRandomNode();
 //    if(!(scionP==T.getRoot())){
@@ -82,8 +98,6 @@ int main() {
 //    }else{
 //        cout << "root selected" <<endl;
 //    }
-
-    cout << T.toString() << endl;
 
     cout << "--- END ---" << endl;
 

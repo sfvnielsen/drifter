@@ -39,6 +39,10 @@ list<Node *> Node::getChildren(){
 return children;
 }
 
+//Need when copying
+void Node::setChildren(list<Node *> new_children){
+    children = new_children;
+}
 
 list<int> Node::getLeaves() {
     list<int> leaves;
@@ -67,6 +71,10 @@ Node * Node::getParent() {
  */
 void Node::setParent(Node * new_parentP) {
     parentP = new_parentP;
+}
+
+void Node::setTreePointer(Tree * new_treeP){
+    treeP = new_treeP;
 }
 
 int Node::getLeafId(){

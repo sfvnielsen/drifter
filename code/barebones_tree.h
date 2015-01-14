@@ -18,6 +18,17 @@
 
 
 class Tree {
+    /**
+     * RULE of 5
+     * Destructor
+     * copy const
+     * copy assignment operator
+     * move con
+     * move assignment
+     *
+     *
+     *
+     */
 private:
     Node * rootP;
     std::list<Node> nodes;
@@ -39,7 +50,7 @@ public:
     Tree(std::list<std::pair<int,int>>, std::string);
     Tree(std::list<std::pair<int,int>>, std::list<std::pair<int,int>>
          ,std::vector<int>); // Builds tree based on data, tree and data-tree relation
-    Tree(Tree);
+    Tree(Tree const &);
 
     void removeNode(Node *);
     Adj_list getAdjacencyList();
