@@ -12,13 +12,59 @@
 #include <cmath>
 using namespace std;
 
+
+/**
+ * Tree constructor choice
+ */
+Tree::Tree(list<pair<int, int>> data_graph, string initType){
+    
+    //first construct adjacency list, same regardless of tree stucture.
+    for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
+        leaves.push_back(it->first);
+        leaves.push_back(it->second);
+    }
+    
+    // Find only the unique elements
+    leaves.sort();
+    leaves.unique();
+    
+    int N = (int) leaves.size();
+    A = Adj_list(N,data_graph);
+    
+    
+    if (initType == "Binary") {
+//        statements
+    } else { //Flat tree
+        
+    }
+    
+    //Correct internal number count
+    root.updateNumInternalNodes();
+    
+}
+
+int Tree::InitBinaryTree(std::list<std::pair<int, int> > * data_graph){
+    
+    return 0;
+}
+
+int Tree::InitFlatTree(std::list<std::pair<int, int> > * data_graph){
+    // Add a new Node for each leaf and add is as a child of root
+    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
+        nodes.push_back(Node(&A,*it));
+        root.addChild(&(nodes.back()));
+    }
+    return 0;
+}
+
+
 /**
  * Construct flat tree
  */
 Tree::Tree(list<pair<int,int>> data_graph) {
 
     // insert all the indexes from the edge list into leaves
-	for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
+    for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(it->first);
         leaves.push_back(it->second);
     }

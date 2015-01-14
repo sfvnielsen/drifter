@@ -24,6 +24,8 @@ private:
     std::list<int> leaves;
     std::list<std::pair<int,int>> graph;
     Adj_list A;
+    int InitBinaryTree(std::list<std::pair<int, int>> *);
+    int InitFlatTree(std::list<std::pair<int, int>> *);
 
 	// TODO make functions private when not debugging them.
 
@@ -31,6 +33,7 @@ public:
 	Tree(); // default constructor
 	// Tree(something); // some other constructor?
 	Tree(std::list<std::pair<int,int>>); // make the naive tree building in the adjacency matrix.
+    Tree(std::list<std::pair<int,int>>, std::string);
     Tree(std::list<std::pair<int,int>>, std::list<std::pair<int,int>>
          ,std::vector<int>); // Builds tree based on data, tree and data-tree relation
 	Tree regraft(); // return new regrafted tree
