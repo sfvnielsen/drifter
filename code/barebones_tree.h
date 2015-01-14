@@ -18,6 +18,17 @@
 
 
 class Tree {
+    /**
+     * RULE of 5
+     * Destructor
+     * copy const
+     * copy assignment operator
+     * move con
+     * move assignment
+     *
+     *
+     *
+     */
 private:
     Node * rootP;
     std::list<Node> nodes;
