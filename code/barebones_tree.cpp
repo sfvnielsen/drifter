@@ -183,6 +183,21 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
     }
 
 }
+
+/**
+* Copy constructor
+*
+*/
+
+Tree Tree::Tree(Tree old_tree)  {
+    Node * rootP;
+    nodes = old_tree.nodes;
+    leaves = ;
+    std::vector<int> vec_leaves;
+    std::list<std::pair<int,int>> graph;
+    Adj_list adjacencyList;
+}
+
 /**
  * Finds a specific node (characterized by an unique id) and
  * returns a pointer to this node or nullptr if it isn't pressent
