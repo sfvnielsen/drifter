@@ -13,11 +13,13 @@
 #ifndef NODE_H_
 #define NODE_H_
 
+class Tree;
+
 class Node {
 public:
     Node();
-	Node(Adj_list *); // default constructor
-    Node(Adj_list *, int); // leaf node constructor
+	Node(Tree *); // default constructor
+    Node(Tree * ,int ); // leaf node constructor
 
     bool isDescendant(Node *);
     void setParent(Node *);
@@ -30,6 +32,7 @@ public:
     void addChild(Node *);
     void removeChild(Node *);
     bool isInternalNode();
+    bool operator == ( const Node &rhs ) const;
 
 	Node * getParent();
 	int getNumInternalNodes();
@@ -44,12 +47,12 @@ public:
     double evaluateSubtreeLogLike(double,double,int,int);
 
 private:
-    Node * parent;
+    Node * parentP;
 	int num_internal_nodes;
     std::list<Node *> children;
     int leafId;
     bool isInternal;
-    Adj_list * AP;
+    Tree * treeP;
 
 };
 

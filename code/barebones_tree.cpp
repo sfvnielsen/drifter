@@ -28,10 +28,10 @@ Tree::Tree(list<pair<int,int>> data_graph) {
     leaves.unique();
 
     int N = (int) leaves.size();
-    A = Adj_list(N,data_graph);
+    adjacencyList = Adj_list(N,data_graph);
 
-    nodes.push_back(Node(&A));
-    root = &(nodes.back());
+    nodes.push_back(Node(this));
+    rootP = &(nodes.back());
 
     /*
      * Initialisation step, here init is worse case (IRM model),
@@ -39,10 +39,10 @@ Tree::Tree(list<pair<int,int>> data_graph) {
      */
     // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        nodes.push_back(Node(&A,*it));
-        root->addChild(&(nodes.back()));
+        nodes.push_back(Node(this,*it));
+        rootP->addChild(&(nodes.back()));
     }
-    root->updateNumInternalNodes();
+    rootP->updateNumInternalNodes();
 }
 
 /**
@@ -54,22 +54,21 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
     // - Construct adj list from data_graph
     int N = (int) data_leaf_relation.size();
-    A = Adj_list(N, data_graph);
+    adjacencyList = Adj_list(N, data_graph);
 
     // 1.0 Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
     pair<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front();
 
-    nodes.push_back(Node(&A,element.first));
-    root = &(nodes.back());
+    nodes.push_back(Node(this, element.first));
+    rootP = &(nodes.back());
 
     //Add the first node as a child
-    Node new_child = Node(&A,element.second);
-    //new_child.setParent(&root);
+    Node new_child = Node(this, element.second);
 
     nodes.push_back(new_child);
-    root->addChild(&(nodes.back()));
+    rootP->addChild(&(nodes.back()));
 
     //Insert parrent-->child relations for the rest
     while (!tree_struct_graph.empty()) {
@@ -80,12 +79,12 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         Node * parent = this->getNode(element.first);
 //        cout << "Is null?: " << (parent == nullptr) << endl; // DEBUG
 //        cout << "Found node: " << parent->getLeafId() << endl; // DEBUG
-        new_child = Node(& A,element.second);
+        new_child = Node(this,element.second);
 
         Node* existing_nodeP = this->getNode(element.second);
         if (existing_nodeP==nullptr) {
             nodes.push_back(new_child);
-            parent->addChild(& (nodes.back()));
+            parent->addChild(&(nodes.back()));
         } else{
             parent->addChild(existing_nodeP);
         }
@@ -94,7 +93,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
     }
 
     //Updates internal count.
-    root->updateNumInternalNodes();
+    rootP->updateNumInternalNodes();
 
 
     /*
@@ -102,7 +101,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
      *  each internal node is assigned a unique negative number.
      */
     int new_id =-1;
-    root->setLeafId(new_id);
+    rootP->setLeafId(new_id);
 
     for (auto it = nodes.begin(); it != nodes.end(); it++) {
         if (it->isInternalNode()){ //Internal node
@@ -125,7 +124,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 Node * Tree::getNode(int leaf_id){
     //Iterates over all internal and leaf nodes
     if (leaf_id == 0) { // is root?
-        return root;
+        return rootP;
     }
     for(list<Node>::iterator it = nodes.begin();
         it != nodes.end(); it++){
@@ -139,7 +138,7 @@ Node * Tree::getNode(int leaf_id){
 }
 
 list<pair<int, int>> Tree::getCountsAll(){
-    return root->getCountsAll();
+    return rootP->getCountsAll();
 }
 
 
@@ -150,8 +149,23 @@ list<pair<int, int>> Tree::getCountsAll(){
 */
 
 Node * Tree::getRandomNode() {
-    return root->getRandomDescendant();
+    return rootP->getRandomDescendant();
 }
+
+void Tree::removeNode(Node * nodeP){
+    nodes.remove(*nodeP);
+}
+
+Adj_list Tree::getAdjacencyList(){
+    return adjacencyList;
+}
+
+void Tree::setRootP(Node * node){
+    rootP = node;
+}
+
+
+
 
 /**
  *
@@ -159,18 +173,21 @@ Node * Tree::getRandomNode() {
 Tree Tree::regraft(){
     Tree new_Tree = *this;
 // TODO: finish the regrafting
-//    Node * scion = new_Tree.getRandomNode();
-//    new_Tree.cutSubtree(scion);
-//
-//    Node * stock = new_Tree.getRandomNode();
-//    new_Tree.insertSubtree(stock, scion, true);
-
+    Node * scionP = new_Tree.getRandomNode();
+    if(!(scionP==rootP)){
+        new_Tree.cutSubtree(scionP);
+        rootP->updateNumInternalNodes();
+        Node * stockP = new_Tree.getRandomNode();
+        // TODO: random child or sibling
+        new_Tree.insertSubtree(stockP, scionP, true);
+        rootP->updateNumInternalNodes();
+    }
     return new_Tree;
 }
 
 string Tree::toString(){
-    string sAdj = A.toString();
-    return root->toString() + sAdj ;
+    string sAdj = adjacencyList.toString();
+    return rootP->toString() + sAdj ;
 }
 
 
@@ -179,23 +196,26 @@ string Tree::toString(){
 */
 
 double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, int rho_minus){
-//    double root_node_contribution = this->root->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
-//    double root_subtree_contribution = this->root->evaluateSubtreeLogLike(alpha
+//    double root_node_contribution = this->rootP->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
+//    double root_subtree_contribution = this->rootP->evaluateSubtreeLogLike(alpha
 //                                                    ,beta,rho_plus,rho_minus);
 //
 //    return root_node_contribution + root_subtree_contribution;
-    return this->root->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
+    return rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
 }
 
 void Tree::cutSubtree(Node * scionP){
+    cout << "cutting: " << scionP->getLeafId() << endl;
+    // assumes that scionP doesnt point to root.
     Node * parentP = scionP->getParent();
     parentP->removeChild(scionP);
     scionP->setParent(nullptr);
+
     // TODO: remove obsoleted internal nodes
 }
 
 Node * Tree::getRoot(){
-    return root;
+    return rootP;
 }
 
 void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
@@ -217,6 +237,5 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         // add graft both stock and scion to the new parent
         new_parent->addChild(stockP);
         new_parent->addChild(scionP);
-
     }
 }

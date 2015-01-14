@@ -33,16 +33,16 @@ int main() {
     pair<int,int> t2 (0,2);
     pair<int,int> t3 (1,3);
     pair<int,int> t4 (1,4);
-    pair<int,int> t5 (1,5);
-    pair<int,int> t6 (1,6);
+    pair<int,int> t5 (2,5);
+    pair<int,int> t6 (2,6);
     list<pair<int,int>> tree_edge_list = {t1,t2,t3,t4,t5,t6};
 
     // data-leaf relation - convention
     vector<int> data_leaf_relation(2*4,-1);
     data_leaf_relation[3] = 0;
-    data_leaf_relation[4] = 2;
+    data_leaf_relation[4] = 3;
     data_leaf_relation[5] = 1;
-    data_leaf_relation[6] = 3;
+    data_leaf_relation[6] = 2;
 
 
     cout << "--- Constructing the tree ---" << endl;
@@ -56,13 +56,30 @@ int main() {
 
     cout << "--- New Tree ---" << endl;
 
-    Tree T2 = T.regraft();
+    //Tree T2 = T.regraft();
+    Tree new_Tree = T;
 
+    Node * scionP = new_Tree.getRandomNode();
+    if(!(scionP==new_Tree.getRoot())){
+        new_Tree.cutSubtree(scionP);
+        cout << new_Tree.toString();
+        new_Tree.getRoot()->updateNumInternalNodes();
+        Node * stockP = new_Tree.getRandomNode();
+        // TODO: random child or sibling
+        new_Tree.insertSubtree(stockP, scionP, true);
+        cout << new_Tree.toString();
+
+        new_Tree.getRoot()->updateNumInternalNodes();
+    }else{
+        cout << "root selected" <<endl;
+    }
+
+    Tree T2 = new_Tree;
     cout << T2.toString() << endl;
 
     cout << "--- Likelihood ---" << endl;
 
-    cout << "L:" << T2.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
+//    cout << "L:" << T2.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
 
 
