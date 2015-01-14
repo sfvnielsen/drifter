@@ -62,28 +62,30 @@ int main() {
 
     cout << "--- New Tree ---" << endl;
 
-    //Tree T2 = T.regraft();
-    Tree new_Tree = T;
+    T.regraft();
+//
+//    Node * scionP = T.getRandomNode();
+//    if(!(scionP==T.getRoot())){
+//        T.cutSubtree(scionP);
+//        
+//        
+////        cout << new_Tree.toString();
+//        T.getRoot()->updateNumInternalNodes();
+//        
+//        //Something below doesnt work...
+//        Node * stockP = T.getRandomNode();
+//        // TODO: random child or sibling
+//        T.insertSubtree(stockP, scionP, true);
+////        cout << new_Tree.toString();
+//
+//        T.getRoot()->updateNumInternalNodes();
+//    }else{
+//        cout << "root selected" <<endl;
+//    }
 
-    Node * scionP = new_Tree.getRandomNode();
-    if(!(scionP==new_Tree.getRoot())){
-        new_Tree.cutSubtree(scionP);
-        cout << new_Tree.toString();
-        new_Tree.getRoot()->updateNumInternalNodes();
-        Node * stockP = new_Tree.getRandomNode();
-        // TODO: random child or sibling
-        new_Tree.insertSubtree(stockP, scionP, true);
-        cout << new_Tree.toString();
+    cout << T.toString() << endl;
 
-        new_Tree.getRoot()->updateNumInternalNodes();
-    }else{
-        cout << "root selected" <<endl;
-    }
-
-    Tree T2 = new_Tree;
-    cout << T2.toString() << endl;
-
-    cout << "--- Likelihood ---" << endl;
+    cout << "--- END ---" << endl;
 
 //    cout << "L:" << T2.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 

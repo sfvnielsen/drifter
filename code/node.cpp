@@ -91,12 +91,12 @@ void Node::removeChild(Node * child) {
     children.remove(child);
     // if there is only one child left: collapse node.
     if(1==(int)children.size()){
-        if(parentP==nullptr){
+        if(this == (treeP->getRoot()) ){ //If the node is the tree root
             children.front()->setParent(nullptr);
-            treeP->setRootP(&(*children.front()));
+            treeP->setRootP(children.front());
             treeP->removeNode(this);
         }else{
-            parentP->addChild(&(*children.front()));
+            parentP->addChild(children.front());
             parentP->removeChild(this);
             treeP->removeNode(this);
         }

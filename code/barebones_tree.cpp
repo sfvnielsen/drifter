@@ -252,19 +252,17 @@ void Tree::setRootP(Node * node){
 /**
  *
  */
-Tree Tree::regraft(){
-    Tree new_Tree = *this;
+void Tree::regraft(){
 // TODO: finish the regrafting
-    Node * scionP = new_Tree.getRandomNode();
+    Node * scionP = this->getRandomNode();
     if(!(scionP==rootP)){
-        new_Tree.cutSubtree(scionP);
+        this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
-        Node * stockP = new_Tree.getRandomNode();
+        Node * stockP = this->getRandomNode();
         // TODO: random child or sibling
-        new_Tree.insertSubtree(stockP, scionP, true);
+        this->insertSubtree(stockP, scionP, true);
         rootP->updateNumInternalNodes();
     }
-    return new_Tree;
 }
 
 string Tree::toString(){

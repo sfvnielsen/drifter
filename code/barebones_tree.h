@@ -45,7 +45,7 @@ public:
     Adj_list getAdjacencyList();
     void setRootP(Node *);
 
-	Tree regraft(); // return new regrafted tree
+	void regraft(); // return new regrafted tree
 	Node * getRandomNode();
 	Node * getRoot();
 	void cutSubtree(Node * scion_node); //Returns the subtree at Node sub_node
