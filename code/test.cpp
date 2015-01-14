@@ -12,6 +12,7 @@
 #include <dirent.h>
 #include <cmath>
 #include "barebones_tree.h"
+#include "iofilehandler.h"
 
 using namespace std;
 
@@ -47,66 +48,22 @@ int main()
             }
             // Read in test file
             cout << "Reading file '" << test_file_name << "..." << endl;
-            ifstream inStream(dir_str+test_file_name); //
-            //ifstream inStream(ent->d_name); //
-            if (!inStream)
-            {
-                throw runtime_error("Could not open the desired file");
-            }
+            bool should_write = 0;
+            IoFileHandler test_case(dir_str+test_file_name,should_write);
+            test_case.read_test_case();
 
+            list<pair<int,int>> data_edge_list = test_case.getDataEl();
+            list<pair<int,int>> tree_edge_list = test_case.getTreeEl();
+            vector<int> leaf_data_relation = test_case.getLeafDataRelation();
+            double alpha = test_case.getAlpha();
+            double beta = test_case.getBeta();
+            int rho_plus = test_case.getRhoPlus();
+            int rho_minus = test_case.getRhoMinus();
+            double llike_true = test_case.getLlike();
 
-            // Reading number of data nodes and edges
-            int number_data_nodes,number_data_edges;
-            inStream >> number_data_nodes;
-            inStream >> number_data_edges;
-
-            // Reading edge list
-            list<pair<int,int>> data_edge_list;
-            int e1,e2;
-            for (int i=0; i!=number_data_edges; ++i)
-            {
-                inStream >> e1 >> e2;
-                pair<int,int> edge (e1,e2);
-                data_edge_list.push_back(edge);
-            }
-
-            // Reading in number of nodes in entire tree
-            int number_nodes_tree;
-            inStream >> number_nodes_tree;
-
-            // Reading tree edge list (Parent->Child)
-            list<pair<int,int>> tree_edge_list;
-            for (int i=0; i!=number_nodes_tree-1; ++i)
-            {
-                inStream >> e1 >> e2;
-                pair<int,int> edge (e1,e2);
-                tree_edge_list.push_back(edge);
-            }
-
-            // Reading in relation between tree leaves and data nodes
-            // - A vector of maximal length (N*2) is made
-            vector<int> leaf_data_relation = vector<int>(number_data_nodes*2);
-
-            for (int i=0; i!=number_data_nodes; ++i)
-            {
-                inStream >> e1 >> e2;
-                //e1 is the leaf id, i.e. "fake_id"
-                //e2 is the id given in the data
-                leaf_data_relation [e1] = e2;
-            }
-
-            // Reading in hyperparameters
-            double alpha,beta,rho_plus,rho_minus;
-            inStream >> alpha >> beta >> rho_plus >> rho_minus;
-
-            // Reading in true log-likelihood
-            double llike_true;
-            inStream >> llike_true;
 
             //Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data_relation );
-            //cout << test_tree.toString() << endl;
-
 
             // Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test..." << endl << flush ;
@@ -126,6 +83,7 @@ int main()
             }
 
             // Save result likelihood result
+            int number_data_nodes = ( (int) test_case.getLeafDataRelation().size())/2;
             if (number_data_nodes == 3)
             {
                 llike_all_n3.push_back(llike_test);

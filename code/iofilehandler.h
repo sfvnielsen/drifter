@@ -25,22 +25,37 @@ class IoFileHandler
         int read_test_case();
         std::list<std::pair<int,int>> getDataEl();
         std::list<std::pair<int,int>> getTreeEl();
-        std::vector<int> getDataLeafRelation();
+        std::vector<int> getLeafDataRelation();
         std::string getFilename();
+        double getAlpha();
+        double getBeta();
+        int getRhoPlus();
+        int getRhoMinus();
+        double getLlike();
+
         void setDataEl(std::list<std::pair<int,int>>);
         void setTreeEl(std::list<std::pair<int,int>>);
-        void setDataLeafRelation(std::vector<int>);
+        void setLeafDataRelation(std::vector<int>);
         void setFilename(std::string);
+        void setAlpha(double);
+        void setBeta(double);
+        void setRhoPlus(int);
+        void setRhosMinus(int);
+        void setLlike(double);
+
         // Write out credability tree?
         // write out other results from tests?
 
     private:
         bool write;
         std::string filename;
-        std::string file_path;
+        // std::string file_path;
         std::list<std::pair<int,int>> data_edge_list;
         std::list<std::pair<int,int>> tree_edge_list;
-        std::vector<int> data_leaf_relation;
+        std::vector<int> leaf_data_relation;
+        double alpha, beta;
+        int rho_plus, rho_minus;
+        double llike;
 };
 
 #endif // IOFILEHANDLER_H
