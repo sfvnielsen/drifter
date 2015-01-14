@@ -24,10 +24,10 @@ private:
     std::list<int> leaves;
     std::vector<int> vec_leaves;
     std::list<std::pair<int,int>> graph;
-    Adj_list adjacencyList
+    Adj_list adjacencyList;
     int InitBinaryTree();
     Node * makeNleafTree(int,int,int);
-    
+
     int InitFlatTree();
 
 	// TODO make functions private when not debugging them.

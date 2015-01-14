@@ -16,7 +16,7 @@ using namespace std;
  * Tree constructor choice
  */
 Tree::Tree(list<pair<int, int>> data_graph, string initType){
-    
+
     //first construct adjacency list and leaf list, same regardless of tree stucture.
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(it->first);
@@ -29,17 +29,17 @@ Tree::Tree(list<pair<int, int>> data_graph, string initType){
 
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
-    
-    
+
+
     if (initType == "Binary") {
         InitBinaryTree();
     } else { //Flat tree
         InitFlatTree();
     }
-    
+
     //Correct internal number count
-    root.updateNumInternalNodes();
-    
+    rootP->updateNumInternalNodes();
+
 }
 
 /**
@@ -54,7 +54,7 @@ int Tree::InitBinaryTree(){
  * NOT IMPLEMENTED!!!
  */
 Node * Tree::makeNleafTree(int a, int b, int N){
-    
+
     return nullptr;
 }
 
@@ -67,8 +67,8 @@ int Tree::InitFlatTree(){
      * another appoarch is a binary tree (TBI)
      */
     // Add a new Node for each leaf and add is as a child of root
-    
-    
+
+
 
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         nodes.push_back(Node(this,*it));
@@ -95,11 +95,11 @@ Tree::Tree(list<pair<int,int>> data_graph) {
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
-    
+
     //Copies the elements to a vector ***** TEMPORARY *****
     vec_leaves = vector<int>(leaves.size());
     copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
-    
+
 
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
@@ -144,7 +144,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
         tree_struct_graph.pop_front();
 
         Node * parent = this->getNode(element.first);
-        
+
         //Check if the child node is already created,
         //  then it is a nullptr if it does not exist
         Node* existing_nodeP = this->getNode(element.second);
