@@ -84,22 +84,15 @@ int main()
             }
 
             // Reading in relation between tree leaves and data nodes
-            // - Two lists are created
-            list<int> leaf_data_relation, data_leaf_relation;
-            list<pair<int,int>> leaf_data; //
-            // consider using vectors instead?
-            vector<int> leaf_da = vector<int>(number_data_nodes*2);
+            // - A vector of maximal length (N*2) is made
+            vector<int> leaf_data_relation = vector<int>(number_data_nodes*2);
 
             for (int i=0; i!=number_data_nodes; ++i)
             {
                 inStream >> e1 >> e2;
-                leaf_data_relation.push_back(e1);
-                data_leaf_relation.push_back(e2);
-
-                pair<int,int> edge (e1,e2);
-                leaf_data.push_back(edge); //
-
-                leaf_da[e1] = e2;
+                //e1 is the leaf id, i.e. "fake_id"
+                //e2 is the id given in the data
+                leaf_data_relation [e1] = e2;
             }
 
             // Reading in hyperparameters
@@ -111,7 +104,7 @@ int main()
             inStream >> llike_true;
 
             //Format into tree-class structure (approriate constructors)
-            Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_da);
+            Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data_relation );
             //cout << test_tree.toString() << endl;
 
 
