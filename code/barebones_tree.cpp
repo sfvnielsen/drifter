@@ -18,7 +18,7 @@ using namespace std;
  */
 Tree::Tree(list<pair<int, int>> data_graph, string initType){
     
-    //first construct adjacency list, same regardless of tree stucture.
+    //first construct adjacency list and leaf list, same regardless of tree stucture.
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(it->first);
         leaves.push_back(it->second);
@@ -33,9 +33,9 @@ Tree::Tree(list<pair<int, int>> data_graph, string initType){
     
     
     if (initType == "Binary") {
-//        statements
+        InitBinaryTree();
     } else { //Flat tree
-        
+        InitFlatTree();
     }
     
     //Correct internal number count
@@ -43,12 +43,33 @@ Tree::Tree(list<pair<int, int>> data_graph, string initType){
     
 }
 
-int Tree::InitBinaryTree(std::list<std::pair<int, int> > * data_graph){
-    
+/**
+ * NOT IMPLEMENTED!!!
+ */
+int Tree::InitBinaryTree(){
+    makeNleafTree(0, (int) vec_leaves.size(),2);
     return 0;
 }
 
-int Tree::InitFlatTree(std::list<std::pair<int, int> > * data_graph){
+/**
+ * NOT IMPLEMENTED!!!
+ */
+Node * Tree::makeNleafTree(int a, int b, int N){
+    
+    return nullptr;
+}
+
+/**
+ * Initialise a flat treee structure
+ */
+int Tree::InitFlatTree(){
+    /*
+     * Initialisation step, here init is worse case (IRM model),
+     * another appoarch is a binary tree (TBI)
+     */
+    // Add a new Node for each leaf and add is as a child of root
+    
+    
     // Add a new Node for each leaf and add is as a child of root
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         nodes.push_back(Node(&A,*it));
@@ -56,6 +77,8 @@ int Tree::InitFlatTree(std::list<std::pair<int, int> > * data_graph){
     }
     return 0;
 }
+
+
 
 
 /**
@@ -72,21 +95,18 @@ Tree::Tree(list<pair<int,int>> data_graph) {
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
+    
+    //Copies the elements to a vector ***** TEMPORARY *****
+    vec_leaves = vector<int>(leaves.size());
+    copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
+    
 
     int N = (int) leaves.size();
     A = Adj_list(N,data_graph);
 
     root = Node(&A);
 
-    /*
-     * Initialisation step, here init is worse case (IRM model),
-     * another appoarch is a binary tree (TBI)
-     */
-    // Add a new Node for each leaf and add is as a child of root
-    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        nodes.push_back(Node(&A,*it));
-        root.addChild(&(nodes.back()));
-    }
+    InitFlatTree();
     root.updateNumInternalNodes();
 }
 
