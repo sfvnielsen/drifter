@@ -6,6 +6,7 @@
  */
 
 #include "node.h"
+#include "barebones_tree.h"
 
 #include <iostream> // should be removed at some point
 #include <numeric> // lets us use cumulative sum
@@ -19,18 +20,16 @@ using namespace std;
 
 Node::Node(){}
 
-Node::Node(Adj_list * AP) {
+Node::Node(Tree * tP): treeP(tP){
     // Trivial constructor.
-    parent = nullptr;
+    parentP = nullptr;
     isInternal = true;
-    this->AP = AP;
 }
 
-Node::Node(Adj_list * AP, int L) {
+Node::Node(Tree * tP, int L): treeP(tP) {
     // Construct a node with the leaf L
     // This defines a leaf-node
-    this->AP = AP;
-    parent = nullptr;
+    parentP = nullptr;
     num_internal_nodes = 0;
     leafId = L;
     isInternal = false;
@@ -60,14 +59,14 @@ list<int> Node::getLeaves() {
 }
 
 Node * Node::getParent() {
-    return parent;
+    return parentP;
 }
 
 /**
- * Set the pointer "parent" to a new value.
+ * Set the pointer "parentP" to a new value.
  */
-void Node::setParent(Node * new_parent) {
-    parent = new_parent;
+void Node::setParent(Node * new_parentP) {
+    parentP = new_parentP;
 }
 
 int Node::getLeafId(){
@@ -90,7 +89,24 @@ void Node::addChild(Node * childP) {
 
 void Node::removeChild(Node * child) {
     children.remove(child);
+    // if there is only one child left: collapse node.
+    if(1==(int)children.size()){
+        if(parentP==nullptr){
+            children.front()->setParent(nullptr);
+            treeP->setRootP(&(*children.front()));
+            treeP->removeNode(this);
+        }else{
+            parentP->addChild(&(*children.front()));
+            parentP->removeChild(this);
+            treeP->removeNode(this);
+        }
+    }
 }
+
+bool Node::operator==( const Node &rhs ) const {
+    return parentP==rhs.parentP && leafId==rhs.leafId && children==rhs.children;
+}
+
 
 bool Node::isInternalNode() {
     return isInternal;
@@ -214,7 +230,7 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
     for (list<int>::iterator fst = LA.begin(); fst != LA.end(); fst++) {
         for (list<int>::iterator snd = LB.begin(); snd != LB.end(); snd++) {
-            if(AP->isConnected(*fst,*snd)){
+            if(treeP->getAdjacencyList().isConnected(*fst,*snd)){
                 nLinks += 1;
             }
         }
@@ -347,7 +363,7 @@ Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
     list<double> cumulative_sum(p_vals.size(),0);
     // finding cumulative sum (partial sum) of p_vals
     partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
-    // asserts..
+
     assert(abs(cumulative_sum.back()-1.0 < 1e-12)); // check that p_vals is valid
     assert(node_list.size() == p_vals.size());
 

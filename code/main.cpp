@@ -62,13 +62,30 @@ int main() {
 
     cout << "--- New Tree ---" << endl;
 
-    Tree T2 = T.regraft();
+    //Tree T2 = T.regraft();
+    Tree new_Tree = T;
 
+    Node * scionP = new_Tree.getRandomNode();
+    if(!(scionP==new_Tree.getRoot())){
+        new_Tree.cutSubtree(scionP);
+        cout << new_Tree.toString();
+        new_Tree.getRoot()->updateNumInternalNodes();
+        Node * stockP = new_Tree.getRandomNode();
+        // TODO: random child or sibling
+        new_Tree.insertSubtree(stockP, scionP, true);
+        cout << new_Tree.toString();
+
+        new_Tree.getRoot()->updateNumInternalNodes();
+    }else{
+        cout << "root selected" <<endl;
+    }
+
+    Tree T2 = new_Tree;
     cout << T2.toString() << endl;
 
     cout << "--- Likelihood ---" << endl;
 
-    cout << "L:" << T2.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
+//    cout << "L:" << T2.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
 
 

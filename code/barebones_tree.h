@@ -19,12 +19,12 @@
 
 class Tree {
 private:
-    Node root;
+    Node * rootP;
     std::list<Node> nodes;
     std::list<int> leaves;
     std::vector<int> vec_leaves;
     std::list<std::pair<int,int>> graph;
-    Adj_list A;
+    Adj_list adjacencyList
     int InitBinaryTree();
     Node * makeNleafTree(int,int,int);
     
@@ -39,6 +39,11 @@ public:
     Tree(std::list<std::pair<int,int>>, std::string);
     Tree(std::list<std::pair<int,int>>, std::list<std::pair<int,int>>
          ,std::vector<int>); // Builds tree based on data, tree and data-tree relation
+
+    void removeNode(Node *);
+    Adj_list getAdjacencyList();
+    void setRootP(Node *);
+
 	Tree regraft(); // return new regrafted tree
 	Node * getRandomNode();
 	Node * getRoot();
