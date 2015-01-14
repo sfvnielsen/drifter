@@ -35,7 +35,7 @@ Sampler::~Sampler()
 void Sampler::run(int L){
 for (int i=0; i<L; i++){
     // Create a proposal
-    Tree proposal = chain.back().regraft();
+    Tree proposal = chain.back();//.regraft();
 
     // Get Likelihoods times priors
     float propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
