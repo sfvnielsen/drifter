@@ -69,7 +69,7 @@
 
 1420801980 49d53a0669aaa02c0cf534042de2a74e8cd08
 
-1421157004 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
+1421167837 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
@@ -81,20 +81,20 @@
 	<list>
 	<algorithm>
 
-1421161999 source:/home/sfvn/Documents/parmugit/code/main.cpp
+1421167129 source:/home/sfvn/Documents/parmugit/code/main.cpp
 	<iostream>
 	<cstdlib>
 	<time.h>
 	"barebones_tree.h"
 	"sampler.h"
 
-1421162445 source:/home/sfvn/Documents/parmugit/code/node.cpp
+1421167655 source:/home/sfvn/Documents/parmugit/code/node.cpp
 	"node.h"
 	<iostream>
 	<numeric>
 	<cassert>
 
-1421162159 source:/home/sfvn/Documents/parmugit/code/adjacency_list.cpp
+1421166012 source:/home/sfvn/Documents/parmugit/code/adjacency_list.cpp
 	"adjacency_list.h"
 	<iostream>
 	<algorithm>
