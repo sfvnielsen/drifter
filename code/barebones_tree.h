@@ -22,10 +22,13 @@ private:
     Node root;
     std::list<Node> nodes;
     std::list<int> leaves;
+    std::vector<int> vec_leaves;
     std::list<std::pair<int,int>> graph;
     Adj_list A;
-    int InitBinaryTree(std::list<std::pair<int, int>> *);
-    int InitFlatTree(std::list<std::pair<int, int>> *);
+    int InitBinaryTree();
+    Node * makeNleafTree(int,int,int);
+    
+    int InitFlatTree();
 
 	// TODO make functions private when not debugging them.
 
