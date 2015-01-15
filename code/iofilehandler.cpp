@@ -195,5 +195,21 @@ int IoFileHandler::read_test_case() {
 
     // Reading in true log-likelihood
     inStream >> llike;
+    return 0;
+}
 
+
+/**
+
+Print functions
+
+*/
+
+
+string IoFileHandler::toDataEdgeListString() {
+    string result = "";
+    for (auto it = data_edge_list.begin(); it != data_edge_list.end(); ++it) {
+        result += "(" + to_string(it->first) + "," + to_string(it->second) +")\n";
+    }
+    return result;
 }

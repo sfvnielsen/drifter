@@ -76,18 +76,18 @@ int main() {
     new_tree.regraft();
     cout << "--- After regrafting 6---" << endl;
     cout << new_tree.toString() << endl;
-    
-    
+
+
 //    T.regraft();
 //
 //    Node * scionP = T.getRandomNode();
 //    if(!(scionP==T.getRoot())){
 //        T.cutSubtree(scionP);
-//        
-//        
+//
+//
 ////        cout << new_Tree.toString();
 //        T.getRoot()->updateNumInternalNodes();
-//        
+//
 //        //Something below doesnt work...
 //        Node * stockP = T.getRandomNode();
 //        // TODO: random child or sibling
