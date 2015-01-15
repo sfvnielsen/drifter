@@ -18,14 +18,14 @@ class Sampler
         void run();
         void run(int L);
         Tree getLast();
-        float getLastLikelihood();
+        double getLastLikelihood();
 
     protected:
-    
+
     private:
         // Data storage
         std::list<Tree> chain;
-        std::list<float> likelihoods;
+        std::list<double> likelihoods;
         int L;
 
         // Hyperparameters:

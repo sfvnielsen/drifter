@@ -1,5 +1,6 @@
 #include "sampler.h"
 #include <iostream>
+#include <numeric>
 
 using namespace std;
 
@@ -35,36 +36,40 @@ Sampler::~Sampler()
 * @param L: number of iterations
 */
 void Sampler::run(int L){
-    
+double lastLogLik = -std::numeric_limits<double>::infinity();
 for (int i=0; i<L; i++){
     // Create a proposal
     Tree proposal = chain.back();
 //    cout << proposal.toString() << endl;
-    float move_ratio = proposal.regraft(); //Try a move
+    double move_ratio = proposal.regraft(); //Try a move
 
     // Get Likelihoods times priors
-    float propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
-    float lastLogLik = chain.back().evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+    double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
 
     // calculate the acceptance ratio
-    float a = exp(propLogLik-lastLogLik)*move_ratio;
+    double a = exp(propLogLik-lastLogLik)*move_ratio;
     if(a>=1){
         chain.push_back(proposal);
+        likelihoods.push_back(propLogLik);
+        lastLogLik = propLogLik;
     }else if(a>(double)rand()/RAND_MAX){
         chain.push_back(proposal);
+        likelihoods.push_back(propLogLik);
+        lastLogLik = propLogLik;
     }else{
         chain.push_back(chain.back());
+        likelihoods.push_back(lastLogLik);
     }
 
     if (((i+1) % 1)==0){
         cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
         << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
-        
+
     }
 
 }
 }
 
-float Sampler::getLastLikelihood(){
-    return chain.back().evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+double Sampler::getLastLikelihood(){
+    return likelihoods.back();
 }
