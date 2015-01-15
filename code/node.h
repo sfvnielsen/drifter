@@ -32,7 +32,7 @@ public:
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);
     void addChild(Node *);
-    void removeChild(Node *);
+    int removeChild(Node *);
     bool isInternalNode();
     void setInternalNodeValue(bool);
     bool operator == ( const Node &rhs ) const;
