@@ -24,15 +24,11 @@ int main() {
     string data_file_name = "data/karate_edgelist.txt";
 //    data_file_name = "data/celegans_edgelist.txt";
 
-
     /**
      * Testing a network
      */
     int num_iterations = 100;
     testNetwork(data_file_name,num_iterations);
-
-    cout << "--- END ---" << endl;
-
 
 	return 0;
 }
@@ -53,7 +49,7 @@ void testNetwork(string data_file_name, int num_of_iterations){
 
     sampler.run(num_of_iterations);
 
-    cout << new_tree.toString() << endl;
+    cout << sampler.getLast().toString() << endl;
 
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
