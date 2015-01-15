@@ -94,28 +94,6 @@ int main() {
     
     
     
-    
-//    T.regraft();
-//
-//    Node * scionP = T.getRandomNode();
-//    if(!(scionP==T.getRoot())){
-//        T.cutSubtree(scionP);
-//
-//
-////        cout << new_Tree.toString();
-//        T.getRoot()->updateNumInternalNodes();
-//
-//        //Something below doesnt work...
-//        Node * stockP = T.getRandomNode();
-//        // TODO: random child or sibling
-//        T.insertSubtree(stockP, scionP, true);
-////        cout << new_Tree.toString();
-//
-//        T.getRoot()->updateNumInternalNodes();
-//    }else{
-//        cout << "root selected" <<endl;
-//    }
->>>>>>> 3853bc2927c682acbd78b857f80a8358b96068f4
 
     cout << "--- END ---" << endl;
 

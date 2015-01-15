@@ -295,7 +295,7 @@ void Tree::regraft(){
 //        cout << "cutting: " << scionP->getLeafId() << endl;
         this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
-
+        
         Node * stockP = this->getRandomNode();
 //        cout << "inserting: " << stockP->getLeafId();
         // TODO: random child or sibling
@@ -366,6 +366,10 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     if(asChild){
         stockP->addChild(scionP);
     }else{ //As sibling
+
+        // TODO: Replacing the root node.
+
+        //TODO:: ADD new Internal node as parent
 
         // cut the stock
         Node * stock_parent = stockP->getParent();
