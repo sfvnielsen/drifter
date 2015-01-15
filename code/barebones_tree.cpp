@@ -295,7 +295,7 @@ void Tree::regraft(){
 //        cout << "cutting: " << scionP->getLeafId() << endl;
         this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
-        
+
         Node * stockP = this->getRandomNode();
 //        cout << "inserting: " << stockP->getLeafId();
         // TODO: random child or sibling
@@ -316,7 +316,7 @@ void Tree::regraft(int scionVal, int stockVal){
         cout << "cutting: " << scionP->getLeafId() << endl;
         this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
-        
+
         Node * stockP = this->getNode(stockVal);
         cout << "inserting: " << stockP->getLeafId() << endl;
         // TODO: random child or sibling
@@ -344,19 +344,21 @@ double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, 
     return rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
 }
 
-void Tree::cutSubtree(Node * scionP){
-    // assumes that scionP doesnt point to root.
+int Tree::cutSubtree(Node * scionP){
+    // assumes that scionP doesn't point to root.
     Node * parentP = scionP->getParent();
-    parentP->removeChild(scionP);
+    int collapsed = parentP->removeChild(scionP);
     scionP->setParent(nullptr);
-    // TODO: remove obsoleted internal nodes
+    return collapsed;
 }
 
 Node * Tree::getRoot(){
     return rootP;
 }
 
-void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
+int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
+
+    int created = 0;
     //TODO: Fix less hot hotfix
     // Cannot be added as a child to a leaf, only as sibling
     if (! stockP->isInternalNode()){
@@ -367,33 +369,25 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         stockP->addChild(scionP);
     }else{ //As sibling
 
-        // TODO: Replacing the root node.
-
-        //TODO:: ADD new Internal node as parent
-
-        // cut the stock
-        Node * stock_parent = stockP->getParent();
-
+        // Create a new node
         nodes.push_back(Node(this,getNextInternalNodeId()));
         Node * new_parent = &(nodes.back());
         new_parent->setInternalNodeValue(true);
-        
-        
-        if (stock_parent != nullptr) {
+
+        // Constuct and add a new parent
+        Node * stock_parent = stockP->getParent();
+        if(stock_parent != nullptr){ // if stock is not root
             new_parent->setParent(stock_parent);
             stock_parent->addChild(new_parent);
             stock_parent->removeChild(stockP);
-        } else {
-            //Parent is nullptr
+        } else {// if stock is root
             setRootP(new_parent);
         }
-        
-        // constuct and add a new parent
+
+        created++;
 
         new_parent->addChild(stockP);
         new_parent->addChild(scionP);
-        
-        
-
     }
+    return created;
 }

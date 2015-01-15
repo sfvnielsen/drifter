@@ -95,7 +95,8 @@ void Node::addChild(Node * childP) {
     children.push_back(childP);
 }
 
-void Node::removeChild(Node * child) {
+int Node::removeChild(Node * child) {
+    int collapsed = 0;
     children.remove(child);
     // if there is only one child left: collapse node.
     if(1==(int)children.size()){
@@ -103,12 +104,15 @@ void Node::removeChild(Node * child) {
             children.front()->setParent(nullptr);
             treeP->setRootP(children.front());
             treeP->removeNode(this);
+                collapsed++;
         }else{
             parentP->addChild(children.front());
-            parentP->removeChild(this);
+            collapsed += parentP->removeChild(this);
             treeP->removeNode(this);
+               collapsed++;
         }
     }
+    return collapsed;
 }
 
 
