@@ -64,7 +64,7 @@ public:
 	int cutSubtree(Node * scion_node); //Modifies the tree and returns change in the number of internal nodes
     int insertSubtree(Node * stockP, Node * scionP, bool asChild); //Modifies the tree and returns change in the number of internal nodes
     Node * getNode(int);
-
+    
     void recalculate(); // calculate all of the counts on the tree from the graph
 
     std::string toString();
