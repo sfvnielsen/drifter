@@ -32,7 +32,7 @@
 	"barebones_tree.h"
 	"iofilehandler.h"
 
-1421327204 /home/sfvn/Documents/parmugit/code/barebones_tree.h
+1421351624 /home/sfvn/Documents/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
@@ -54,7 +54,7 @@
 	<numeric>
 	<cassert>
 
-1420804361 D
+1421310477 D
 
 1421240146 source:/home/julian/Dropbox/skole/parmugit/code/adjacency_list.cpp
 	"adjacency_list.h"
@@ -70,7 +70,7 @@
 
 1420804673 >
 
-1421327204 /home/sfvn/Documents/parmugit/code/node.h
+1421337528 /home/sfvn/Documents/parmugit/code/node.h
 	<list>
 	<cmath>
 	"adjacency_list.h"
@@ -89,7 +89,7 @@
 	<list>
 	<algorithm>
 
-1421335041 source:/home/sfvn/Documents/parmugit/code/main.cpp
+1421339093 source:/home/sfvn/Documents/parmugit/code/main.cpp
 	<iostream>
 	<cstdlib>
 	<time.h>
@@ -143,7 +143,6 @@
 	<utility>
 	<vector>
 
-<<<<<<< HEAD
 1421318290 /home/julian/Dropbox/skole/parmugit/code/iofilehandler.h
 	<iostream>
 	<string>
@@ -156,10 +155,13 @@
 	<fstream>
 	<stdexcept>
 	<dirent.h>
-=======
-1421335582 source:/home/sfvn/Documents/parmugit/code/sampler.cpp
+
+1421318290 
+
+1421337528 source:/home/sfvn/Documents/parmugit/code/sampler.cpp
 	"sampler.h"
 	<iostream>
 	<numeric>
->>>>>>> 1756df843b03589333a63a6657eee42fbb5582e9
+
+1421335582 6df843b03589333a63a6657eee42fbb5582e9
 

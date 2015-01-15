@@ -19,17 +19,7 @@
 
 
 class Tree {
-    /**
-     * RULE of 5
-     * Destructor
-     * copy const
-     * copy assignment operator
-     * move con
-     * move assignment
-     *
-     *
-     *
-     */
+
 private:
     Node * rootP;
     std::list<Node> nodes;
@@ -45,36 +35,43 @@ private:
 	// TODO make functions private when not debugging them.
 
 public:
-    Tree(); // default constructor
-    // Tree(something); // some other constructor?
+    // Constructors
     Tree(std::list<std::pair<int, int>>); // make the naive tree building in the adjacency matrix.
     Tree(std::list<std::pair<int, int>>, std::string);
     Tree(std::list<std::pair<int, int>>, std::list<std::pair<int, int>>
          , std::vector<int>); // Builds tree based on data, tree and data-tree relation
-    Tree(Tree const &);
 
-    void removeNode(Node *);
+    //TODO: Rule of "5"
+    //virtual ~Tree();                     // Default destructor
+    Tree(Tree const &);                  // Copy constructor
+    //Tree(Tree&&) = default;                    // Move constructor
+    //Tree& operator=(const Tree&) & = default;  // Copy assignment operator
+    //Tree& operator=(Tree&&) & = default;       // Move assignment operator
+
+    // Get and set - Trivial stuff
     Adj_list getAdjacencyList();
     void setRootP(Node *);
+    Node * getRoot(); // Returns pointer tree-root
+    int getNextInternalNodeId();
+    Node * getNode(int); // Get node by unique 'leaf-id'
 
+    // Regrafting
 	double regraft(); // return new regrafted tree
     void regraft(int,int); // DEBUG testing specific move;
-    int getNextInternalNodeId();
 	Node * getRandomScion();
 	Node * getRandomStock();
-	Node * getRoot();
-	int cutSubtree(Node * scion_node); //Modifies the tree and returns change in the number of internal nodes
-    int insertSubtree(Node * stockP, Node * scionP, bool asChild); //Modifies the tree and returns change in the number of internal nodes
-    Node * getNode(int);
-    
-    void recalculate(); // calculate all of the counts on the tree from the graph
+	int cutSubtree(Node * ); //Modifies the tree and returns change in the number of internal nodes
+    int insertSubtree(Node *, Node *, bool); //Modifies the tree and returns change in the number of internal nodes
+    void removeNode(Node *);  // Removes node from nodes-list (called from Node class)
 
-    std::string toString();
-
+    // Evaluating likelihood
     double evaluateLogLikeTimesPrior(double, double, int, int);
 
-    std::list<std::pair<int, int>> getCountsAll();
+    // Print
+    std::string toString();
 
+    //TODO: Dont know what to do with this...?
+    // void recalculate(); // calculate all of the counts on the tree from the graph
 };
 
 
