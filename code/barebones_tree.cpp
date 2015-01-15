@@ -189,7 +189,7 @@ Tree::Tree(Tree const &old_tree)  {
     nodes = old_tree.nodes;
     leaves = old_tree.leaves;
     vec_leaves =old_tree.vec_leaves;
-    graph = old_tree.graph ;
+    graph = old_tree.graph;
     adjacencyList = old_tree.adjacencyList;
     nextInternalNodeId = old_tree.nextInternalNodeId;
 
@@ -198,11 +198,17 @@ Tree::Tree(Tree const &old_tree)  {
         if (it->getParent() == nullptr) {
             rootP = &(*it);
         }else{
+        }
+    }
+    
+    for (auto it = nodes.begin(); it != nodes.end();++it){
+        if (it->getParent() != nullptr){
             //parent update
             int old_parent = it->getParent()->getLeafId();
             it->setParent(getNode(old_parent));
+            
         }
-
+        
         //children update
         list<Node *> children = it->getChildren();
         list<Node *> new_children;
@@ -310,17 +316,17 @@ double Tree::regraft(){
 // TODO: finish the regrafting
     Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
-        cout << "cutting: " << scionP->getLeafId() << endl;
+//        cout << "cutting: " << scionP->getLeafId() << endl;
         int n_collapsed = this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         
-        cout << "Mutilated tree :'( \n" << toString() << endl << flush;
+//        cout << "Mutilated tree :'( \n" << toString() << endl << flush;
         
         Node * stockP = this->getRandomStock();
-        cout << "inserting at: " << stockP->getLeafId();
+//        cout << "inserting at: " << stockP->getLeafId();
         // TODO: random child or sibling
         bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
-        cout << " , as child : "+to_string(unbiased_coinflip) << endl;
+//        cout << " , as child : "+to_string(unbiased_coinflip) << endl;
         int n_created = this->insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
 

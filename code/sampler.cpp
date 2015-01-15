@@ -39,7 +39,7 @@ void Sampler::run(int L){
 for (int i=0; i<L; i++){
     // Create a proposal
     Tree proposal = chain.back();
-    cout << proposal.toString() << endl;
+//    cout << proposal.toString() << endl;
     float move_ratio = proposal.regraft(); //Try a move
 
     // Get Likelihoods times priors
@@ -47,14 +47,19 @@ for (int i=0; i<L; i++){
     float lastLogLik = chain.back().evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
 
     // calculate the acceptance ratio
-    float a = exp(propLogLik)/exp(lastLogLik)*move_ratio;
-    cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a << endl;
+    float a = exp(propLogLik-lastLogLik)*move_ratio;
     if(a>=1){
         chain.push_back(proposal);
     }else if(a>(double)rand()/RAND_MAX){
         chain.push_back(proposal);
     }else{
         chain.push_back(chain.back());
+    }
+
+    if (((i+1) % 50)==0){
+        cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
+        << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
+        
     }
 
 }

@@ -60,18 +60,18 @@ int main() {
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
     cout << "--- New Tree ---" << endl;
-    T.regraft(3,1);
+//    T.regraft(3,1);
   
 
-    
-    for (int i = 0; i < 1000; i++){
-        //        cout << "--- After regrafting "+to_string(i)+ "--- " << endl;
-        T.regraft();
-        double llike = Tree(T).evaluateLogLikeTimesPrior(.5, .5, 1, 1);
-        cout << "Loglikelihood: "+ to_string(llike) << endl << endl;
-          cout << T.toString() << endl;
-        
-    }
+//    
+//    for (int i = 0; i < 100000; i++){
+//        //        cout << "--- After regrafting "+to_string(i)+ "--- " << endl;
+//        T.regraft();
+//        double llike = Tree(T).evaluateLogLikeTimesPrior(.5, .5, 1, 1);
+//        cout << "Loglikelihood: "+ to_string(llike) << endl << endl;
+//          cout << T.toString() << endl;
+//        
+//    }
     
     string data_file_name = "data/karate_edgelist.txt";
 //    data_file_name = "data/celegans_edgelist.txt";
@@ -80,13 +80,13 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 10;
-    //    testNetwork(data_file_name,num_iterations);
-
-    cout << "--- Using the sampler object---" << endl;
+    int num_iterations = 10000;
+    testNetwork(data_file_name,num_iterations);
+//
+//    cout << "--- Using the sampler object---" << endl;
 //    Sampler sampler = Sampler(T,0.5, 0.5, 1, 1);
-  //  sampler.run(100);
-
+//    sampler.run(100000);
+//
 //    cout << "L:" << S.getLastLikelihood() << endl;
 //
 //    cout << "--------Get Random Node -------" << endl;
@@ -107,20 +107,14 @@ void testNetwork(string data_file_name, int num_of_iterations){
     data_file.read_graph();
     
     Tree new_tree(data_file.getDataEl()); // initialize flat tree
-    cout << new_tree.toString() << endl;
+//    cout << new_tree.toString() << endl;
     
-    
-    //    Tree new_tree(T);
-    
+    Sampler sampler = Sampler(new_tree,0.5, 0.5, 1, 1);
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();
-    for (int i = 0; i < num_of_iterations; i++){
-        //        cout << "--- After regrafting "+to_string(i)+ "--- " << endl;
-        new_tree.regraft();
-        double llike = new_tree.evaluateLogLikeTimesPrior(.5, .5, 1, 1);
-        cout << "Loglikelihood: "+ to_string(llike) << endl << endl;
-        
-    }
+    
+    sampler.run(num_of_iterations);
+    
     cout << new_tree.toString() << endl;
     
     end = chrono::system_clock::now();
