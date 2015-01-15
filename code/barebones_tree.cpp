@@ -267,7 +267,7 @@ Node * Tree::getRandomScion() {
     int num_nodes = (int) nodes.size();
     // Sample random id in nodes list
     int random_node_id = (int) round( ((double)rand()/RAND_MAX)*(num_nodes-1));
-    list<Node>::iterator it = it.begin();
+    list<Node>::iterator it = nodes.begin();
     for (int i = 0; i!= random_node_id; ++i) {
             // loop through list until you find the element
             // NB! Convert all this to vector for random access PLZ!!!?!?
