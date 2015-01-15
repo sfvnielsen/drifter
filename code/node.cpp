@@ -116,8 +116,9 @@ bool Node::isInternalNode() {
     return isInternal;
 }
 
-void Node::setInternalNodeValue(bool new_value){
-    isInternal = new_value;
+bool Node::operator==( const Node &rhs ) const {
+    return leafId == rhs.leafId;
+//  return parentP==rhs.parentP && leafId==rhs.leafId && children==rhs.children;
 }
 
 int Node::getNumInternalNodes(){
