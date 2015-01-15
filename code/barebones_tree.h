@@ -64,7 +64,7 @@ public:
 	void cutSubtree(Node * scion_node); //Returns the subtree at Node sub_node
     void insertSubtree(Node * stockP, Node * scionP, bool asChild);
     Node * getNode(int);
-
+    
     void recalculate(); // calculate all of the counts on the tree from the graph
 
     std::string toString();

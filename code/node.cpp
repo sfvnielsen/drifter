@@ -125,6 +125,10 @@ int Node::getNumInternalNodes(){
     return num_internal_nodes;
 }
 
+void Node::setInternalNodeValue(bool new_value){
+    isInternal = new_value;
+}
+
 /**
  * Recursively recalculates the number of internal nodes at each node
  * below the provide node.

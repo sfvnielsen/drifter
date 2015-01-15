@@ -60,13 +60,13 @@ int main() {
     cout << "--- New Tree ---" << endl;
 
     string data_file_name = "data/karate_edgelist.txt";
-    data_file_name = "data/celegans_edgelist.txt";
+//    data_file_name = "data/celegans_edgelist.txt";
     
     IoFileHandler data_file(data_file_name,0);
     data_file.read_graph();
     
     Tree new_tree(data_file.getDataEl()); // initialize flat tree
-//    cout << new_tree.toString() << endl;
+    cout << new_tree.toString() << endl;
 
     
 //    Tree new_tree(T);
