@@ -58,24 +58,14 @@ int main() {
     cout << "--- New Tree ---" << endl;
 
     Tree new_tree(T);
-    new_tree.regraft();
-    cout << "--- After regrafting 1---" << endl;
-    cout << new_tree.toString() << endl;
-    new_tree.regraft();
-    cout << "--- After regrafting 2---" << endl;
-    cout << new_tree.toString() << endl;
-    new_tree.regraft();
-    cout << "--- After regrafting 3---" << endl;
-    cout << new_tree.toString() << endl;
-    new_tree.regraft();
-    cout << "--- After regrafting 4---" << endl;
-    cout << new_tree.toString() << endl;
-    new_tree.regraft();
-    cout << "--- After regrafting 5---" << endl;
-    cout << new_tree.toString() << endl;
-    new_tree.regraft();
-    cout << "--- After regrafting 6---" << endl;
-    cout << new_tree.toString() << endl;
+    for (int i = 0; i < 100000; i++){
+        new_tree.regraft();
+        cout << "--- After regrafting "+to_string(i)+ "---" << endl;
+        cout << new_tree.toString() << endl;
+
+    }
+    
+    
     
     
 //    T.regraft();

@@ -120,6 +120,10 @@ bool Node::isInternalNode() {
     return isInternal;
 }
 
+void Node::setInternalNodeValue(bool new_value){
+    isInternal = new_value;
+}
+
 int Node::getNumInternalNodes(){
     return num_internal_nodes;
 }
@@ -149,7 +153,7 @@ string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
 
     list<int> leaves = this->getLeaves();
-    string s = "leaves: (";
+    string s = "Node: " +  to_string(getLeafId()) + "; Leaves: (";
     if(!leaves.empty()) {
         for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++) {
             s += "," + to_string(*it);

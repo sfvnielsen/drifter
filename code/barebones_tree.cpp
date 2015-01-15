@@ -15,7 +15,7 @@ using namespace std;
 /**
  * Tree constructor choice
  */
-Tree::Tree(list<pair<int, int>> data_graph, string initType){
+Tree::Tree(list<pair<int, int>> data_graph, string initType): nextInternalNodeId(0){
 
     //first construct adjacency list and leaf list, same regardless of tree stucture.
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
@@ -84,7 +84,7 @@ int Tree::InitFlatTree(){
 /**
  * Construct flat tree
  */
-Tree::Tree(list<pair<int,int>> data_graph) {
+Tree::Tree(list<pair<int,int>> data_graph): nextInternalNodeId(0) {
 
     // insert all the indexes from the edge list into leaves
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
@@ -104,7 +104,7 @@ Tree::Tree(list<pair<int,int>> data_graph) {
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
 
-    nodes.push_back(Node(this));
+    nodes.push_back(Node(this,getNextInternalNodeId()));
     rootP = &(nodes.back());
 
 
@@ -117,7 +117,7 @@ Tree::Tree(list<pair<int,int>> data_graph) {
 * (First element in tree_struct_graph must contain root)
 */
 Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
-           vector<int> data_leaf_relation) {
+           vector<int> data_leaf_relation): nextInternalNodeId(0) {
 
     // - Construct adj list from data_graph
     int N = ((int) data_leaf_relation.size())/2; //Number of leaves in graph
@@ -167,13 +167,11 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
      * For each leaf node, correct the leaf ID, so it correspond to the data ID
      *  each internal node is assigned a unique negative number.
      */
-    int new_id =-1;
-    rootP->setLeafId(new_id);
+    rootP->setLeafId(getNextInternalNodeId());
 
     for (auto it = nodes.begin(); it != nodes.end(); it++) {
         if (it->isInternalNode()){ //Internal node
-            new_id--;
-            it->setLeafId(new_id);
+            it->setLeafId(getNextInternalNodeId());
 
         } else { //Leaf node
              //Find what the fake_id corresponds to in real id
@@ -188,13 +186,13 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 * Copy constructor
 *
 */
-
 Tree::Tree(Tree const &old_tree)  {
     nodes = old_tree.nodes;
     leaves = old_tree.leaves;
     vec_leaves =old_tree.vec_leaves;
     graph = old_tree.graph ;
     adjacencyList = old_tree.adjacencyList;
+    nextInternalNodeId = old_tree.nextInternalNodeId;
 
     //Find new root node
     for (auto it = nodes.begin(); it != nodes.end();++it){
@@ -227,6 +225,13 @@ Tree::Tree(Tree const &old_tree)  {
     //Update rest
 //    for (auto it nodes)
 
+}
+
+int Tree::getNextInternalNodeId(){
+    --nextInternalNodeId;
+    cout << "New internal node: "+ to_string(nextInternalNodeId) << endl;
+    return nextInternalNodeId;
+//  return --nextInternalNodeId;
 }
 
 /**
@@ -292,6 +297,27 @@ void Tree::regraft(){
         rootP->updateNumInternalNodes();
         
         Node * stockP = this->getRandomNode();
+        cout << "inserting: " << stockP->getLeafId();
+        // TODO: random child or sibling
+        bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
+        cout << " , as : "+to_string(unbiased_coinflip) << endl;
+        this->insertSubtree(stockP, scionP, unbiased_coinflip);
+        rootP->updateNumInternalNodes();
+    }
+}
+
+/**
+ * Regraft specific nodes !!! ASSUMES ITS A VALID OPERATION!!
+ */
+void Tree::regraft(int scionVal, int stockVal){
+    // TODO: finish the regrafting
+    Node * scionP = this->getNode(scionVal);
+    if(!(scionP==rootP)){
+        cout << "cutting: " << scionP->getLeafId() << endl;
+        this->cutSubtree(scionP);
+        rootP->updateNumInternalNodes();
+        
+        Node * stockP = this->getNode(stockVal);
         cout << "inserting: " << stockP->getLeafId() << endl;
         // TODO: random child or sibling
         this->insertSubtree(stockP, scionP, true);
@@ -332,7 +358,8 @@ Node * Tree::getRoot(){
 
 void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     //TODO: Fix less hot hotfix
-    if (!stockP->isInternalNode()){
+    // Cannot be added as a child to a leaf, only as sibling
+    if (! stockP->isInternalNode()){
         asChild = false;
     }
     
@@ -340,22 +367,29 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         stockP->addChild(scionP);
     }else{ //As sibling
 
-        // TODO: Replacing the root node.
-        
-        //TODO:: ADD new Internal node as parent
-
         // cut the stock
-        Node * parent = stockP->getParent();
-        parent -> removeChild(stockP);
+        Node * stock_parent = stockP->getParent();
 
-        // add a new parent
-        nodes.push_back(Node());
+        nodes.push_back(Node(this,getNextInternalNodeId()));
         Node * new_parent = &(nodes.back());
-        parent->addChild(new_parent);
+        new_parent->setInternalNodeValue(true);
+        
+        
+        if (stock_parent != nullptr) {
+            new_parent->setParent(stock_parent);
+            stock_parent->addChild(new_parent);
+            stock_parent->removeChild(stockP);
+        } else {
+            //Parent is nullptr
+            setRootP(new_parent);
+        }
+        
+        // constuct and add a new parent
 
-        // add graft both stock and scion to the new parent
         new_parent->addChild(stockP);
         new_parent->addChild(scionP);
+        
+        
 
     }
 }

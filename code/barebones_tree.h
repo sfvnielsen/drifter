@@ -40,7 +40,7 @@ private:
     Node * makeNleafTree(int,int,int);
 
     int InitFlatTree();
-
+    int nextInternalNodeId;
 	// TODO make functions private when not debugging them.
 
 public:
@@ -57,6 +57,8 @@ public:
     void setRootP(Node *);
 
 	void regraft(); // return new regrafted tree
+    void regraft(int,int); // DEBUG testing specific move;
+    int getNextInternalNodeId();
 	Node * getRandomNode();
 	Node * getRoot();
 	void cutSubtree(Node * scion_node); //Returns the subtree at Node sub_node
