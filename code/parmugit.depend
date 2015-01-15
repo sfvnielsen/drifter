@@ -1,24 +1,27 @@
 # depslib dependency file v1.0
-1421241213 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
+1421335025 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
 
-1421241200 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
+1421327865 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
 	<set>
 	<list>
 	<string>
+	<algorithm>
 	"node.h"
 
-1421240178 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
+1421327865 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
 	<iostream>
 	<cstdlib>
 	<time.h>
+	<chrono>
 	"barebones_tree.h"
 	"sampler.h"
+	"iofilehandler.h"
 
 1421313016 source:/home/sfvn/Documents/parmugit/code/test.cpp
 	<iostream>
@@ -38,12 +41,12 @@
 	<string>
 	"node.h"
 
-1421240178 /home/julian/Dropbox/skole/parmugit/code/node.h
+1421325392 /home/julian/Dropbox/skole/parmugit/code/node.h
 	<list>
 	<cmath>
 	"adjacency_list.h"
 
-1421241007 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
+1421335025 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
 	"node.h"
 	"barebones_tree.h"
 	<iostream>
@@ -104,10 +107,11 @@
 	<iostream>
 	<algorithm>
 
-1421149641 source:/home/julian/Dropbox/skole/parmugit/code/sampler.cpp
+1421335025 source:/home/julian/Dropbox/skole/parmugit/code/sampler.cpp
 	"sampler.h"
+	<iostream>
 
-1421161042 /home/julian/Dropbox/skole/parmugit/code/sampler.h
+1421327865 /home/julian/Dropbox/skole/parmugit/code/sampler.h
 	"barebones_tree.h"
 	<cstdlib>
 
@@ -135,4 +139,17 @@
 	<list>
 	<utility>
 	<vector>
+
+1421318290 /home/julian/Dropbox/skole/parmugit/code/iofilehandler.h
+	<iostream>
+	<string>
+	<list>
+	<utility>
+	<vector>
+
+1421318290 source:/home/julian/Dropbox/skole/parmugit/code/iofilehandler.cpp
+	"iofilehandler.h"
+	<fstream>
+	<stdexcept>
+	<dirent.h>
 
