@@ -260,12 +260,30 @@ list<pair<int, int>> Tree::getCountsAll(){
 
 
 /**
+    Get random node in tree (based on nodes list)
+    All nodes are weigthed equally
+*/
+Node * Tree::getRandomScion() {
+    int num_nodes = (int) nodes.size();
+    // Sample random id in nodes list
+    int random_node_id = (int) round( ((double)rand()/RAND_MAX)*(num_nodes-1));
+    list<Node>::iterator it = it.begin();
+    for (int i = 0; i!= random_node_id; ++i) {
+            // loop through list until you find the element
+            // NB! Convert all this to vector for random access PLZ!!!?!?
+        ++it;
+    }
+    return &(*it);
+}
+
+
+/**
 * Get random node in tree (recursive operation)
 * - Chooses internal nodes with weight 2 and leaves with weight 1
 * - calls getRandomChild from node-class
 */
 
-Node * Tree::getRandomNode() {
+Node * Tree::getRandomStock() {
     return rootP->getRandomDescendant();
 }
 
@@ -285,23 +303,33 @@ void Tree::setRootP(Node * node){
 
 
 /**
- *
+ * Modifies tree by random regrafting
+ * Returns the Metropolis-Hasting 'move-ratio' (NB! non-logarithmic)
  */
-void Tree::regraft(){
+double Tree::regraft(){
 // TODO: finish the regrafting
-    Node * scionP = this->getRandomNode();
+    Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
 //        cout << "cutting: " << scionP->getLeafId() << endl;
-        this->cutSubtree(scionP);
+        int n_collapsed = this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
 
-        Node * stockP = this->getRandomNode();
+        Node * stockP = this->getRandomStock();
 //        cout << "inserting: " << stockP->getLeafId();
         // TODO: random child or sibling
         bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
 //        cout << " , as : "+to_string(unbiased_coinflip) << endl;
-        this->insertSubtree(stockP, scionP, unbiased_coinflip);
+        int n_created = this->insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
+
+        // Move probabilities
+        int n_nodes = (int)nodes.size();
+        double p_scion = 1.0/(n_nodes);
+        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
+
+        return p_stock/p_scion;
+    } else{ // scion was root - ratio of move probabilities is 1
+        return 1;
     }
 }
 
@@ -382,6 +410,7 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         } else {// if stock is root
             setRootP(new_parent);
         }
+
 
         created++;
 
