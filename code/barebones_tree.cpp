@@ -205,25 +205,25 @@ Tree::Tree(Tree const &old_tree)  {
             int old_parent = it->getParent()->getLeafId();
             it->setParent(getNode(old_parent));
         }
-        
+
         //children update
         list<Node *> children = it->getChildren();
         list<Node *> new_children;
         for (auto it_child = children.begin();
              it_child != children.end(); ++it_child) {
-            
+
             //Find id, and find it in
             int id = (*it_child)->getLeafId();
             new_children.push_back(getNode(id));
-            
+
         }
         it->setChildren(new_children);
-        
+
         //tree pointer update
         it->setTreePointer(this);
-        
+
     }
-    
+
     //Update rest
 //    for (auto it nodes)
 
@@ -290,7 +290,7 @@ void Tree::regraft(){
         cout << "cutting: " << scionP->getLeafId() << endl;
         this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
-        
+
         Node * stockP = this->getRandomNode();
         cout << "inserting: " << stockP->getLeafId() << endl;
         // TODO: random child or sibling
@@ -335,13 +335,13 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     if (!stockP->isInternalNode()){
         asChild = false;
     }
-    
+
     if(asChild){
         stockP->addChild(scionP);
     }else{ //As sibling
 
         // TODO: Replacing the root node.
-        
+
         //TODO:: ADD new Internal node as parent
 
         // cut the stock

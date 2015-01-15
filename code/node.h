@@ -34,7 +34,6 @@ public:
     void addChild(Node *);
     void removeChild(Node *);
     bool isInternalNode();
-    bool operator == ( const Node &rhs ) const;
 
 	Node * getParent();
 	int getNumInternalNodes();

@@ -111,10 +111,6 @@ void Node::removeChild(Node * child) {
     }
 }
 
-bool Node::operator==( const Node &rhs ) const {
-    return parentP==rhs.parentP && leafId==rhs.leafId && children==rhs.children;
-}
-
 
 bool Node::isInternalNode() {
     return isInternal;
