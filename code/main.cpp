@@ -74,13 +74,13 @@ int main() {
 //    }
     
     string data_file_name = "data/karate_edgelist.txt";
-//    data_file_name = "data/celegans_edgelist.txt";
+    data_file_name = "data/celegans_edgelist.txt";
     
 
     /**
      * Testing a network
      */
-    int num_iterations = 10000;
+    int num_iterations = 50;
     testNetwork(data_file_name,num_iterations);
 //
 //    cout << "--- Using the sampler object---" << endl;

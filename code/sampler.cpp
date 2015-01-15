@@ -56,7 +56,7 @@ for (int i=0; i<L; i++){
         chain.push_back(chain.back());
     }
 
-    if (((i+1) % 50)==0){
+    if (((i+1) % 1)==0){
         cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
         << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
         
