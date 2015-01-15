@@ -73,3 +73,7 @@ for (int i=0; i<L; i++){
 double Sampler::getLastLikelihood(){
     return likelihoods.back();
 }
+
+Tree Sampler::getLast(){
+    return chain.back();
+}
