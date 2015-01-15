@@ -46,7 +46,8 @@ void Node::setChildren(list<Node *> new_children){
 
 list<int> Node::getLeaves() {
     list<int> leaves;
-
+    assert(isInternal == ((leafId < 0) && children.size() >0));
+    
     if(!isInternal){
         leaves.push_back(leafId);
         return leaves;
@@ -99,7 +100,7 @@ int Node::removeChild(Node * child) {
     int collapsed = 0;
     children.remove(child);
     // if there is only one child left: collapse node.
-    if(1==(int)children.size()){
+    if(1==(int) children.size()){
         if(this == (treeP->getRoot()) ){ //If the node is the tree root
             children.front()->setParent(nullptr);
             treeP->setRootP(children.front());
@@ -184,7 +185,7 @@ string Node::toString() {
 */
 Node * Node::getRandomDescendant() {
     if (isInternal){
-        list<Node *> node_list = this->getChildren();
+        list<Node *> node_list = getChildren();
         list<int> subtree_weight;
         for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
         // Each subtree has weight according to two times the number of

@@ -310,15 +310,17 @@ double Tree::regraft(){
 // TODO: finish the regrafting
     Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
-//        cout << "cutting: " << scionP->getLeafId() << endl;
+        cout << "cutting: " << scionP->getLeafId() << endl;
         int n_collapsed = this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
-
+        
+        cout << "Mutilated tree :'( \n" << toString() << endl << flush;
+        
         Node * stockP = this->getRandomStock();
-//        cout << "inserting: " << stockP->getLeafId();
+        cout << "inserting at: " << stockP->getLeafId();
         // TODO: random child or sibling
         bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
-//        cout << " , as : "+to_string(unbiased_coinflip) << endl;
+        cout << " , as child : "+to_string(unbiased_coinflip) << endl;
         int n_created = this->insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
 
@@ -347,7 +349,7 @@ void Tree::regraft(int scionVal, int stockVal){
         Node * stockP = this->getNode(stockVal);
         cout << "inserting: " << stockP->getLeafId() << endl;
         // TODO: random child or sibling
-        this->insertSubtree(stockP, scionP, true);
+        this->insertSubtree(stockP, scionP, false);
         rootP->updateNumInternalNodes();
     }
 }

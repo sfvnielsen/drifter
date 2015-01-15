@@ -39,6 +39,7 @@ void Sampler::run(int L){
 for (int i=0; i<L; i++){
     // Create a proposal
     Tree proposal = chain.back();
+    cout << proposal.toString() << endl;
     float move_ratio = proposal.regraft(); //Try a move
 
     // Get Likelihoods times priors

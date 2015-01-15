@@ -38,16 +38,16 @@ int main() {
     pair<int,int> t2 (0,2);
     pair<int,int> t3 (1,3);
     pair<int,int> t4 (1,4);
-    pair<int,int> t5 (2,5);
-    pair<int,int> t6 (2,6);
-    list<pair<int,int>> tree_edge_list = {t1,t2,t3,t4,t5,t6};
+    pair<int,int> t5 (1,5);
+//    pair<int,int> t6 (2,6);
+    list<pair<int,int>> tree_edge_list = {t1,t2,t3,t4,t5};
 
     // data-leaf relation - convention
     vector<int> data_leaf_relation(2*4,-1);
-    data_leaf_relation[3] = 0;
-    data_leaf_relation[4] = 3;
-    data_leaf_relation[5] = 1;
-    data_leaf_relation[6] = 2;
+    data_leaf_relation[2] = 3;
+    data_leaf_relation[3] = 2;
+    data_leaf_relation[4] = 1;
+    data_leaf_relation[5] = 0;
 
 
     cout << "--- Constructing the tree ---" << endl;
@@ -60,19 +60,32 @@ int main() {
     cout << "L:" << T.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
 
     cout << "--- New Tree ---" << endl;
+    T.regraft(3,1);
+  
 
+    
+    for (int i = 0; i < 1000; i++){
+        //        cout << "--- After regrafting "+to_string(i)+ "--- " << endl;
+        T.regraft();
+        double llike = Tree(T).evaluateLogLikeTimesPrior(.5, .5, 1, 1);
+        cout << "Loglikelihood: "+ to_string(llike) << endl << endl;
+          cout << T.toString() << endl;
+        
+    }
+    
     string data_file_name = "data/karate_edgelist.txt";
 //    data_file_name = "data/celegans_edgelist.txt";
     
-    int num_iterations = 10;
+
     /**
      * Testing a network
      */
-    testNetwork(data_file_name,num_iterations);
+    int num_iterations = 10;
+    //    testNetwork(data_file_name,num_iterations);
 
     cout << "--- Using the sampler object---" << endl;
-    Sampler sampler = Sampler(T,0.5, 0.5, 1, 1);
-    sampler.run(10);
+//    Sampler sampler = Sampler(T,0.5, 0.5, 1, 1);
+  //  sampler.run(100);
 
 //    cout << "L:" << S.getLastLikelihood() << endl;
 //
