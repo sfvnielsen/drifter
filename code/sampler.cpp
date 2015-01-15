@@ -1,4 +1,5 @@
 #include "sampler.h"
+#include <iostream>
 
 using namespace std;
 
@@ -31,18 +32,23 @@ Sampler::~Sampler()
 }
 /**
 * Running the Metropolis hastings sampler
+* @param L: number of iterations
 */
 void Sampler::run(int L){
+    
 for (int i=0; i<L; i++){
     // Create a proposal
-    Tree proposal = chain.back();//.regraft();
+    Tree proposal = chain.back();
+    //float move_ratio =
+    proposal.regraft(); //Try a move
 
     // Get Likelihoods times priors
     float propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
     float lastLogLik = chain.back().evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
 
     // calculate the acceptance ratio
-    float a = exp(propLogLik)/exp(lastLogLik);
+    float a = exp(propLogLik)/exp(lastLogLik);//*move_ratio;
+    cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a << endl;
     if(a>=1){
         chain.push_back(proposal);
     }else if(a>(double)rand()/RAND_MAX){

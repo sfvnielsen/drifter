@@ -70,18 +70,9 @@ int main() {
      */
     testNetwork(data_file_name,num_iterations);
 
-    
-    
-    
-
-    cout << "--- END ---" << endl;
-
-//    cout << "L:" << T2.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-
-
-
-//    cout << "--- Using the sampler object---" << endl;
-//    Sampler S = Sampler(T,0.5, 0.5, 1, 1);
+    cout << "--- Using the sampler object---" << endl;
+    Sampler sampler = Sampler(T,0.5, 0.5, 1, 1);
+    sampler.run(10);
 
 //    cout << "L:" << S.getLastLikelihood() << endl;
 //
@@ -89,6 +80,10 @@ int main() {
 //    Node * random_node = T.getRandomNode();
 //    cout << random_node->toString() << endl;
 
+    
+    cout << "--- END ---" << endl;
+    
+    
 	return 0;
 }
 /**

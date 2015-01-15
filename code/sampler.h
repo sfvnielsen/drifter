@@ -21,6 +21,7 @@ class Sampler
         float getLastLikelihood();
 
     protected:
+    
     private:
         // Data storage
         std::list<Tree> chain;
