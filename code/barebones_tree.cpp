@@ -229,7 +229,7 @@ Tree::Tree(Tree const &old_tree)  {
 
 int Tree::getNextInternalNodeId(){
     --nextInternalNodeId;
-    cout << "New internal node: "+ to_string(nextInternalNodeId) << endl;
+//    cout << "New internal node: "+ to_string(nextInternalNodeId) << endl;
     return nextInternalNodeId;
 //  return --nextInternalNodeId;
 }
@@ -292,15 +292,15 @@ void Tree::regraft(){
 // TODO: finish the regrafting
     Node * scionP = this->getRandomNode();
     if(!(scionP==rootP)){
-        cout << "cutting: " << scionP->getLeafId() << endl;
+//        cout << "cutting: " << scionP->getLeafId() << endl;
         this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         
         Node * stockP = this->getRandomNode();
-        cout << "inserting: " << stockP->getLeafId();
+//        cout << "inserting: " << stockP->getLeafId();
         // TODO: random child or sibling
         bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
-        cout << " , as : "+to_string(unbiased_coinflip) << endl;
+//        cout << " , as : "+to_string(unbiased_coinflip) << endl;
         this->insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
     }

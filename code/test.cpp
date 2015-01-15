@@ -149,7 +149,8 @@ int main()
 //    }
 
     cout << "------ Real data test -----" << endl;
-    string data_file_name = "data/celegans_edgelist.txt";
+//    string data_file_name = "data/celegans_edgelist.txt";
+    string data_file_name = "data/karate_edgelist.txt";
 
     IoFileHandler data_file(data_file_name,0);
     data_file.read_graph();
