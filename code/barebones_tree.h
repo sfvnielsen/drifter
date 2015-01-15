@@ -14,6 +14,7 @@
 #include <set>
 #include <list>
 #include <string>
+#include <algorithm>
 #include "node.h"
 
 
@@ -56,10 +57,11 @@ public:
     Adj_list getAdjacencyList();
     void setRootP(Node *);
 
-	void regraft(); // return new regrafted tree
+	double regraft(); // return new regrafted tree
     void regraft(int,int); // DEBUG testing specific move;
     int getNextInternalNodeId();
-	Node * getRandomNode();
+	Node * getRandomScion();
+	Node * getRandomStock();
 	Node * getRoot();
 	void cutSubtree(Node * scion_node); //Returns the subtree at Node sub_node
     void insertSubtree(Node * stockP, Node * scionP, bool asChild);
