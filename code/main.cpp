@@ -60,7 +60,49 @@ int main() {
     Tree new_tree(T);
     cout << new_tree==T << endl;
     new_tree.regraft();
+<<<<<<< HEAD
 
+=======
+    cout << "--- After regrafting 1---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 2---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 3---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 4---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 5---" << endl;
+    cout << new_tree.toString() << endl;
+    new_tree.regraft();
+    cout << "--- After regrafting 6---" << endl;
+    cout << new_tree.toString() << endl;
+
+
+//    T.regraft();
+//
+//    Node * scionP = T.getRandomNode();
+//    if(!(scionP==T.getRoot())){
+//        T.cutSubtree(scionP);
+//
+//
+////        cout << new_Tree.toString();
+//        T.getRoot()->updateNumInternalNodes();
+//
+//        //Something below doesnt work...
+//        Node * stockP = T.getRandomNode();
+//        // TODO: random child or sibling
+//        T.insertSubtree(stockP, scionP, true);
+////        cout << new_Tree.toString();
+//
+//        T.getRoot()->updateNumInternalNodes();
+//    }else{
+//        cout << "root selected" <<endl;
+//    }
+>>>>>>> 3853bc2927c682acbd78b857f80a8358b96068f4
 
     cout << "--- END ---" << endl;
 

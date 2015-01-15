@@ -23,6 +23,9 @@ class IoFileHandler
 
         int read_graph();
         int read_test_case();
+
+
+        // Get functions
         std::list<std::pair<int,int>> getDataEl();
         std::list<std::pair<int,int>> getTreeEl();
         std::vector<int> getLeafDataRelation();
@@ -33,6 +36,7 @@ class IoFileHandler
         int getRhoMinus();
         double getLlike();
 
+        // Set functions
         void setDataEl(std::list<std::pair<int,int>>);
         void setTreeEl(std::list<std::pair<int,int>>);
         void setLeafDataRelation(std::vector<int>);
@@ -43,6 +47,8 @@ class IoFileHandler
         void setRhosMinus(int);
         void setLlike(double);
 
+        // Print functions
+        std::string toDataEdgeListString();
         // Write out credability tree?
         // write out other results from tests?
 
