@@ -73,11 +73,11 @@ int main() {
 //    Node * scionP = T.getRandomNode();
 //    if(!(scionP==T.getRoot())){
 //        T.cutSubtree(scionP);
-//        
-//        
+//
+//
 ////        cout << new_Tree.toString();
 //        T.getRoot()->updateNumInternalNodes();
-//        
+//
 //        //Something below doesnt work...
 //        Node * stockP = T.getRandomNode();
 //        // TODO: random child or sibling
