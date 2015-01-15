@@ -61,8 +61,8 @@ public:
     int getNextInternalNodeId();
 	Node * getRandomNode();
 	Node * getRoot();
-	void cutSubtree(Node * scion_node); //Returns the subtree at Node sub_node
-    void insertSubtree(Node * stockP, Node * scionP, bool asChild);
+	int cutSubtree(Node * scion_node); //Modifies the tree and returns change in the number of internal nodes
+    int insertSubtree(Node * stockP, Node * scionP, bool asChild); //Modifies the tree and returns change in the number of internal nodes
     Node * getNode(int);
     
     void recalculate(); // calculate all of the counts on the tree from the graph
