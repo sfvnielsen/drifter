@@ -23,31 +23,40 @@ public:
 
     bool isDescendant(Node *);
     void setParent(Node *);
+   	Node * getParent();
+    
     void setTreePointer(Tree *);
+
     int getLeafId();
     void setLeafId(int);
+    
+    std::list<int> getLeaves();
     std::list<std::pair<int,int>> getCountsAll();
     std::pair<int,int> getCountsPair(Node *, Node *);
-    std::list<int> getLeaves();
+    
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);
     void addChild(Node *);
     int removeChild(Node *);
+    
     bool isInternalNode();
     void setInternalNodeValue(bool);
-    bool operator == ( const Node &rhs ) const;
+    
 
-	Node * getParent();
+
 	int getNumInternalNodes();
     int updateNumInternalNodes();
-	int getNumEdges();
-	int getNumPossibleEdges();
 
+    int getNumEdges();
+	int getNumPossibleEdges();
     Node * getRandomDescendant();
-    std::string toString();
+    
 
     double evaluateNodeLogLike(double,double,int,int);
     double evaluateSubtreeLogLike(double,double,int,int);
+    
+    bool operator == ( const Node &rhs ) const;
+    std::string toString();
 
 private:
     Node * parentP;

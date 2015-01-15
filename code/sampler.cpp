@@ -61,7 +61,7 @@ for (int i=0; i<L; i++){
         likelihoods.push_back(lastLogLik);
     }
 
-    if (((i+1) % 1)==0){
+    if (((i+1) % 50)==0){
         cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
         << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
 
@@ -72,4 +72,8 @@ for (int i=0; i<L; i++){
 
 double Sampler::getLastLikelihood(){
     return likelihoods.back();
+}
+
+Tree Sampler::getLast(){
+    return chain.back();
 }
