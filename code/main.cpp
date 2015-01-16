@@ -81,6 +81,6 @@ Tree debuggingTree(){
     pair<int,int> g6 (0,4);
     pair<int,int> g7 (4,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5,g6};
-    
-    return Tree(data_edge_list,"Binary");
+
+    return Tree(data_edge_list);
 }

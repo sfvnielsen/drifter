@@ -160,6 +160,7 @@ int Tree::InitBinaryTree(){
  NB! Not DONE! TODO!
  */
 Node * Tree::makeNleafTree(int a, int b, int N){
+
     if ((b-a) < (N)) {
         if (b==a){ //If there is only one node (special case, no new internal
                    //  node should be created.
@@ -186,6 +187,7 @@ Node * Tree::makeNleafTree(int a, int b, int N){
         nodes.push_back(Node(this,getNextInternalNodeId()));
         Node * parent = & nodes.back();
         parent->setInternalNodeValue(true);
+
         //Binary split
         Node * new_child = makeNleafTree(a, (b-a)/2+a, N);
         parent->addChild(new_child);
