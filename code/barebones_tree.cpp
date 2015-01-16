@@ -186,7 +186,7 @@ Node * Tree::makeNleafTree(int a, int b, int N){
             return parent;
         }
     //else, We are at a level where we should split, by adding an internal node
-    //       and recursing into two new (internal) nodes.
+    //       and recursing into N new (internal) nodes.
     } else {
         //Create internal node, which
         nodes.push_back(Node(this,getNextInternalNodeId()));
