@@ -54,7 +54,8 @@ public:
     Node * getRoot(); // Returns pointer tree-root
     int getNextInternalNodeId();
     Node * getNode(int); // Get node by unique 'leaf-id'
-
+    void removeNode(Node *);  // Removes node from nodes-list (called from Node class)
+    
     // Regrafting
 	double regraft(); // return new regrafted tree
     void regraft(int,int); // DEBUG testing specific move;
@@ -62,7 +63,7 @@ public:
 	Node * getRandomStock();
 	int cutSubtree(Node * ); //Modifies the tree and returns change in the number of internal nodes
     int insertSubtree(Node *, Node *, bool); //Modifies the tree and returns change in the number of internal nodes
-    void removeNode(Node *);  // Removes node from nodes-list (called from Node class)
+
 
     // Evaluating likelihood
     double evaluateLogLikeTimesPrior(double, double, int, int);
