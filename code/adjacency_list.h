@@ -39,6 +39,7 @@ public:
 
 private:
     std::vector<std::vector<int>> adjacency_list;
+    std::vector<std::vector<bool> > adjacency_matrix;
 };
 
 
