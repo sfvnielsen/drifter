@@ -51,7 +51,7 @@ void testNetwork(string data_file_name, int num_of_iterations){
 //    cout << new_tree.toString() << endl;
 
     Sampler sampler = Sampler(new_tree,0.5, 0.5, 1, 1);
-    
+
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();
 
@@ -64,7 +64,7 @@ void testNetwork(string data_file_name, int num_of_iterations){
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
     << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl;
-    
+
     cout << sampler.getLast().toString() << endl;
 }
 
