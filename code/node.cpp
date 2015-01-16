@@ -35,27 +35,26 @@ Node::Node(Tree * tP, int L): treeP(tP) {
     isInternal = false;
 }
 
+/**
+* Recursively copy nodes from another tree.
+*/
 void Node::copyFrom(Tree * tP, Node const & old_node){
     treeP = tP;
     isInternal = old_node.isInternal;
     leafId = old_node.leafId;
 
-
     for (auto it = old_node.children.begin(); it != old_node.children.end(); it++) {
         // add new node
         Node * new_child = treeP->addNode();
-        // fix fields treeP,id, isinternal,
-
         // add as child
-        new_child->setParent(this);
-        children.push_back(new_child);
+        this->addChild(new_child);
         // recurse
-        copyFrom(treeP, **it);
+        new_child->copyFrom(treeP, **it);
     }
 }
 
 list<Node *> Node::getChildren(){
-return children;
+    return children;
 }
 
 //Need when copying

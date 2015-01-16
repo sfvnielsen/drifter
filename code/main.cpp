@@ -27,22 +27,13 @@ int main() {
 //    data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
 
-
-    cout << "--- Original tree --- " << endl;
-    Tree T = debuggingTree();
-
-    cout << T.toString() << endl;
-    cout << "--- Copied tree --- " << endl;
-    Tree T2 = Tree(T);
-    cout << T2.toString() << endl;
-
     /**
      * Testing a network
      */
-//    int num_iterations = 1000;
-//
-//    testNetwork(data_file_name,num_iterations);
-//
+    int num_iterations = 1000;
+
+    testNetwork(data_file_name,num_iterations);
+
 	return 0;
 }
 /**
