@@ -1,9 +1,9 @@
 //============================================================================
-// Name        : main.cpp
-// Author      : Julian
-// Version     :
+// Name        : release.cpp
+// Author      : Julian, Jesper and Søren
+// Version     : alpha
 // Copyright   : It is OURS!!
-// Description : Hello World in C++, Ansi-style
+// Description : Release mode version of alpha-program
 //============================================================================
 
 #include <iostream>
@@ -17,21 +17,29 @@
 using namespace std;
 
 void testNetwork(string,int);
-Tree debuggingTree();
 
-int main() {
+int main(int argc, char* argv[]) {
     srand ((unsigned int) time(NULL)); // set random seed
 
-    string data_file_name = "data/karate_edgelist.txt";
-    data_file_name = "data/celegans_edgelist.txt";
-//    data_file_name = "data/football_edgelist.txt";
-//    data_file_name = "data/facebook100_edgelist.txt";
-
+    string data_file_name;
+    int num_iterations;
+    if (argc < 2) {
+        data_file_name = "../../data/karate_edgelist.txt";
+        num_iterations = 10000;
+    }else if (argc == 2) {
+        data_file_name = (string) argv[1];
+        num_iterations = 100;
+    } else if (argc == 3){
+        data_file_name = (string) argv[1];
+        num_iterations = atoi(argv[2]);
+    } else {
+        throw runtime_error("Too many input arguments");
+        return 1;
+    }
 
     /**
      * Testing a network
      */
-    int num_iterations = 1000;
 
     testNetwork(data_file_name,num_iterations);
 
@@ -45,11 +53,7 @@ void testNetwork(string data_file_name, int num_of_iterations){
     IoFileHandler data_file(data_file_name,0);
     data_file.read_graph();
 
-    Tree new_tree(data_file.getDataEl(),"Binary"); // initialize flat tree
-    /*******/
-//    Tree new_tree = debuggingTree(); //DEBUG
-    cout << new_tree.toString() << endl;
-
+    Tree new_tree(data_file.getDataEl()); // initialize flat tree
 //    cout << new_tree.toString() << endl;
 
     Sampler sampler = Sampler(new_tree,0.5, 0.5, 1, 1);
@@ -67,20 +71,7 @@ void testNetwork(string data_file_name, int num_of_iterations){
 
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
-    << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl << endl;
-
-    cout << sampler.getLast().toString() << endl;
+    << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl
+    << "Regrafts per second: " << ((double) num_of_iterations)/(double)elapsed_seconds.count() << " rps" << endl;
 }
 
-Tree debuggingTree(){
-    pair<int,int> g1 (0,1);
-    pair<int,int> g2 (1,2);
-    pair<int,int> g3 (0,3);
-    pair<int,int> g4 (1,3);
-    pair<int,int> g5 (2,3);
-    pair<int,int> g6 (0,4);
-    pair<int,int> g7 (4,3);
-    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5,g6};
-    
-    return Tree(data_edge_list,"Binary");
-}

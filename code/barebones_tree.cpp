@@ -16,25 +16,25 @@ using namespace std;
  * Construct flat tree from data
  */
 Tree::Tree(list<pair<int,int>> data_graph): nextInternalNodeId(0) {
-    
+
     // insert all the indexes from the edge list into leaves
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(it->first);
         leaves.push_back(it->second);
     }
-    
+
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
-    
+
     //Copies the elements to a vector ***** TEMPORARY *****
     vec_leaves = vector<int>();
     copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
-    
-    
+
+
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
-    
+
     InitFlatTree();
     rootP->updateNumInternalNodes();
 }
@@ -43,37 +43,37 @@ Tree::Tree(list<pair<int,int>> data_graph): nextInternalNodeId(0) {
  * Tree constructor choice
  */
 Tree::Tree(list<pair<int,int>> data_graph, string initType): nextInternalNodeId(0) {
-    
+
     // insert all the indexes from the edge list into leaves
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(it->first);
         leaves.push_back(it->second);
     }
-    
+
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
-    
+
     //Copies the elements to a vector ***** TEMPORARY *****
     vec_leaves = vector<int>();
     copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
     cout << "Vec_leaves size: " << vec_leaves.size() << endl;
     cout << "Leaves size: " << leaves.size() << endl << flush;
-    
-    
+
+
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
-    
-    
+
+
     if (initType == "Binary") {
         InitBinaryTree();
     } else { //Flat tree
         InitFlatTree();
     }
-    
+
     //Correct internal number count
     rootP->updateNumInternalNodes();
-    
+
 }
 
 /**
@@ -194,8 +194,8 @@ Node * Tree::makeNleafTree(int a, int b, int N){
         parent->addChild(new_child);
         return parent;
     }
-    
-    
+
+
     //return nullptr; //Return nullptr when root is selected.
 }
 
@@ -207,11 +207,11 @@ int Tree::InitFlatTree(){
      * Initialisation step, here init is worse case for parameters (flat tree).
      */
     // Add a new Node for each leaf and add is as a child of root
-    
+
     nodes.push_back(Node(this,getNextInternalNodeId()));
     rootP = &(nodes.back());
-    
-    
+
+
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         nodes.push_back(Node(this,*it));
         rootP->addChild(&(nodes.back()));
@@ -287,6 +287,10 @@ Tree::Tree(Tree const &old_tree)  {
 /** Get Data Adjacency List */
 Adj_list Tree::getAdjacencyList(){
     return adjacencyList;
+}
+
+Adj_list * Tree::getAdjacencyListP(){
+    return &adjacencyList;
 }
 
 /** Set Root Node */

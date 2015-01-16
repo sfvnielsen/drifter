@@ -47,7 +47,7 @@ void Node::setChildren(list<Node *> new_children){
 list<int> Node::getLeaves() {
     list<int> leaves;
     assert(isInternal == ((leafId < 0) && children.size() >0));
-    
+
     if(!isInternal){
         leaves.push_back(leafId);
         return leaves;
@@ -246,9 +246,11 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
     int nLinks = 0;
 
+    Adj_list * AP = treeP->getAdjacencyListP();
+
     for (list<int>::iterator fst = LA.begin(); fst != LA.end(); fst++) {
         for (list<int>::iterator snd = LB.begin(); snd != LB.end(); snd++) {
-            if(treeP->getAdjacencyList().isConnected(*fst,*snd)){
+            if(AP->isConnected(*fst,*snd)){
                 nLinks += 1;
             }
         }

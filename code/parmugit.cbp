@@ -27,6 +27,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-std=c++11" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -56,14 +57,8 @@
 		<Unit filename="adjacency_list.h" />
 		<Unit filename="barebones_tree.cpp" />
 		<Unit filename="barebones_tree.h" />
-		<Unit filename="iofilehandler.cpp">
-			<Option target="Test" />
-			<Option target="Debug" />
-		</Unit>
-		<Unit filename="iofilehandler.h">
-			<Option target="Test" />
-			<Option target="Debug" />
-		</Unit>
+		<Unit filename="iofilehandler.cpp" />
+		<Unit filename="iofilehandler.h" />
 		<Unit filename="main.cpp">
 			<Option target="Debug" />
 			<Option target="Release" />
