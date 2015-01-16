@@ -29,7 +29,10 @@ Tree::Tree(list<pair<int, int>> data_graph, string initType): nextInternalNodeId
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
 
-
+    //Copies the elements to a vector ***** TEMPORARY *****
+    vec_leaves = vector<int>();
+    copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
+    
     if (initType == "Binary") {
         InitBinaryTree();
     } else { //Flat tree
@@ -45,7 +48,7 @@ Tree::Tree(list<pair<int, int>> data_graph, string initType): nextInternalNodeId
  * NOT IMPLEMENTED!!!
  */
 int Tree::InitBinaryTree(){
-    makeNleafTree(0, (int) vec_leaves.size(),2);
+    setRootP(makeNleafTree(0, (int) vec_leaves.size() -1 ,2) );
     return 0;
 }
 
@@ -53,8 +56,38 @@ int Tree::InitBinaryTree(){
  * NOT IMPLEMENTED!!!
  */
 Node * Tree::makeNleafTree(int a, int b, int N){
-
-    return nullptr;
+    
+    if ((b-a) < (N)) {
+        //Create new internal node
+        nodes.push_back(Node(this,getNextInternalNodeId()));
+        Node * parent = & nodes.back();
+        parent->setInternalNodeValue(true);
+        
+        //Add the up to N leafs
+        for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
+            nodes.push_back(Node(this,a+i));
+            Node * child_P = & nodes.back();
+            child_P->setParent(parent);
+            parent->addChild(child_P);
+        }
+        return parent;
+    } else {
+        //Create internal node
+        nodes.push_back(Node(this,getNextInternalNodeId()));
+        Node * parent = & nodes.back();
+        parent->setInternalNodeValue(true);
+        
+        //Binary split
+        Node * new_child = makeNleafTree(a, b/2, N);
+        parent->addChild(new_child);
+        
+        new_child = makeNleafTree(b/2+1, b, N);
+        parent->addChild(new_child);
+        return parent;
+    }
+    
+    
+    //return nullptr; //Return nullptr when root is selected.
 }
 
 /**
@@ -62,11 +95,12 @@ Node * Tree::makeNleafTree(int a, int b, int N){
  */
 int Tree::InitFlatTree(){
     /*
-     * Initialisation step, here init is worse case (IRM model),
-     * another appoarch is a binary tree (TBI)
+     * Initialisation step, here init is worse case for parameters (flat tree).
      */
     // Add a new Node for each leaf and add is as a child of root
-
+    
+    nodes.push_back(Node(this,getNextInternalNodeId()));
+    rootP = &(nodes.back());
 
 
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
@@ -76,8 +110,6 @@ int Tree::InitFlatTree(){
 	rootP->updateNumInternalNodes();
     return 0;
 }
-
-
 
 
 /**
@@ -96,18 +128,20 @@ Tree::Tree(list<pair<int,int>> data_graph): nextInternalNodeId(0) {
     leaves.unique();
 
     //Copies the elements to a vector ***** TEMPORARY *****
-    vec_leaves = vector<int>(leaves.size());
+    vec_leaves = vector<int>();
     copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
+    cout << "Vec_leaves size: " << vec_leaves.size() << endl;
+    cout << "Leaves size: " << leaves.size() << endl << flush;
 
 
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
 
-    nodes.push_back(Node(this,getNextInternalNodeId()));
-    rootP = &(nodes.back());
 
 
     InitFlatTree();
+//    InitBinaryTree();
+    
     rootP->updateNumInternalNodes();
 }
 
