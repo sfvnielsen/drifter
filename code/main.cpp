@@ -23,7 +23,7 @@ int main() {
     srand ((unsigned int) time(NULL)); // set random seed
 
     string data_file_name = "data/karate_edgelist.txt";
-    data_file_name = "data/celegans_edgelist.txt";
+    //data_file_name = "data/celegans_edgelist.txt";
 //    data_file_name = "data/football_edgelist.txt";
 //    data_file_name = "data/facebook100_edgelist.txt";
 
@@ -76,9 +76,7 @@ Tree debuggingTree(){
     pair<int,int> g3 (0,3);
     pair<int,int> g4 (1,3);
     pair<int,int> g5 (2,3);
-    pair<int,int> g6 (0,4);
-    pair<int,int> g7 (4,3);
-    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5,g6};
+    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4};
 
     return Tree(data_edge_list);
 }

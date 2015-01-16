@@ -249,46 +249,16 @@ int Tree::InitFlatTree(){
 * Copy constructor
 *
 */
-Tree::Tree(Tree const &old_tree)  {
-    nodes = old_tree.nodes;
+Tree::Tree(Tree const &old_tree){
     leaves = old_tree.leaves;
-    vec_leaves =old_tree.vec_leaves;
     graph = old_tree.graph;
     adjacencyList = old_tree.adjacencyList;
     nextInternalNodeId = old_tree.nextInternalNodeId;
 
-    //Find new root node
-    for (auto it = nodes.begin(); it != nodes.end();++it){
-        if (it->getParent() == nullptr) {
-            rootP = &(*it);
-        }
-    }
+    nodes.push_back(Node(this,getNextInternalNodeId()));
+    rootP = &(nodes.back());
 
-    for (auto it = nodes.begin(); it != nodes.end();++it){
-        if (it->getParent() != nullptr){
-            //parent update
-            int old_parent = it->getParent()->getLeafId();
-            it->setParent(getNode(old_parent));
-
-        }
-
-        //children update
-        list<Node *> children = it->getChildren();
-        list<Node *> new_children;
-        for (auto it_child = children.begin();
-             it_child != children.end(); ++it_child) {
-
-            //Find id, and find it in
-            int id = (*it_child)->getLeafId();
-            new_children.push_back(getNode(id));
-
-        }
-        it->setChildren(new_children);
-
-        //tree pointer update
-        it->setTreePointer(this);
-
-    }
+    rootP->copyFrom(this, *(old_tree.rootP));
 }
 
 
@@ -328,6 +298,12 @@ Node * Tree::getRoot(){
 /** Decrements nextInternalNodeId and returns it */
 int Tree::getNextInternalNodeId(){
     return --nextInternalNodeId;
+}
+
+/** Adds a new Node to the nodes list */
+Node * Tree::addNode(){
+    nodes.push_back(Node(this,getNextInternalNodeId()));
+    return &(nodes.back());
 }
 
 
@@ -483,8 +459,7 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     }else{ //As sibling
 
         // Create a new node
-        nodes.push_back(Node(this,getNextInternalNodeId()));
-        Node * new_parent = &(nodes.back());
+        Node * new_parent = addNode();
         new_parent->setInternalNodeValue(true);
 
         // Constuct and add a new parent
