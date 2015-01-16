@@ -11,68 +11,69 @@
 #include <cmath>
 using namespace std;
 
+
 /**
  * Construct flat tree from data
  */
 Tree::Tree(list<pair<int,int>> data_graph): nextInternalNodeId(0) {
-
+    
     // insert all the indexes from the edge list into leaves
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(it->first);
         leaves.push_back(it->second);
     }
-
+    
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
-
+    
     //Copies the elements to a vector ***** TEMPORARY *****
-    vec_leaves = vector<int>(leaves.size());
+    vec_leaves = vector<int>();
     copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
-
-
+    
+    
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
-
-    nodes.push_back(Node(this,getNextInternalNodeId()));
-    rootP = &(nodes.back());
-
-
+    
     InitFlatTree();
     rootP->updateNumInternalNodes();
 }
 
-
 /**
- * Tree constructor - Can initialize based on string
-   - Options are: Binary, Flat
-   NB! Not DONE! TODO!
+ * Tree constructor choice
  */
-Tree::Tree(list<pair<int, int>> data_graph, string initType): nextInternalNodeId(0){
-
-    //first construct adjacency list and leaf list, same regardless of tree stucture.
+Tree::Tree(list<pair<int,int>> data_graph, string initType): nextInternalNodeId(0) {
+    
+    // insert all the indexes from the edge list into leaves
     for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
         leaves.push_back(it->first);
         leaves.push_back(it->second);
     }
-
+    
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
-
+    
+    //Copies the elements to a vector ***** TEMPORARY *****
+    vec_leaves = vector<int>();
+    copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
+    cout << "Vec_leaves size: " << vec_leaves.size() << endl;
+    cout << "Leaves size: " << leaves.size() << endl << flush;
+    
+    
     int N = (int) leaves.size();
     adjacencyList = Adj_list(N,data_graph);
-
-
+    
+    
     if (initType == "Binary") {
         InitBinaryTree();
     } else { //Flat tree
         InitFlatTree();
     }
-
+    
     //Correct internal number count
     rootP->updateNumInternalNodes();
-
+    
 }
 
 /**
@@ -145,36 +146,75 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
 }
 
-
 /**
  * NOT IMPLEMENTED!!!
  */
 int Tree::InitBinaryTree(){
-    makeNleafTree(0, (int) vec_leaves.size(),2);
+    setRootP(makeNleafTree(0, (int) vec_leaves.size() -1 ,2) );
     return 0;
 }
 
 /**
- * NOT IMPLEMENTED!!!
+ * Tree constructor - Can initialize based on string
+ - Options are: Binary, Flat
+ NB! Not DONE! TODO!
  */
 Node * Tree::makeNleafTree(int a, int b, int N){
-
-    return nullptr;
+    
+    if ((b-a) < (N)) {
+        //Create new internal node
+        nodes.push_back(Node(this,getNextInternalNodeId()));
+        Node * parent = & nodes.back();
+        parent->setInternalNodeValue(true);
+        
+        //Add the up to N leafs
+        for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
+            nodes.push_back(Node(this,a+i));
+            Node * child_P = & nodes.back();
+            child_P->setParent(parent);
+            parent->addChild(child_P);
+        }
+        return parent;
+    } else {
+        //Create internal node
+        nodes.push_back(Node(this,getNextInternalNodeId()));
+        Node * parent = & nodes.back();
+        parent->setInternalNodeValue(true);
+        
+        //Binary split
+        Node * new_child = makeNleafTree(a, b/2, N);
+        parent->addChild(new_child);
+        
+        new_child = makeNleafTree(b/2+1, b, N);
+        parent->addChild(new_child);
+        return parent;
+    }
+    
+    
+    //return nullptr; //Return nullptr when root is selected.
 }
 
 /**
- Initialise a flat treee structure
+ * Initialise a flat treee structure
  */
 int Tree::InitFlatTree(){
+    /*
+     * Initialisation step, here init is worse case for parameters (flat tree).
+     */
     // Add a new Node for each leaf and add is as a child of root
-
+    
+    nodes.push_back(Node(this,getNextInternalNodeId()));
+    rootP = &(nodes.back());
+    
+    
     for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
         nodes.push_back(Node(this,*it));
         rootP->addChild(&(nodes.back()));
     }
-	rootP->updateNumInternalNodes();
+    rootP->updateNumInternalNodes();
     return 0;
 }
+
 
 
 
@@ -194,7 +234,6 @@ Tree::Tree(Tree const &old_tree)  {
     for (auto it = nodes.begin(); it != nodes.end();++it){
         if (it->getParent() == nullptr) {
             rootP = &(*it);
-        }else{
         }
     }
 
@@ -226,17 +265,19 @@ Tree::Tree(Tree const &old_tree)  {
 }
 
 
+
 /**
  TODO: Rest of "Rule of 5"
-    - Move
-    - Copy-assign
-    - Move-assign
-
-*/
+ - Move
+ - Copy-assign
+ - Move-assign
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/** Get and Set - Trivial Stuff */
+/**
+ * Get and Set - "Trivial" Stuff the proof is up to the reader
+ */
 
 /** Get Data Adjacency List */
 Adj_list Tree::getAdjacencyList(){
@@ -278,6 +319,13 @@ Node * Tree::getNode(int leaf_id){
 
     }
     return nullptr;
+}
+
+/** Removes specific node from nodes list
+ * - Used when collapsing branch in regrafting
+ */
+void Tree::removeNode(Node * nodeP){
+    nodes.remove(*nodeP);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -366,7 +414,6 @@ Node * Tree::getRandomScion() {
 * - calls getRandomChild from node-class
 * - Usd for sampling the STOCK!
 */
-
 Node * Tree::getRandomStock() {
     return rootP->getRandomDescendant();
 }
@@ -378,7 +425,6 @@ Node * Tree::getRandomStock() {
 * but doesnt remove them from nodes list
 * - Returns the number of nodes that have been removed from the tree
 */
-
 int Tree::cutSubtree(Node * scionP){
     // assumes that scionP doesn't point to root.
     Node * parentP = scionP->getParent();
@@ -392,7 +438,6 @@ int Tree::cutSubtree(Node * scionP){
 *  - inserts either as child or as sibling of stock-node
 *  - returns number of nodes created by insertion (0 or 1)
 */
-
 int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
     int created = 0;
@@ -428,14 +473,6 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         new_parent->addChild(scionP);
     }
     return created;
-}
-
-
-/** Removes specific node from nodes list
-* - Used when collapsing branch in regrafting
-*/
-void Tree::removeNode(Node * nodeP){
-    nodes.remove(*nodeP);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

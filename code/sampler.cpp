@@ -61,7 +61,7 @@ for (int i=0; i<L; i++){
         likelihoods.push_back(lastLogLik);
     }
 
-    if (((i+1) % 50)==0){
+    if (((i+1) % 10)==0){
         cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
         << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
 

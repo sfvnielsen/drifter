@@ -17,18 +17,22 @@
 using namespace std;
 
 void testNetwork(string,int);
+Tree debuggingTree();
 
 int main() {
     srand ((unsigned int) time(NULL)); // set random seed
 
     string data_file_name = "data/karate_edgelist.txt";
     //data_file_name = "data/celegans_edgelist.txt";
+//    data_file_name = "data/football_edgelist.txt";
+//    data_file_name = "data/facebook100_edgelist.txt";
 
 
     /**
      * Testing a network
      */
     int num_iterations = 10000;
+
     testNetwork(data_file_name,num_iterations);
 
 	return 0;
@@ -42,6 +46,10 @@ void testNetwork(string data_file_name, int num_of_iterations){
     data_file.read_graph();
 
     Tree new_tree(data_file.getDataEl()); // initialize flat tree
+    /*******/
+//    Tree new_tree = debuggingTree(); //DEBUG
+    cout << new_tree.toString() << endl;
+
 //    cout << new_tree.toString() << endl;
 
     Sampler sampler = Sampler(new_tree,0.5, 0.5, 1, 1);
@@ -61,4 +69,16 @@ void testNetwork(string data_file_name, int num_of_iterations){
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
     << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl
     << "Regrafts per second: " << ((double) num_of_iterations)/(double)elapsed_seconds.count() << " rps" << endl;
+}
+
+Tree debuggingTree(){
+    pair<int,int> g1 (0,1);
+    pair<int,int> g2 (1,2);
+    pair<int,int> g3 (0,3);
+    pair<int,int> g4 (1,3);
+    pair<int,int> g5 (2,3);
+    pair<int,int> g6 (0,4);
+    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5,g6};
+
+    return Tree(data_edge_list);
 }
