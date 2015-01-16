@@ -20,7 +20,7 @@ Adj_list::Adj_list(){}
  */
 Adj_list::Adj_list(int N, std::list<std::pair<int,int>> edge_list){
     adjacency_list = vector<vector<int>>(N);
-    
+
     //Construct adjacency list
     for (list<pair<int,int>>::iterator it = edge_list.begin();
          it != edge_list.end(); it++){
@@ -29,12 +29,12 @@ Adj_list::Adj_list(int N, std::list<std::pair<int,int>> edge_list){
     for (auto it = adjacency_list.begin(); it != adjacency_list.end(); it++) {
         sort(it->begin(),it->end());
     }
-    
+
     //Construct adjacency_matrix (set the value to true if a connection
     //  exists in the adjacency list)
     adjacency_matrix = vector<vector<bool>>(N,vector<bool>(N,false));
     for (auto i = 0; i < N; i++) {
-        for (auto j = 0; j < adjacency_list[i].size(); j++) {
+        for (auto j = 0; j < (int)adjacency_list[i].size(); j++) {
             adjacency_matrix[i][j] = true;
             adjacency_matrix[j][i] = true;
         }
@@ -86,7 +86,7 @@ bool Adj_list::isConnected(int current, int target){
 
     try {
         return adjacency_matrix[current][target];
-        
+
 //        //Binary search for element
 //        return binary_search(adjacency_list[current].begin(),
 //                             adjacency_list[current].end(), target);
@@ -100,7 +100,7 @@ bool Adj_list::isConnected(int current, int target){
         }
         throw e;
     }
-    
+
 };
 
 string Adj_list::toString(){
