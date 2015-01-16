@@ -246,11 +246,11 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
     int nLinks = 0;
 
-    Adj_list A = treeP->getAdjacencyList();
+    Adj_list * AP = treeP->getAdjacencyListP();
 
     for (list<int>::iterator fst = LA.begin(); fst != LA.end(); fst++) {
         for (list<int>::iterator snd = LB.begin(); snd != LB.end(); snd++) {
-            if(A.isConnected(*fst,*snd)){
+            if(AP->isConnected(*fst,*snd)){
                 nLinks += 1;
             }
         }
