@@ -27,6 +27,7 @@ int main() {
 //    data_file_name = "data/football_edgelist.txt";
 //    data_file_name = "data/facebook100_edgelist.txt";
 
+
     /**
      * Testing a network
      */
@@ -43,9 +44,9 @@ void testNetwork(string data_file_name, int num_of_iterations){
     IoFileHandler data_file(data_file_name,0);
     data_file.read_graph();
 
-//    Tree new_tree(data_file.getDataEl()); // initialize flat tree
+    Tree new_tree(data_file.getDataEl()); // initialize flat tree
     /*******/
-    Tree new_tree = debuggingTree(); //DEBUG
+//    Tree new_tree = debuggingTree(); //DEBUG
     cout << new_tree.toString() << endl;
     
 //    cout << new_tree.toString() << endl;
