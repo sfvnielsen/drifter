@@ -32,7 +32,7 @@
 	"barebones_tree.h"
 	"iofilehandler.h"
 
-1421400615 /home/sfvn/Documents/parmugit/code/barebones_tree.h
+1421401434 /home/sfvn/Documents/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
@@ -165,4 +165,13 @@
 	<numeric>
 
 1421335582 6df843b03589333a63a6657eee42fbb5582e9
+
+1421400987 source:/home/sfvn/Documents/parmugit/code/release.cpp
+	<iostream>
+	<cstdlib>
+	<time.h>
+	<chrono>
+	"barebones_tree.h"
+	"sampler.h"
+	"iofilehandler.h"
 
