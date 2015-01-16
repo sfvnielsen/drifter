@@ -50,12 +50,13 @@ public:
 
     // Get and set - Trivial stuff
     Adj_list getAdjacencyList();
+    Adj_list * getAdjacencyListP();
     void setRootP(Node *);
     Node * getRoot(); // Returns pointer tree-root
     int getNextInternalNodeId();
     Node * getNode(int); // Get node by unique 'leaf-id'
     void removeNode(Node *);  // Removes node from nodes-list (called from Node class)
-    
+
     // Regrafting
 	double regraft(); // return new regrafted tree
     void regraft(int,int); // DEBUG testing specific move;
