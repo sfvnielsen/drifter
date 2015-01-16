@@ -25,7 +25,7 @@ int main() {
     string data_file_name = "data/karate_edgelist.txt";
     data_file_name = "data/celegans_edgelist.txt";
 //    data_file_name = "data/football_edgelist.txt";
-    data_file_name = "data/facebook100_edgelist.txt";
+//    data_file_name = "data/facebook100_edgelist.txt";
 
 
     /**
@@ -49,7 +49,6 @@ void testNetwork(string data_file_name, int num_of_iterations){
     /*******/
 //    Tree new_tree = debuggingTree(); //DEBUG
     cout << new_tree.toString() << endl;
-
 //    cout << new_tree.toString() << endl;
 
     Sampler sampler = Sampler(new_tree,0.5, 0.5, 1, 1);
