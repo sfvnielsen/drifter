@@ -28,7 +28,7 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 100;
+    int num_iterations = 10000;
     testNetwork(data_file_name,num_iterations);
 
 	return 0;
@@ -55,9 +55,10 @@ void testNetwork(string data_file_name, int num_of_iterations){
     chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
+    cout << sampler.getLast().toString() << endl;
+
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
-    << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl;
-
-    cout << sampler.getLast().toString() << endl;
+    << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl
+    << "Regrafts per second: " << ((double) num_of_iterations)/(double)elapsed_seconds.count() << " rps" << endl;
 }
