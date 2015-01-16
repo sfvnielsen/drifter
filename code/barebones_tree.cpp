@@ -162,19 +162,26 @@ int Tree::InitBinaryTree(){
 Node * Tree::makeNleafTree(int a, int b, int N){
 
     if ((b-a) < (N)) {
-        //Create new internal node
-        nodes.push_back(Node(this,getNextInternalNodeId()));
-        Node * parent = & nodes.back();
-        parent->setInternalNodeValue(true);
-
-        //Add the up to N leafs
-        for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
-            nodes.push_back(Node(this,a+i));
+        if (b==a){ //If there is only one node (special case, no new internal
+                   //  node should be created.
+            nodes.push_back(Node(this,a));
             Node * child_P = & nodes.back();
-            child_P->setParent(parent);
-            parent->addChild(child_P);
+            return child_P;
+            
+        } else { //If there is more than one node
+            //Create new internal node
+            nodes.push_back(Node(this,getNextInternalNodeId()));
+            Node * parent = & nodes.back();
+            parent->setInternalNodeValue(true);
+            
+            //Add the up to N leafs
+            for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
+                nodes.push_back(Node(this,a+i));
+                Node * child_P = & nodes.back();
+                parent->addChild(child_P);
+            }
+            return parent;
         }
-        return parent;
     } else {
         //Create internal node
         nodes.push_back(Node(this,getNextInternalNodeId()));
@@ -182,10 +189,10 @@ Node * Tree::makeNleafTree(int a, int b, int N){
         parent->setInternalNodeValue(true);
 
         //Binary split
-        Node * new_child = makeNleafTree(a, b/2, N);
+        Node * new_child = makeNleafTree(a, (b-a)/2+a, N);
         parent->addChild(new_child);
-
-        new_child = makeNleafTree(b/2+1, b, N);
+        
+        new_child = makeNleafTree((b-a)/2+a+1, b, N);
         parent->addChild(new_child);
         return parent;
     }

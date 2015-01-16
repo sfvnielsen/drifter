@@ -23,7 +23,7 @@ int main() {
     srand ((unsigned int) time(NULL)); // set random seed
 
     string data_file_name = "data/karate_edgelist.txt";
-    //data_file_name = "data/celegans_edgelist.txt";
+    data_file_name = "data/celegans_edgelist.txt";
 //    data_file_name = "data/football_edgelist.txt";
 //    data_file_name = "data/facebook100_edgelist.txt";
 
@@ -45,7 +45,7 @@ void testNetwork(string data_file_name, int num_of_iterations){
     IoFileHandler data_file(data_file_name,0);
     data_file.read_graph();
 
-    Tree new_tree(data_file.getDataEl()); // initialize flat tree
+    Tree new_tree(data_file.getDataEl(),"Binary"); // initialize flat tree
     /*******/
 //    Tree new_tree = debuggingTree(); //DEBUG
     cout << new_tree.toString() << endl;
@@ -67,8 +67,9 @@ void testNetwork(string data_file_name, int num_of_iterations){
 
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
-    << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl
-    << "Regrafts per second: " << ((double) num_of_iterations)/(double)elapsed_seconds.count() << " rps" << endl;
+    << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl << endl;
+
+    cout << sampler.getLast().toString() << endl;
 }
 
 Tree debuggingTree(){
@@ -78,6 +79,7 @@ Tree debuggingTree(){
     pair<int,int> g4 (1,3);
     pair<int,int> g5 (2,3);
     pair<int,int> g6 (0,4);
+    pair<int,int> g7 (4,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5,g6};
 
     return Tree(data_edge_list);
