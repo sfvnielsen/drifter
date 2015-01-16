@@ -61,21 +61,21 @@ int main() {
 
     cout << "--- New Tree ---" << endl;
 //    T.regraft(3,1);
-  
 
-//    
+
+//
 //    for (int i = 0; i < 100000; i++){
 //        //        cout << "--- After regrafting "+to_string(i)+ "--- " << endl;
 //        T.regraft();
 //        double llike = Tree(T).evaluateLogLikeTimesPrior(.5, .5, 1, 1);
 //        cout << "Loglikelihood: "+ to_string(llike) << endl << endl;
 //          cout << T.toString() << endl;
-//        
+//
 //    }
-    
+
     string data_file_name = "data/karate_edgelist.txt";
 //    data_file_name = "data/celegans_edgelist.txt";
-    
+
 
     /**
      * Testing a network
@@ -93,10 +93,10 @@ int main() {
 //    Node * random_node = T.getRandomNode();
 //    cout << random_node->toString() << endl;
 
-    
+
     cout << "--- END ---" << endl;
-    
-    
+
+
 	return 0;
 }
 /**
@@ -105,22 +105,22 @@ int main() {
 void testNetwork(string data_file_name, int num_of_iterations){
     IoFileHandler data_file(data_file_name,0);
     data_file.read_graph();
-    
+
     Tree new_tree(data_file.getDataEl()); // initialize flat tree
 //    cout << new_tree.toString() << endl;
-    
+
     Sampler sampler = Sampler(new_tree,0.5, 0.5, 1, 1);
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();
-    
+
     sampler.run(num_of_iterations);
-    
+
     cout << new_tree.toString() << endl;
-    
+
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-    
+
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
     << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl;
