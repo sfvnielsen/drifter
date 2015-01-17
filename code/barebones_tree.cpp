@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <cassert>
 using namespace std;
 
 
@@ -167,13 +168,13 @@ Node * Tree::makeNleafTree(int a, int b, int N){
             nodes.push_back(Node(this,a));
             Node * child_P = & nodes.back();
             return child_P;
-            
+
         } else { //If there is more than one node
             //Create new internal node
             nodes.push_back(Node(this,getNextInternalNodeId()));
             Node * parent = & nodes.back();
             parent->setInternalNodeValue(true);
-            
+
             //Add the up to N leafs
             for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
                 nodes.push_back(Node(this,a+i));
@@ -191,7 +192,7 @@ Node * Tree::makeNleafTree(int a, int b, int N){
         //Binary split
         Node * new_child = makeNleafTree(a, (b-a)/2+a, N);
         parent->addChild(new_child);
-        
+
         new_child = makeNleafTree((b-a)/2+a+1, b, N);
         parent->addChild(new_child);
         return parent;
@@ -502,4 +503,85 @@ double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, 
 
 string Tree::toString(){
     return rootP->toString();
+}
+
+
+/** Write out the tree as a .txt file formatted
+    for ease of use in MATLAB scripts (plotting)
+*/
+
+void Tree::writeMatlabFormat(string filename) {
+
+    // Give all nodes a proper new id
+    list<Node *> lnodes; // recursion list
+    lnodes.push_back(rootP);
+
+    int current_id = 0;
+    vector<int> new_id(nodes.size(),-1);
+    while (!lnodes.empty()) {
+        Node * cnodeP = lnodes.front(); // take next node
+        list<Node>::iterator it_nodes = nodes.begin();
+        int n_id = 0;
+        while (&(*it_nodes)!= cnodeP) { // find its id in nodes list
+            it_nodes++;
+            n_id++;
+        }
+        new_id[n_id] = current_id++; // set its new id
+        list<Node*> c_children = cnodeP->getChildren(); // add children to recursion-list
+        for (auto it_c = c_children.begin(); it_c!= c_children.end(); ++it_c) {
+            lnodes.push_back(*it_c);
+        }
+        lnodes.pop_front(); // remove current node
+    }
+
+    // Parent -> Child relation list
+    int n_this_node = 0;
+    vector<int> parent_child_rel((int)nodes.size(),-1);
+    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+        Node * cparentP = it->getParent(); // get pointer to this nodes parent
+        if (cparentP != nullptr) {
+            // find location of parent in nodes list
+            list<Node>::iterator it_parent = nodes.begin();
+            int n_id_parent = 0;
+            while (&(*it_parent) != cparentP) {
+                it_parent++;
+                n_id_parent++;
+            }
+            // At position = this_nodes_id, set parents new_id
+            // NB! +1 due to MATLAB not zero-indexing
+            parent_child_rel[new_id[n_this_node]] = new_id[n_id_parent]+1;
+        } else { // if root
+            parent_child_rel[0] = 0;
+        }
+        n_this_node++;
+    }
+
+    // Leaf->Data list
+    vector<int> leaf_list((int)leaves.size(),-1);
+    for (auto it = leaves.begin(); it != leaves.end(); ++it) {
+        // find corresponding node in nodes
+        list<Node>::iterator it_node = nodes.begin();
+        int node_id = 0;
+        while (*it != it_node->getLeafId()) {
+            it_node++;
+            node_id++;
+        }
+        // set leaf_list[*it] = new_id[node_id];
+        leaf_list[*it] = new_id[node_id]+1;
+    }
+
+
+    assert(find(leaf_list.begin(),leaf_list.end(),-1) == leaf_list.end());
+
+    ofstream out_file(filename.c_str()); // output file
+
+    // write first line - Parent->Child relation
+    for (auto it = parent_child_rel.begin(); it != parent_child_rel.end(); ++it) {
+        out_file << *it << " ";
+    }
+    out_file << endl;
+    // write second line - Leaf-Data relation
+    for (auto it = leaf_list.begin(); it != leaf_list.end(); ++it) {
+        out_file << *it << " ";
+    }
 }

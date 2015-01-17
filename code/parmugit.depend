@@ -23,7 +23,7 @@
 	"sampler.h"
 	"iofilehandler.h"
 
-1421313016 source:/home/sfvn/Documents/parmugit/code/test.cpp
+1421502355 source:/home/sfvn/Documents/parmugit/code/test.cpp
 	<iostream>
 	<fstream>
 	<stdexcept>
@@ -31,8 +31,9 @@
 	<cmath>
 	"barebones_tree.h"
 	"iofilehandler.h"
+	"sampler.h"
 
-1421401434 /home/sfvn/Documents/parmugit/code/barebones_tree.h
+1421417410 /home/sfvn/Documents/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
@@ -40,6 +41,7 @@
 	<list>
 	<string>
 	<algorithm>
+	<fstream>
 	"node.h"
 
 1421398899 /home/julian/Dropbox/skole/parmugit/code/node.h
@@ -77,10 +79,11 @@
 
 1420801980 49d53a0669aaa02c0cf534042de2a74e8cd08
 
-1421402997 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
+1421502288 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
+	<cassert>
 
 1421157004 /home/sfvn/Documents/parmugit/code/adjacency_list.h
 	<stdio.h>
@@ -131,13 +134,13 @@
 	"barebones_tree.h"
 	<cstdlib>
 
-1421313281 source:/home/sfvn/Documents/parmugit/code/iofilehandler.cpp
+1421408998 source:/home/sfvn/Documents/parmugit/code/iofilehandler.cpp
 	"iofilehandler.h"
 	<fstream>
 	<stdexcept>
 	<dirent.h>
 
-1421310477 /home/sfvn/Documents/parmugit/code/iofilehandler.h
+1421408998 /home/sfvn/Documents/parmugit/code/iofilehandler.h
 	<iostream>
 	<string>
 	<list>

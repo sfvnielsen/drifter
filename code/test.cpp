@@ -13,8 +13,11 @@
 #include <cmath>
 #include "barebones_tree.h"
 #include "iofilehandler.h"
+#include "sampler.h"
 
 using namespace std;
+
+Tree debuggingTree();
 
 int main()
 {
@@ -148,16 +151,33 @@ int main()
 //        return EXIT_FAILURE;
 //    }
 
-    cout << "------ Real data test -----" << endl;
-//    string data_file_name = "data/celegans_edgelist.txt";
-    string data_file_name = "data/karate_edgelist.txt";
+//    cout << "------ Real data test -----" << endl;
+////    string data_file_name = "data/celegans_edgelist.txt";
+//    string data_file_name = "data/karate_edgelist.txt";
+//
+//    IoFileHandler data_file(data_file_name,0);
+//    data_file.read_graph();
+//
+//    Tree test_tree(data_file.getDataEl()); // initialize flat tree
+//    cout << test_tree.toString() << endl;
 
-    IoFileHandler data_file(data_file_name,0);
-    data_file.read_graph();
-
-    Tree test_tree(data_file.getDataEl()); // initialize flat tree
-    cout << test_tree.toString() << endl;
-
-
+    Tree T = debuggingTree();
+    Sampler sampler(T,0.5,0.5,1,1);
+    sampler.run(100);
+    sampler.getLast().writeMatlabFormat("a_test.txt");
     return 0;
+}
+
+
+Tree debuggingTree(){
+    pair<int,int> g1 (0,1);
+    pair<int,int> g2 (1,2);
+    pair<int,int> g3 (0,3);
+    pair<int,int> g4 (1,3);
+    pair<int,int> g5 (2,3);
+    pair<int,int> g6 (0,4);
+    pair<int,int> g7 (4,3);
+    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5,g6};
+
+    return Tree(data_edge_list);
 }

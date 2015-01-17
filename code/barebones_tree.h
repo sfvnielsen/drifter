@@ -15,6 +15,7 @@
 #include <list>
 #include <string>
 #include <algorithm>
+#include <fstream>
 #include "node.h"
 
 
@@ -71,6 +72,7 @@ public:
 
     // Print
     std::string toString();
+    void writeMatlabFormat(std::string);
 
     //TODO: Dont know what to do with this...?
     // void recalculate(); // calculate all of the counts on the tree from the graph
