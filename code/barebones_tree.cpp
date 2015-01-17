@@ -148,7 +148,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 }
 
 /**
- * NOT IMPLEMENTED!!!
+ * Initialises the data in a binary tree structure
  */
 int Tree::InitBinaryTree(){
     setRootP(makeNleafTree(0, (int) vec_leaves.size() -1 ,2) );
@@ -156,26 +156,28 @@ int Tree::InitBinaryTree(){
 }
 
 /**
- * Tree constructor - Can initialize based on string
- - Options are: Binary, Flat
- NB! Not DONE! TODO!
+ *
  */
 Node * Tree::makeNleafTree(int a, int b, int N){
 
-    if ((b-a) < (N)) {
-        if (b==a){ //If there is only one node (special case, no new internal
-                   //  node should be created.
+    //If (b-a) < N, we are a leaf level in the tree (or just above).
+    if ((b-a) < N) {
+        //Special case: There is only ONE node (a leaf), so the leaf should
+        //  be added as a child to the previous internal node.
+        if (b==a){
+            //Creating leaf node
             nodes.push_back(Node(this,a));
             Node * child_P = & nodes.back();
             return child_P;
-
-        } else { //If there is more than one node
+        //General case: There is between 2 and N nodes (leafs), they are added
+        //  to a new internal node, which is a child to the previous internal node
+        } else {
             //Create new internal node
             nodes.push_back(Node(this,getNextInternalNodeId()));
             Node * parent = & nodes.back();
             parent->setInternalNodeValue(true);
 
-            //Add the up to N leafs
+            //Add the leaf nodes as children
             for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
                 nodes.push_back(Node(this,a+i));
                 Node * child_P = & nodes.back();
@@ -183,18 +185,33 @@ Node * Tree::makeNleafTree(int a, int b, int N){
             }
             return parent;
         }
+    //else, We are at a level where we should split, by adding an internal node
+    //       and recursing into N new (internal) nodes.
     } else {
-        //Create internal node
+        //Create internal node, which
         nodes.push_back(Node(this,getNextInternalNodeId()));
         Node * parent = & nodes.back();
         parent->setInternalNodeValue(true);
 
         //Binary split
-        Node * new_child = makeNleafTree(a, (b-a)/2+a, N);
-        parent->addChild(new_child);
+//        Node * new_child = makeNleafTree(a, (b-a)/2+a, N);
+//        parent->addChild(new_child);
+//
+//        new_child = makeNleafTree((b-a)/2+a+1, b, N);
+//        parent->addChild(new_child);
 
-        new_child = makeNleafTree((b-a)/2+a+1, b, N);
-        parent->addChild(new_child);
+        Node * new_child;// = makeNleafTree(a, (b-a)/N+a, N);;
+        for (int i = 0; i < N; i++) {
+            if (i == N-1){
+                new_child = makeNleafTree(i*((b-a+1)/N)+a, b, N);
+                cout << "parm1: "<< i*((b-a+1)/N)+a << "  ,  parmb: " << b <<endl;
+            } else {
+                new_child = makeNleafTree(i*((b-a+1)/N)+a, (i+1)*((b-a+1)/N)+a-1, N);
+                cout << "parm1: "<< i*((b-a+1)/N)+a << "  ,  parm2: " << (i+1)*((b-a+1)/N)+a-1 <<endl;
+            }
+
+            parent->addChild(new_child);
+        }
         return parent;
     }
 
@@ -230,46 +247,16 @@ int Tree::InitFlatTree(){
 * Copy constructor
 *
 */
-Tree::Tree(Tree const &old_tree)  {
-    nodes = old_tree.nodes;
+Tree::Tree(Tree const &old_tree){
     leaves = old_tree.leaves;
-    vec_leaves =old_tree.vec_leaves;
     graph = old_tree.graph;
     adjacencyList = old_tree.adjacencyList;
     nextInternalNodeId = old_tree.nextInternalNodeId;
 
-    //Find new root node
-    for (auto it = nodes.begin(); it != nodes.end();++it){
-        if (it->getParent() == nullptr) {
-            rootP = &(*it);
-        }
-    }
+    nodes.push_back(Node(this,getNextInternalNodeId()));
+    rootP = &(nodes.back());
 
-    for (auto it = nodes.begin(); it != nodes.end();++it){
-        if (it->getParent() != nullptr){
-            //parent update
-            int old_parent = it->getParent()->getLeafId();
-            it->setParent(getNode(old_parent));
-
-        }
-
-        //children update
-        list<Node *> children = it->getChildren();
-        list<Node *> new_children;
-        for (auto it_child = children.begin();
-             it_child != children.end(); ++it_child) {
-
-            //Find id, and find it in
-            int id = (*it_child)->getLeafId();
-            new_children.push_back(getNode(id));
-
-        }
-        it->setChildren(new_children);
-
-        //tree pointer update
-        it->setTreePointer(this);
-
-    }
+    rootP->copyFrom(this, *(old_tree.rootP));
 }
 
 
@@ -309,6 +296,12 @@ Node * Tree::getRoot(){
 /** Decrements nextInternalNodeId and returns it */
 int Tree::getNextInternalNodeId(){
     return --nextInternalNodeId;
+}
+
+/** Adds a new Node to the nodes list */
+Node * Tree::addNode(){
+    nodes.push_back(Node(this,getNextInternalNodeId()));
+    return &(nodes.back());
 }
 
 
@@ -464,8 +457,7 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     }else{ //As sibling
 
         // Create a new node
-        nodes.push_back(Node(this,getNextInternalNodeId()));
-        Node * new_parent = &(nodes.back());
+        Node * new_parent = addNode();
         new_parent->setInternalNodeValue(true);
 
         // Constuct and add a new parent

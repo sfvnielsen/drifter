@@ -55,6 +55,7 @@ public:
     void setRootP(Node *);
     Node * getRoot(); // Returns pointer tree-root
     int getNextInternalNodeId();
+    Node * addNode(); // Adds a node to the nodes-list
     Node * getNode(int); // Get node by unique 'leaf-id'
     void removeNode(Node *);  // Removes node from nodes-list (called from Node class)
 
