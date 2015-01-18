@@ -24,6 +24,7 @@ write(should_write), filename(new_filename) {
         {
             throw runtime_error("IOHANDLER:  Could not read desired file");
         }
+        this->read_graph();
     }
 }
 
