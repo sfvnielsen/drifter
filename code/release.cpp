@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     string data_file_name;
     int num_iterations;
     if (argc < 2) {
-        data_file_name = "../../data/karate_edgelist.txt";
+        data_file_name = "data/karate_edgelist.txt";
         num_iterations = 10000;
     }else if (argc == 2) {
         data_file_name = (string) argv[1];
