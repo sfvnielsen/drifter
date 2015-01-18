@@ -142,6 +142,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
              //Find what the fake_id corresponds to in real id
             int fake_id = it->getLeafId();
             it->setLeafId(data_leaf_relation[fake_id]);
+            leaves.push_back(it->getLeafId());
         }
     }
 
@@ -571,9 +572,10 @@ void Tree::writeMatlabFormat(string filename) {
     for (auto it = parent_child_rel.begin(); it != parent_child_rel.end(); ++it) {
         out_file << *it << " ";
     }
-    out_file << endl;
+    out_file << "\n";
     // write second line - Leaf-Data relation
     for (auto it = leaf_list.begin(); it != leaf_list.end(); ++it) {
         out_file << *it << " ";
     }
+
 }

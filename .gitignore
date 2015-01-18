@@ -12,3 +12,4 @@ code/obj/*
 code/test.build/*
 code/parmugit.cbp
 code/run_parmugit
+code/test/mat_test/*
