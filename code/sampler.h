@@ -20,6 +20,8 @@ class Sampler
         Tree getLast();
         double getLastLikelihood();
 
+        void writeResults(std::string);
+
     protected:
 
     private:

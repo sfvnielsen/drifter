@@ -23,7 +23,7 @@
 	"sampler.h"
 	"iofilehandler.h"
 
-1421578238 source:/home/sfvn/Documents/parmugit/code/test.cpp
+1421586779 source:/home/sfvn/Documents/parmugit/code/test.cpp
 	<iostream>
 	<fstream>
 	<stdexcept>
@@ -79,7 +79,7 @@
 
 1420801980 49d53a0669aaa02c0cf534042de2a74e8cd08
 
-1421578123 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
+1421578698 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
@@ -130,7 +130,7 @@
 	<cmath>
 	"barebones_tree.h"
 
-1421335082 /home/sfvn/Documents/parmugit/code/sampler.h
+1421584684 /home/sfvn/Documents/parmugit/code/sampler.h
 	"barebones_tree.h"
 	<cstdlib>
 
@@ -162,10 +162,12 @@
 
 1421318290 
 
-1421400615 source:/home/sfvn/Documents/parmugit/code/sampler.cpp
+1421586664 source:/home/sfvn/Documents/parmugit/code/sampler.cpp
 	"sampler.h"
 	<iostream>
 	<numeric>
+	<dirent.h>
+	<fstream>
 
 1421335582 6df843b03589333a63a6657eee42fbb5582e9
 

@@ -1,6 +1,9 @@
 #include "sampler.h"
 #include <iostream>
 #include <numeric>
+#include <dirent.h>
+#include <fstream>
+#include <cstdio>
 
 using namespace std;
 
@@ -76,4 +79,37 @@ double Sampler::getLastLikelihood(){
 
 Tree Sampler::getLast(){
     return chain.back();
+}
+
+/**
+* Write results of sampling procedure
+*/
+
+void Sampler::writeResults(std::string folder) {
+
+    // if folder doesnt exist - create it
+    DIR *dir;
+    if ((dir = opendir (folder.c_str())) == NULL) {
+        throw runtime_error("Target directory for writing results not found");
+    }
+
+    // write trees
+    int n_sample = 1;
+    string filename = "";
+    for (auto it = chain.begin(); it != chain.end(); ++it) {
+            char buffer [6];
+            sprintf (buffer,"%05d", n_sample);
+            string n_id = (string) buffer;
+            filename = folder + "/tree_sample" + n_id + ".txt";
+            it->writeMatlabFormat(filename);
+            n_sample++;
+    }
+
+    // write likelihood
+    filename = folder + "/loglikelihood.txt";
+    ofstream out_file(filename);
+
+    for (auto it = likelihoods.begin(); it != likelihoods.end(); ++it){
+        out_file << *it << " ";
+    }
 }
