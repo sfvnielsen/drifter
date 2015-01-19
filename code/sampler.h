@@ -15,9 +15,10 @@ class Sampler
 
         virtual ~Sampler();
 
-        void run();
-        void run(int L);
-        void run(int L, int burnin, int thinning);
+        void run(); // normal run
+        void run(int); // run int samples
+        void run(int,int); // run with thinning
+        void run(int, int, int); // run burnin (and call above after)
         Tree getLast();
         double getLastLikelihood();
 

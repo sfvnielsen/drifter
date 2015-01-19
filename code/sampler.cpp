@@ -100,6 +100,59 @@ for (int i=0; i<L; i++){
 }
 
 /**
+* Running the Metropolis hastings sampler with thinning
+* @param L: number of iterations
+* @param thinning: save only each thinning'th sample
+*/
+void Sampler::run(int L, int thinning ){
+
+    lastLogLik = likelihoods.back();
+    Tree lastTree = chain.back();
+
+    int step = max((int) L/100,10);
+
+for (int i=0; i<L; i++){
+    // Create a proposal
+    Tree proposal = lastTree;
+
+    double move_ratio = proposal.regraft(); //Try a move
+
+    // Get Likelihoods times priors
+    double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+
+    // calculate the acceptance ratio
+    double a = exp(propLogLik-lastLogLik)*move_ratio;
+    if(a>=1){
+        if ( (i%thinning) == 0) {
+            chain.push_back(proposal);
+            likelihoods.push_back(propLogLik);
+        }
+        lastLogLik = propLogLik;
+        lastTree = proposal;
+    }else if(a>(double)rand()/RAND_MAX){
+        if ( (i%thinning) == 0) {
+            chain.push_back(proposal);
+            likelihoods.push_back(propLogLik);
+        }
+        lastLogLik = propLogLik;
+        lastTree = proposal;
+    }else{
+        if ( (i%thinning) == 0) {
+            chain.push_back(lastTree);
+            likelihoods.push_back(lastLogLik);
+        }
+    }
+
+    if (((i) % step)==0){
+        cout << "[Iteration: "<< (int)(i*100)/L << "% of " << L << "] Acceptance ratio: " << a
+        << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
+    }
+
+}
+}
+
+
+/**
 * Running the Metropolis hastings sampler with burnin and thinning
 * @param L: number of iterations
 */
@@ -131,8 +184,8 @@ for (int i=0; i<burnin; i++){
     }
 
     if (((i) % bstep)==0){
-        cout << "[burnin: "<< (int)(i*100)/burnin << "% of " << burnin << "] Accptance ration: " << a
-        << " Loglikelihood: "<< lastLogLik << endl << endl <<flush ;
+        cout << "[burnin: "<< (int)(i*100)/burnin << "% of " << burnin << "] Acceptance ratio: " << a
+        << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
     }
 }
     likelihoods.clear();
@@ -140,8 +193,10 @@ for (int i=0; i<burnin; i++){
     chain.clear();
     chain.push_back(oldTree);
 
-    run(L);
+    run(L,thinning);
 }
+
+
 
 double Sampler::getLastLikelihood(){
     return likelihoods.back();
