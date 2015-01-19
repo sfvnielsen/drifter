@@ -17,6 +17,7 @@ class Sampler
 
         void run();
         void run(int L);
+        void run(int L, int burnin, int thinning);
         Tree getLast();
         double getLastLikelihood();
 
@@ -30,6 +31,7 @@ class Sampler
         std::list<double> likelihoods;
         int L;
         Adj_list adjacencyList;
+        double lastLogLik;
 
 
         // Hyperparameters:
