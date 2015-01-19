@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1421416664 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
+1421661801 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
+	<cassert>
 
-1421412560 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
+1421661799 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
@@ -12,9 +13,10 @@
 	<list>
 	<string>
 	<algorithm>
+	<fstream>
 	"node.h"
 
-1421412560 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
+1421661153 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
 	<iostream>
 	<cstdlib>
 	<time.h>
@@ -44,12 +46,12 @@
 	<fstream>
 	"node.h"
 
-1421412560 /home/julian/Dropbox/skole/parmugit/code/node.h
+1421417612 /home/julian/Dropbox/skole/parmugit/code/node.h
 	<list>
 	<cmath>
 	"adjacency_list.h"
 
-1421416923 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
+1421417612 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
 	"node.h"
 	"barebones_tree.h"
 	<iostream>
@@ -58,12 +60,12 @@
 
 1421310477 D
 
-1421412560 source:/home/julian/Dropbox/skole/parmugit/code/adjacency_list.cpp
+1421653836 source:/home/julian/Dropbox/skole/parmugit/code/adjacency_list.cpp
 	"adjacency_list.h"
 	<iostream>
 	<algorithm>
 
-1421412560 /home/julian/Dropbox/skole/parmugit/code/adjacency_list.h
+1421653836 /home/julian/Dropbox/skole/parmugit/code/adjacency_list.h
 	<stdio.h>
 	<string>
 	<vector>
@@ -113,12 +115,15 @@
 	<iostream>
 	<algorithm>
 
-1421417004 source:/home/julian/Dropbox/skole/parmugit/code/sampler.cpp
+1421659789 source:/home/julian/Dropbox/skole/parmugit/code/sampler.cpp
 	"sampler.h"
 	<iostream>
 	<numeric>
+	<dirent.h>
+	<fstream>
+	<cstdio>
 
-1421412560 /home/julian/Dropbox/skole/parmugit/code/sampler.h
+1421658927 /home/julian/Dropbox/skole/parmugit/code/sampler.h
 	"barebones_tree.h"
 	<cstdlib>
 
@@ -154,7 +159,7 @@
 	<utility>
 	<vector>
 
-1421318290 source:/home/julian/Dropbox/skole/parmugit/code/iofilehandler.cpp
+1421658834 source:/home/julian/Dropbox/skole/parmugit/code/iofilehandler.cpp
 	"iofilehandler.h"
 	<fstream>
 	<stdexcept>

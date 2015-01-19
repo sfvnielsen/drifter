@@ -16,7 +16,22 @@ Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus)
 */
 Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int rho_plus, int rho_minus):
                                                   alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
-    Tree T = Tree(data_graph);
+
+    list<int> leaves;
+        // insert all the indexes from the edge list into leaves
+    for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
+        leaves.push_back(it->first);
+        leaves.push_back(it->second);
+    }
+
+    // Find only the unique elements
+    leaves.sort();
+    leaves.unique();
+
+    int N = (int) leaves.size();
+    adjacencyList = Adj_list(N,data_graph);
+
+    Tree T = Tree(N,&adjacencyList);
     chain.push_back(T);
 }
 /**

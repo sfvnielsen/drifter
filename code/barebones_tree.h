@@ -27,9 +27,9 @@ private:
     std::list<int> leaves;
     std::vector<int> vec_leaves;
     std::list<std::pair<int, int>> graph;
-    Adj_list adjacencyList;
     int InitBinaryTree();
     Node * makeNleafTree(int, int, int);
+    Adj_list * adjacencyListP;
 
     int InitFlatTree();
     int nextInternalNodeId;
@@ -37,7 +37,8 @@ private:
 
 public:
     // Constructors
-    Tree(std::list<std::pair<int, int>>); // make the naive tree building in the adjacency matrix.
+    Tree(int N, Adj_list * AP);
+    Tree(int N, Adj_list * AP, std::string initType);
     Tree(std::list<std::pair<int, int>>, std::string);
     Tree(std::list<std::pair<int, int>>, std::list<std::pair<int, int>>
          , std::vector<int>); // Builds tree based on data, tree and data-tree relation
@@ -50,7 +51,6 @@ public:
     //Tree& operator=(Tree&&) & = default;       // Move assignment operator
 
     // Get and set - Trivial stuff
-    Adj_list getAdjacencyList();
     Adj_list * getAdjacencyListP();
     void setRootP(Node *);
     Node * getRoot(); // Returns pointer tree-root

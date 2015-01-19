@@ -12,59 +12,35 @@
 #include <cassert>
 using namespace std;
 
-
 /**
- * Construct flat tree from data
+ * Construct flat tree from number of leaves
  */
-Tree::Tree(list<pair<int,int>> data_graph): nextInternalNodeId(0) {
+Tree::Tree(int N , Adj_list * AP): nextInternalNodeId(0) {
+    adjacencyListP = AP;
+    leaves = list<int> (N);
+    iota(begin(leaves), end(leaves), 0); //0 is the starting number
 
-    // insert all the indexes from the edge list into leaves
-    for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
-        leaves.push_back(it->first);
-        leaves.push_back(it->second);
+    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
+        cout << *it << ", ";
     }
-
-    // Find only the unique elements
-    leaves.sort();
-    leaves.unique();
-
-    //Copies the elements to a vector ***** TEMPORARY *****
-    vec_leaves = vector<int>();
-    copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
-
-
-    int N = (int) leaves.size();
-    adjacencyList = Adj_list(N,data_graph);
 
     InitFlatTree();
     rootP->updateNumInternalNodes();
 }
 
+
 /**
  * Tree constructor choice
  */
-Tree::Tree(list<pair<int,int>> data_graph, string initType): nextInternalNodeId(0) {
+Tree::Tree(int N , Adj_list * A, string initType): nextInternalNodeId(0) {
 
-    // insert all the indexes from the edge list into leaves
-    for (list<pair<int,int>>::iterator it = data_graph.begin(); it != data_graph.end(); it++){
-        leaves.push_back(it->first);
-        leaves.push_back(it->second);
+    adjacencyListP = A;
+    leaves = list<int> (N);
+    iota(begin(leaves), end(leaves), 0); //0 is the starting number
+
+    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
+        cout << *it << ", ";
     }
-
-    // Find only the unique elements
-    leaves.sort();
-    leaves.unique();
-
-    //Copies the elements to a vector ***** TEMPORARY *****
-    vec_leaves = vector<int>();
-    copy(leaves.begin(), leaves.end(), back_inserter(vec_leaves));
-    cout << "Vec_leaves size: " << vec_leaves.size() << endl;
-    cout << "Leaves size: " << leaves.size() << endl << flush;
-
-
-    int N = (int) leaves.size();
-    adjacencyList = Adj_list(N,data_graph);
-
 
     if (initType == "Binary") {
         InitBinaryTree();
@@ -86,7 +62,6 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
 
     // - Construct adj list from data_graph
     int N = ((int) data_leaf_relation.size())/2; //Number of leaves in graph
-    adjacencyList = Adj_list(N, data_graph);
 
     // - Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
@@ -251,7 +226,7 @@ int Tree::InitFlatTree(){
 Tree::Tree(Tree const &old_tree){
     leaves = old_tree.leaves;
     graph = old_tree.graph;
-    adjacencyList = old_tree.adjacencyList;
+    adjacencyListP = old_tree.adjacencyListP;
     nextInternalNodeId = old_tree.nextInternalNodeId;
 
     nodes.push_back(Node(this,getNextInternalNodeId()));
@@ -275,13 +250,8 @@ Tree::Tree(Tree const &old_tree){
  * Get and Set - "Trivial" Stuff the proof is up to the reader
  */
 
-/** Get Data Adjacency List */
-Adj_list Tree::getAdjacencyList(){
-    return adjacencyList;
-}
-
 Adj_list * Tree::getAdjacencyListP(){
-    return &adjacencyList;
+    return adjacencyListP;
 }
 
 /** Set Root Node */

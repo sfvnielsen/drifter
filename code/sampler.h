@@ -29,6 +29,8 @@ class Sampler
         std::list<Tree> chain;
         std::list<double> likelihoods;
         int L;
+        Adj_list adjacencyList;
+
 
         // Hyperparameters:
         double alpha;
