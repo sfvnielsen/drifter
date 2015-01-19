@@ -19,15 +19,18 @@ class Sampler
         void run(int L);
         Tree getLast();
         double getLastLikelihood();
+        std::list<Tree> getChain();
 
         void writeResults(std::string);
-
+        void writeLogLikelihood(std::string);
+        std::list<Tree> chain;
+        std::list<double> likelihoods;
     protected:
 
     private:
         // Data storage
-        std::list<Tree> chain;
-        std::list<double> likelihoods;
+
+
         int L;
         Adj_list adjacencyList;
 

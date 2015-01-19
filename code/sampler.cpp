@@ -83,7 +83,7 @@ for (int i=0; i<L; i++){
         likelihoods.push_back(lastLogLik);
     }
 
-    if (((i+1) % 10)==0){
+    if (((i+1) % 10000)==0){
         cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
         << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
 
@@ -98,6 +98,10 @@ double Sampler::getLastLikelihood(){
 
 Tree Sampler::getLast(){
     return chain.back();
+}
+
+list<Tree> Sampler::getChain(){
+    return chain;
 }
 
 /**
@@ -132,3 +136,21 @@ void Sampler::writeResults(std::string folder) {
         out_file << *it << " ";
     }
 }
+
+void Sampler::writeLogLikelihood(string folder){
+    // if folder doesnt exist - create it
+    DIR *dir;
+    if ((dir = opendir (folder.c_str())) == NULL) {
+        throw runtime_error("Target directory for writing results not found");
+    }
+    
+    // write likelihood
+    string filename = folder + "/loglikelihood.txt";
+    ofstream out_file(filename);
+    
+    for (auto it = likelihoods.begin(); it != likelihoods.end(); ++it){
+        out_file << *it << " ";
+    }
+}
+
+
