@@ -48,6 +48,7 @@ public:
     //TODO: Rule of "5"
     //virtual ~Tree();                     // Default destructor
     Tree(Tree const &);                  // Copy constructor
+    Tree& operator=(const Tree& other); // Copy assignment constructor.
     //Tree(Tree&&) = default;                    // Move constructor
     //Tree& operator=(const Tree&) & = default;  // Copy assignment operator
     //Tree& operator=(Tree&&) & = default;       // Move assignment operator
