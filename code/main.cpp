@@ -22,14 +22,14 @@ int main() {
     srand ((unsigned int) time(NULL)); // set random seed
 
     string data_file_name = "data/karate_edgelist.txt";
-    //data_file_name = "data/celegans_edgelist.txt";
+    data_file_name = "data/celegans_edgelist.txt";
 //    data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
 
     /**
      * Testing a network
      */
-    int num_iterations = 1000;
+    int num_iterations = 50;
 
     testNetwork(data_file_name,num_iterations);
 
