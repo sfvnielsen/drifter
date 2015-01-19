@@ -15,18 +15,34 @@ IoFileHandler::IoFileHandler(): write(0) {}
  New filehandler - sets filename, and if file is used for read or write
 */
 
-IoFileHandler::IoFileHandler(string new_filename,bool should_write):
-write(should_write), filename(new_filename) {
+IoFileHandler::IoFileHandler(string new_filename): filename(new_filename) {
  // check that filename is valid (if read is performed)
-    if (!write) {
-        ifstream inStream(filename);
-        if (!inStream)
-        {
-            throw runtime_error("IOHANDLER:  Could not read desired file");
-        }
-        //this->read_graph();
+    ifstream inStream(filename);
+    if (!inStream)
+    {
+        throw runtime_error("IOHANDLER:  Could not read desired file");
+    }
+    this->read_graph();
+}
+
+/**
+ Testing filehandler
+*/
+
+IoFileHandler::IoFileHandler(string new_filename, bool test):
+filename(new_filename) {
+    ifstream inStream(filename);
+    if (!inStream)
+    {
+        throw runtime_error("IOHANDLER:  Could not read desired file");
+    }
+    if (test) {
+        this->read_test_case();
+    }else {
+        this->read_graph();
     }
 }
+
 
 /**
  Trivial get/set functions

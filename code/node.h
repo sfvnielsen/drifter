@@ -32,7 +32,8 @@ public:
     int getLeafId();
     void setLeafId(int);
 
-    std::list<int> getLeaves();
+    void updateLeaves();
+    std::list<int> * getLeaves();
     std::list<std::pair<int,int>> getCountsAll();
     std::pair<int,int> getCountsPair(Node *, Node *);
 
@@ -43,7 +44,6 @@ public:
 
     bool isInternalNode();
     void setInternalNodeValue(bool);
-
 
 
 	int getNumInternalNodes();
@@ -68,7 +68,8 @@ private:
     int leafId;
     bool isInternal;
     Tree * treeP;
-
+    std::list<int> leaves;
+    bool modified;
 };
 
 double logbeta(double,double);

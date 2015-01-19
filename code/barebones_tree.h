@@ -31,6 +31,8 @@ private:
     Node * makeNleafTree(int, int, int);
     Adj_list * adjacencyListP;
 
+    bool modified;
+
     int InitFlatTree();
     int nextInternalNodeId;
 	// TODO make functions private when not debugging them.
