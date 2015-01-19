@@ -128,7 +128,7 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
             leaves.push_back(it->getLeafId());
         }
     }
-
+    rootP->updateLeaves();
 }
 
 /**
