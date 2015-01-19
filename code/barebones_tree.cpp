@@ -64,7 +64,6 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
 
     adjacencyListP = adj_list;
     // - Construct adj list from data_graph
-    int N = ((int) data_leaf_relation.size())/2; //Number of leaves in graph
 
     // - Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
