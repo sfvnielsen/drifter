@@ -57,7 +57,7 @@ public:
     double evaluateNodeLogLike(double,double,int,int);
     double evaluateSubtreeLogLike(double,double,int,int);
     
-    bool isEqual(Node *);
+    bool isEqualSubtree(Node *);
     bool operator == ( const Node &rhs ) const;
     std::string toString();
 

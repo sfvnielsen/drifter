@@ -563,7 +563,13 @@ void Tree::writeMatlabFormat(string filename) {
 
 }
 
-
+/**
+ * Tests if two trees are equal, defined as when all internal nodes in the
+ *  original tree have the same children as the internal nodes in the "copy" tree.
+ *
+ * Also symmetric tree structure is allowed, as long as each node furfills the
+ *  same leaves requirement.
+ */
 bool Tree::isEqual(Tree copy_tree){
-    return rootP->isEqual(copy_tree.rootP);
+    return rootP->isEqualSubtree(copy_tree.rootP);
 }

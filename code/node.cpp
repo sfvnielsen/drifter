@@ -421,14 +421,26 @@ Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
     return *it_result;
 }
 
-bool Node::isEqual(Node * copy_node){
+
+/**
+ * Tests if two subtrees are equal, defined as when all internal nodes (below) in the
+ *  original tree have the same children as the internal nodes (below) in the "copy" tree.
+ *
+ * Also symmetric subtree structure is allowed, as long as each node furfills the
+ *  same leaves requirement.
+ *
+ * !!! Should not be run on large networks !!!
+ */
+bool Node::isEqualSubtree(Node * copy_node){
     
     list<int> leavesOriginal  = *getLeaves(),
     leavesCopy = * copy_node->getLeaves();
     
+    //If the number of leaves are diffent, they are never a match
     if (leavesCopy.size() != leavesOriginal.size()) {
         return false;
     } else {
+        //Computes how many of the leaves between copy and original are equal
         int num_equal = 0;
         for (auto it = leavesOriginal.begin(); it != leavesOriginal.end(); it++) {
             for (auto it2 = leavesCopy.begin(); it2 != leavesCopy.end(); it2++) {
@@ -438,19 +450,25 @@ bool Node::isEqual(Node * copy_node){
             }
         }
         
+        // iff the following check passes, are the leaves identical
         if (num_equal == (int) leavesOriginal.size()) {
-            int num_child_identical = 0;
             
+            //Now the children must be comparred and as the trees can be symmetric
+            // each possible combination of copy and original children are compared.
+            int num_child_identical = 0;
             for (auto it = children.begin(); it != children.end(); it++) {
-                
                 for (auto it2 = copy_node->children.begin(); it2 != copy_node->children.end(); it2++) {
-                    if ((*it)->isEqual( (* it2) ) ) {
+
+                    //Each check starts a recursion, and at maximum one can be true
+                    // for each iteration of the outer for-loop.
+                    if ((*it)->isEqualSubtree( (* it2) ) ) {
                         num_child_identical++;
                     }
                 }
                 
                 
             }
+            // iff the following check passes, are the subtrees identical
             if (num_child_identical == (int) children.size()) {
                 return true;
             }
