@@ -26,6 +26,10 @@ Tree::Tree(int N , Adj_list * AP): nextInternalNodeId(0) {
 
     InitFlatTree();
     rootP->updateNumInternalNodes();
+    rootP->updateLeaves();
+    modified = false;
+    cout << toString();
+
 }
 
 
@@ -33,7 +37,6 @@ Tree::Tree(int N , Adj_list * AP): nextInternalNodeId(0) {
  * Tree constructor choice
  */
 Tree::Tree(int N , Adj_list * A, string initType): nextInternalNodeId(0) {
-
     adjacencyListP = A;
     leaves = list<int> (N);
     iota(begin(leaves), end(leaves), 0); //0 is the starting number
@@ -50,7 +53,8 @@ Tree::Tree(int N , Adj_list * A, string initType): nextInternalNodeId(0) {
 
     //Correct internal number count
     rootP->updateNumInternalNodes();
-
+    rootP->updateLeaves();
+    modified = false;
 }
 
 /**
@@ -61,7 +65,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
            vector<int> data_leaf_relation): nextInternalNodeId(0) {
 
     // - Construct adj list from data_graph
-    int N = ((int) data_leaf_relation.size())/2; //Number of leaves in graph
+//    int N = ((int) data_leaf_relation.size())/2; //Number of leaves in graph
 
     // - Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
@@ -321,6 +325,7 @@ double Tree::regraft(){
 //        cout << "cutting: " << scionP->getLeafId() << endl;
         int n_collapsed = this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
+        rootP->updateLeaves();
 
 //        cout << "Mutilated tree :'( \n" << toString() << endl << flush;
 
@@ -331,6 +336,7 @@ double Tree::regraft(){
 //        cout << " , as child : "+to_string(unbiased_coinflip) << endl;
         int n_created = this->insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
+        rootP->updateLeaves();
 
         // Move probabilities
         int n_nodes = (int)nodes.size();
@@ -354,12 +360,15 @@ void Tree::regraft(int scionVal, int stockVal){
         cout << "cutting: " << scionP->getLeafId() << endl;
         this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
+        rootP->updateLeaves();
 
         Node * stockP = this->getNode(stockVal);
         cout << "inserting: " << stockP->getLeafId() << endl;
         // TODO: random child or sibling
         this->insertSubtree(stockP, scionP, false);
         rootP->updateNumInternalNodes();
+        rootP->updateLeaves();
+
     }
 }
 
