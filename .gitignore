@@ -10,7 +10,7 @@ giftTest
 code/bin/*
 code/obj/*
 code/test.build/*
-code/parmugit.cbp
+*.cbp
 code/run_parmugit
 code/test/mat_test/*
 *.depend
