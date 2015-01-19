@@ -157,6 +157,11 @@ int main()
         return EXIT_FAILURE;
     }
 
+//
+    
+    Tree eTree = debuggingTree();
+    cout << "Trees equal ? = " << eTree.isEqual(debuggingTree()) << endl;
+    
     return 0;
 }
 

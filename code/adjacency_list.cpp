@@ -85,11 +85,11 @@ bool Adj_list::isConnected(int current, int target){
 
 
     try {
-        return adjacency_matrix[current][target];
+//        return adjacency_matrix[current][target];
 
         //Binary search for element
-//        return binary_search(adjacency_list[current].begin(),
-//                             adjacency_list[current].end(), target);
+        return binary_search(adjacency_list[current].begin(),
+                             adjacency_list[current].end(), target);
     // If something goes wrong, tell why, an make sure that the input given were valid
     } catch (exception e) {
         if (current < 0 || current > (int) adjacency_list.size()-1 ||

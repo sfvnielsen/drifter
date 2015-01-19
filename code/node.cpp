@@ -423,17 +423,39 @@ Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
 
 bool Node::isEqual(Node * copy_node){
     
-    list<int> leavesOriginal = getLeaves(),
-    leavesCopy = copy_node->getLeaves();
+    list<int> leavesOriginal  = *getLeaves(),
+    leavesCopy = * copy_node->getLeaves();
     
     if (leavesCopy.size() != leavesOriginal.size()) {
         return false;
     } else {
         int num_equal = 0;
         for (auto it = leavesOriginal.begin(); it != leavesOriginal.end(); it++) {
-//            if (find(leavesCopy.begin(), leavesCopy.end(), *it)) {
-//                <#statements#>
-//            }
+            for (auto it2 = leavesCopy.begin(); it2 != leavesCopy.end(); it2++) {
+                if (*it == *it2) {
+                    num_equal++;
+                }
+            }
+        }
+        
+        if (num_equal == (int) leavesOriginal.size()) {
+            int num_child_identical = 0;
+            
+            for (auto it = children.begin(); it != children.end(); it++) {
+                
+                for (auto it2 = copy_node->children.begin(); it2 != copy_node->children.end(); it2++) {
+                    if ((*it)->isEqual( (* it2) ) ) {
+                        num_child_identical++;
+                    }
+                }
+                
+                
+            }
+            if (num_child_identical == (int) children.size()) {
+                return true;
+            }
+            
+            
         }
         
         
