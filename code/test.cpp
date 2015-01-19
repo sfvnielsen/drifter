@@ -65,9 +65,9 @@ int main()
             int rho_minus = test_case.getRhoMinus();
             double llike_true = test_case.getLlike();
 
-
+            int number_data_nodes = ( (int) test_case.getLeafDataRelation().size())/2;
             //Init adjacency list
-            Adj_list adjacency_list = Adj_list((int) leaf_data_relation.size(), data_edge_list);
+            Adj_list adjacency_list = Adj_list(number_data_nodes, data_edge_list);
 
             //Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list);
@@ -93,7 +93,6 @@ int main()
             }
 
             // Save result likelihood result
-            int number_data_nodes = ( (int) test_case.getLeafDataRelation().size())/2;
             if (number_data_nodes == 3)
             {
                 llike_all_n3.push_back(llike_test);

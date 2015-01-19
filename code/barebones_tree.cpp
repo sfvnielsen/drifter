@@ -64,8 +64,8 @@ Tree::Tree(int N , Adj_list * A, string initType): nextInternalNodeId(0) {
 * Special test constructor
 * (First element in tree_struct_graph must contain root)
 */
-Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
-           vector<int> data_leaf_relation): nextInternalNodeId(0) {
+Tree::Tree(list<pair<int,int>> tree_struct_graph,
+           vector<int> data_leaf_relation, Adj_list * adj_list): nextInternalNodeId(0) {
 
     adjacencyListP = adj_list;
     // - Construct adj list from data_graph
@@ -128,7 +128,7 @@ Tree::Tree(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph
             leaves.push_back(it->getLeafId());
         }
     }
-
+    rootP->updateLeaves();
 }
 
 /**
