@@ -221,6 +221,8 @@ int Tree::InitFlatTree(){
         rootP->addChild(&(nodes.back()));
     }
     rootP->updateNumInternalNodes();
+    rootP->updateLeaves();
+
     return 0;
 }
 
@@ -243,6 +245,35 @@ Tree::Tree(Tree const &old_tree){
     rootP->copyFrom(this, *(old_tree.rootP));
 }
 
+/**
+* Copy assignment constructor
+*
+*/
+Tree& Tree::operator=(const Tree& other) {
+         // check for self-assignment
+         if(&other == this)
+             return *this;
+
+    leaves = other.leaves;
+    graph = other.graph;
+    adjacencyListP = other.adjacencyListP;
+    nextInternalNodeId = other.nextInternalNodeId;
+
+    nodes.clear();
+    nodes.push_back(Node(this,getNextInternalNodeId()));
+    rootP = &(nodes.back());
+
+    rootP->copyFrom(this, *(other.rootP));
+
+
+         // 1: allocate new memory and copy the elements
+
+         // 2: deallocate old memory
+
+         // 3: assign the new memory to the object
+
+         return *this;
+     }
 
 
 /**

@@ -9,11 +9,11 @@ using namespace std;
 
 Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus):
                           alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
-                              
-    for (int i = 0; i < 1000; i++){
-        cout << "NOT WORKING !!!!!!" <<endl;
-    }
+
     chain.push_back(T);
+    lastLogLik = -std::numeric_limits<double>::infinity();
+    likelihoods.push_back(lastLogLik);
+
 }
 /**
 * Initialize with the naive tree building in the adjacency matrix.
@@ -37,6 +37,8 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int 
 
     Tree T = Tree(N,&adjacencyList);
     chain.push_back(T);
+    lastLogLik = -std::numeric_limits<double>::infinity();
+    likelihoods.push_back(lastLogLik);
 }
 /**
 *Initialize with tree based on data, tree and data-tree relation
@@ -53,16 +55,22 @@ Sampler::~Sampler()
 {
     //dtor
 }
+
+
 /**
 * Running the Metropolis hastings sampler
 * @param L: number of iterations
 */
 void Sampler::run(int L){
-double lastLogLik = -std::numeric_limits<double>::infinity();
+
+    lastLogLik = likelihoods.back();
+
+    int step = max((int) L/100,10);
+
 for (int i=0; i<L; i++){
     // Create a proposal
     Tree proposal = chain.back();
-//    cout << proposal.toString() << endl;
+
     double move_ratio = proposal.regraft(); //Try a move
 
     // Get Likelihoods times priors
@@ -87,10 +95,97 @@ for (int i=0; i<L; i++){
         cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
         << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
 
+    lastLogLik = likelihoods.back();
+    Tree lastTree = chain.back();
+
+    int step = max((int) L/100,10);
+
+for (int i=0; i<L; i++){
+    // Create a proposal
+    Tree proposal = lastTree;
+
+    double move_ratio = proposal.regraft(); //Try a move
+
+    // Get Likelihoods times priors
+    double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+
+    // calculate the acceptance ratio
+    double a = exp(propLogLik-lastLogLik)*move_ratio;
+    if(a>=1){
+        if ( (i%thinning) == 0) {
+            chain.push_back(proposal);
+            likelihoods.push_back(propLogLik);
+        }
+        lastLogLik = propLogLik;
+        lastTree = proposal;
+    }else if(a>(double)rand()/RAND_MAX){
+        if ( (i%thinning) == 0) {
+            chain.push_back(proposal);
+            likelihoods.push_back(propLogLik);
+        }
+        lastLogLik = propLogLik;
+        lastTree = proposal;
+    }else{
+        if ( (i%thinning) == 0) {
+            chain.push_back(lastTree);
+            likelihoods.push_back(lastLogLik);
+        }
+    }
+
+    if (((i) % step)==0){
+        cout << "[Iteration: "<< (int)(i*100)/L << "% of " << L << "] Acceptance ratio: " << a
+        << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
     }
 
 }
 }
+
+
+/**
+* Running the Metropolis hastings sampler with burnin and thinning
+* @param L: number of iterations
+*/
+void Sampler::run(int L, int burnin, int thinning){
+
+Tree oldTree = chain.back();
+// Create a proposal
+Tree proposal = oldTree;
+
+int bstep = max((int) burnin/100,10);
+
+for (int i=0; i<burnin; i++){
+
+    double move_ratio = proposal.regraft(); //Try a move
+
+    // Get Likelihoods times priors
+    double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+
+    // calculate the acceptance ratio
+    double a = exp(propLogLik-lastLogLik)*move_ratio;
+    if(a>=1){
+        oldTree = proposal;
+        lastLogLik = propLogLik;
+    }else if(a>(double)rand()/RAND_MAX){
+        oldTree = proposal;
+        lastLogLik = propLogLik;
+    }else{
+        proposal = oldTree;
+    }
+
+    if (((i) % bstep)==0){
+        cout << "[burnin: "<< (int)(i*100)/burnin << "% of " << burnin << "] Acceptance ratio: " << a
+        << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
+    }
+}
+    likelihoods.clear();
+    likelihoods.push_back(lastLogLik);
+    chain.clear();
+    chain.push_back(oldTree);
+
+    run(L,thinning);
+}
+
+
 
 double Sampler::getLastLikelihood(){
     return likelihoods.back();

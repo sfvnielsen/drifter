@@ -16,29 +16,31 @@
 #include "iofilehandler.h"
 using namespace std;
 
-void testNetwork(string,int);
+void testNetwork(string,int,int,int);
 
 int main() {
     srand ((unsigned int) time(NULL)); // set random seed
 
     string data_file_name = "data/karate_edgelist.txt";
-    data_file_name = "data/celegans_edgelist.txt";
-//    data_file_name = "data/football_edgelist.txt";
+    //data_file_name = "data/celegans_edgelist.txt";
+    data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
 
     /**
      * Testing a network
      */
-    int num_iterations = 50;
+    int num_iterations = 10000;
+    int burnin = 100;
+    int thinning = 10;
 
-    testNetwork(data_file_name,num_iterations);
+    testNetwork(data_file_name,num_iterations,burnin,thinning);
 
 	return 0;
 }
 /**
  * Test a network specifed by an edge list when performing num_of_iterations
  */
-void testNetwork(string data_file_name, int num_of_iterations){
+void testNetwork(string data_file_name, int num_of_iterations, int burnin, int thinning){
     cout << "Running on: " << data_file_name << endl;
     IoFileHandler data_file(data_file_name,0);
     //data_file.read_graph();
@@ -54,13 +56,13 @@ void testNetwork(string data_file_name, int num_of_iterations){
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();
 
-    sampler.run(num_of_iterations);
+    sampler.run(num_of_iterations, 1000, 100);
 
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-    cout << sampler.getLast().toString() << endl;
+    //cout << sampler.getLast().toString() << endl;
 
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
