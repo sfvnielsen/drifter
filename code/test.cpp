@@ -17,14 +17,17 @@
 
 using namespace std;
 
+Tree debuggingTree();
+
 int main()
 {
     cout << "!!!Hello Test-World!!!" << endl;
 
-    // Tolerance on likelihood result
+//     Tolerance on likelihood result
     double epsilon = 1e-6;
 
     string dir_str =  "test/test_files/";
+    string mat_out_dir = "test/mat_test/";
     // For each test file in test_files directory
     DIR *dir;
     struct dirent *ent;
@@ -64,9 +67,15 @@ int main()
             double llike_true = test_case.getLlike();
 
 
+            //Init adjacency list
+            Adj_list adjacency_list = Adj_list((int) leaf_data_relation.size(), data_edge_list);
+            
             //Format into tree-class structure (approriate constructors)
-            Tree test_tree = Tree(data_edge_list, tree_edge_list, leaf_data_relation );
+            Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list);
 
+            // Test of matlab format method
+            string mat_out_file = mat_out_dir + test_file_name;
+            test_tree.writeMatlabFormat(mat_out_file);
             // Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test..." << endl << flush ;
 
@@ -148,21 +157,21 @@ int main()
         perror ("");
         return EXIT_FAILURE;
     }
-//
-//    cout << "------ Real data test -----" << endl;
-////    string data_file_name = "data/celegans_edgelist.txt";
-//    string data_file_name = "data/karate_edgelist.txt";
-//
-//        // Collect all test cases with same number of data nodes
-//        list<double> llike_all_n3, llike_all_n3_true;
-//        list<double> llike_all_n4, llike_all_n4_true;
-//        // Test statistics
-//        int num_passed = 0;
-//        int num_failed = 0;
-//
-//    Tree test_tree(data_file.getDataEl()); // initialize flat tree
-//    cout << test_tree.toString() << endl;
-
 
     return 0;
+}
+
+
+Tree debuggingTree(){
+    pair<int,int> g1 (0,1);
+    pair<int,int> g2 (1,2);
+    pair<int,int> g3 (0,3);
+    pair<int,int> g4 (1,3);
+    pair<int,int> g5 (2,3);
+    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
+    
+    int N = 4;
+    Adj_list adj = Adj_list(4, data_edge_list);
+    
+    return Tree(N,&adj);
 }

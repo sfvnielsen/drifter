@@ -9,6 +9,10 @@ using namespace std;
 
 Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus):
                           alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
+                              
+    for (int i = 0; i < 1000; i++){
+        cout << "NOT WORKING !!!!!!" <<endl;
+    }
     chain.push_back(T);
 }
 /**

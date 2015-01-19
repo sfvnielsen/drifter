@@ -40,8 +40,8 @@ public:
     Tree(int N, Adj_list * AP);
     Tree(int N, Adj_list * AP, std::string initType);
     Tree(std::list<std::pair<int, int>>, std::string);
-    Tree(std::list<std::pair<int, int>>, std::list<std::pair<int, int>>
-         , std::vector<int>); // Builds tree based on data, tree and data-tree relation
+    Tree(std::list<std::pair<int, int>>
+         , std::vector<int>, Adj_list *); // Builds tree based on data, tree and data-tree relation
 
     //TODO: Rule of "5"
     //virtual ~Tree();                     // Default destructor
