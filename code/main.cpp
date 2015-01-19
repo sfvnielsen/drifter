@@ -29,7 +29,7 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 100000;
+    int num_iterations = 1000;
 
     testNetwork(data_file_name,num_iterations);
 
