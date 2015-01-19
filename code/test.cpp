@@ -20,7 +20,7 @@
 using namespace std;
 
 Tree debuggingTree();
-void testSamplerDistribution(string);
+void testSamplerDistribution(string,int,int);
 list<pair<Tree, double>> unique_4_tree;
 
 int main()
@@ -169,7 +169,7 @@ int main()
     Tree eTree = debuggingTree();
     cout << "Debugging sampler" << endl;
     
-    testSamplerDistribution("test/ValidateSampler");
+    testSamplerDistribution("test/ValidateSampler",400000,200000);
     
     cout << "------- END -------" << endl;
     return 0;
@@ -231,7 +231,7 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn){
         if (j > num_burn){
             //Finding the correct tree
             for (auto it_tree = unique_4_tree.begin(); it_tree != unique_4_tree.end(); it_tree++){
-                if (it_tree->first.getRoot()->isEqual(it->getRoot())){
+                if (it_tree->first.getRoot()->isEqualSubtree(it->getRoot())){
                     break;
                 }
                 which_tree++;

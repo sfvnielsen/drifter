@@ -94,6 +94,17 @@ for (int i=0; i<L; i++){
     if (((i+1) % 10000)==0){
         cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
         << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
+    }
+
+}
+}
+
+/**
+* Running the Metropolis hastings sampler with thinning
+* @param L: number of iterations
+* @param thinning: save only each thinning'th sample
+*/
+void Sampler::run(int L, int thinning ){
 
     lastLogLik = likelihoods.back();
     Tree lastTree = chain.back();
@@ -184,6 +195,7 @@ for (int i=0; i<burnin; i++){
 
     run(L,thinning);
 }
+
 
 
 
