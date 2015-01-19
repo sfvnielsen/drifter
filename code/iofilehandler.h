@@ -12,14 +12,8 @@ class IoFileHandler
 {
     public:
         IoFileHandler(); // default dummy constructor
-        IoFileHandler(std::string,bool); //
-//        IoFileHandler(std::string,bool,
-//                      std::list<std::pair<int,int>>,
-//                      std::list<std::pair<int,int>>,
-//                      std::vector<int>);
-        //IoFileHandler(std::string,bool,std::list<std::pair<int,int>>,
-        // ,std::vector<int>);
-
+        IoFileHandler(std::string);
+        IoFileHandler(std::string,bool);
 
         int read_graph();
         int read_test_case();

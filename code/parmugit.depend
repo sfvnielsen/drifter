@@ -1,19 +1,13 @@
 # depslib dependency file v1.0
-<<<<<<< HEAD
-1421661801 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
-=======
+31121152 <<<<<<< HEAD
+
 1421672832 source:/home/julian/Dropbox/skole/parmugit/code/barebones_tree.cpp
->>>>>>> adjacency_matrix_fix
+
+1421671840 acency_matrix_fix
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
 	<cassert>
-
-<<<<<<< HEAD
-1421661799 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
-=======
-1421672832 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
->>>>>>> adjacency_matrix_fix
 	<unordered_map>
 	<vector>
 	<utility>
@@ -23,6 +17,38 @@
 	<algorithm>
 	<fstream>
 	"node.h"
+	<list>
+	<cmath>
+	"adjacency_list.h"
+	"node.h"
+	"barebones_tree.h"
+	<iostream>
+	<numeric>
+	<cassert>
+	"adjacency_list.h"
+	<iostream>
+	<algorithm>
+	<stdio.h>
+	<string>
+	<vector>
+	<list>
+	<algorithm>
+	"sampler.h"
+	<iostream>
+	<numeric>
+	<dirent.h>
+	<fstream>
+	<cstdio>
+	"barebones_tree.h"
+	<cstdlib>
+	"iofilehandler.h"
+	<fstream>
+	<stdexcept>
+	<dirent.h>
+
+1421318290 D
+
+1421672832 /home/julian/Dropbox/skole/parmugit/code/barebones_tree.h
 
 1421661153 source:/home/julian/Dropbox/skole/parmugit/code/main.cpp
 	<iostream>
@@ -43,7 +69,7 @@
 	"iofilehandler.h"
 	"sampler.h"
 
-1421508258 /home/sfvn/Documents/parmugit/code/barebones_tree.h
+1421674565 /home/sfvn/Documents/parmugit/code/barebones_tree.h
 	<unordered_map>
 	<vector>
 	<utility>
@@ -54,47 +80,13 @@
 	<fstream>
 	"node.h"
 
-<<<<<<< HEAD
-1421417612 /home/julian/Dropbox/skole/parmugit/code/node.h
-=======
 1421672832 /home/julian/Dropbox/skole/parmugit/code/node.h
->>>>>>> adjacency_matrix_fix
-	<list>
-	<cmath>
-	"adjacency_list.h"
 
-<<<<<<< HEAD
-1421417612 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
-=======
 1421672832 source:/home/julian/Dropbox/skole/parmugit/code/node.cpp
->>>>>>> adjacency_matrix_fix
-	"node.h"
-	"barebones_tree.h"
-	<iostream>
-	<numeric>
-	<cassert>
 
-1421310477 D
-
-<<<<<<< HEAD
-1421653836 source:/home/julian/Dropbox/skole/parmugit/code/adjacency_list.cpp
-=======
 1421673414 source:/home/julian/Dropbox/skole/parmugit/code/adjacency_list.cpp
->>>>>>> adjacency_matrix_fix
-	"adjacency_list.h"
-	<iostream>
-	<algorithm>
 
-<<<<<<< HEAD
-1421653836 /home/julian/Dropbox/skole/parmugit/code/adjacency_list.h
-=======
 1421673383 /home/julian/Dropbox/skole/parmugit/code/adjacency_list.h
->>>>>>> adjacency_matrix_fix
-	<stdio.h>
-	<string>
-	<vector>
-	<list>
-	<algorithm>
 
 1420804673 >
 
@@ -105,11 +97,12 @@
 
 1420801980 49d53a0669aaa02c0cf534042de2a74e8cd08
 
-1421578698 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
+1421674565 source:/home/sfvn/Documents/parmugit/code/barebones_tree.cpp
 	"barebones_tree.h"
 	<iostream>
 	<cmath>
 	<cassert>
+	<numeric>
 
 1421508258 /home/sfvn/Documents/parmugit/code/adjacency_list.h
 	<stdio.h>
@@ -134,30 +127,14 @@
 	<numeric>
 	<cassert>
 
-1421508258 source:/home/sfvn/Documents/parmugit/code/adjacency_list.cpp
+1421674565 source:/home/sfvn/Documents/parmugit/code/adjacency_list.cpp
 	"adjacency_list.h"
 	<iostream>
 	<algorithm>
 
-<<<<<<< HEAD
-1421659789 source:/home/julian/Dropbox/skole/parmugit/code/sampler.cpp
-=======
 1421672700 source:/home/julian/Dropbox/skole/parmugit/code/sampler.cpp
->>>>>>> adjacency_matrix_fix
-	"sampler.h"
-	<iostream>
-	<numeric>
-	<dirent.h>
-	<fstream>
-	<cstdio>
 
-<<<<<<< HEAD
-1421658927 /home/julian/Dropbox/skole/parmugit/code/sampler.h
-=======
 1421672302 /home/julian/Dropbox/skole/parmugit/code/sampler.h
->>>>>>> adjacency_matrix_fix
-	"barebones_tree.h"
-	<cstdlib>
 
 1421673435 source:/home/julian/Dropbox/skole/parmugit/code/test.cpp
 	<iostream>
@@ -192,15 +169,7 @@
 	<utility>
 	<vector>
 
-<<<<<<< HEAD
-1421658834 source:/home/julian/Dropbox/skole/parmugit/code/iofilehandler.cpp
-=======
 1421671840 source:/home/julian/Dropbox/skole/parmugit/code/iofilehandler.cpp
->>>>>>> adjacency_matrix_fix
-	"iofilehandler.h"
-	<fstream>
-	<stdexcept>
-	<dirent.h>
 
 1421318290 
 
