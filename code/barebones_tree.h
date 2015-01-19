@@ -74,6 +74,8 @@ public:
     // Print
     std::string toString();
     void writeMatlabFormat(std::string);
+    
+    bool isEqual(Tree);
 
     //TODO: Dont know what to do with this...?
     // void recalculate(); // calculate all of the counts on the tree from the graph

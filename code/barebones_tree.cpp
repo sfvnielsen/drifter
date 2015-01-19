@@ -552,3 +552,13 @@ void Tree::writeMatlabFormat(string filename) {
     }
 
 }
+
+
+bool Tree::isEqual(Tree copy_tree){
+    
+    copy_tree.rootP->getLeaves();
+    
+    
+    
+    return false;
+}

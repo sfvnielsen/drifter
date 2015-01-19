@@ -416,3 +416,23 @@ Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
     }
     return *it_result;
 }
+
+bool Node::isEqual(Node * copy_node){
+    
+    list<int> leavesOriginal = getLeaves(),
+    leavesCopy = copy_node->getLeaves();
+    
+    if (leavesCopy.size() != leavesOriginal.size()) {
+        return false;
+    } else {
+        int num_equal = 0;
+        for (auto it = leavesOriginal.begin(); it != leavesOriginal.end(); it++) {
+//            if (find(leavesCopy.begin(), leavesCopy.end(), *it)) {
+//                <#statements#>
+//            }
+        }
+        
+        
+    }
+    return false;
+}
