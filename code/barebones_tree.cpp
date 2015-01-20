@@ -357,18 +357,15 @@ double Tree::regraft(){
 // TODO: finish the regrafting
     Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
-//        cout << "cutting: " << scionP->getLeafId() << endl;
         int n_collapsed = this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
 
-//        cout << "Mutilated tree :'( \n" << toString() << endl << flush;
-
         Node * stockP = this->getRandomStock();
-//        cout << "inserting at: " << stockP->getLeafId();
-        // TODO: random child or sibling
+
+        //Random child or sibling
         bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
-//        cout << " , as child : "+to_string(unbiased_coinflip) << endl;
+
         int n_created = this->insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
@@ -377,7 +374,8 @@ double Tree::regraft(){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
         double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
-
+        
+//        return n_nodes/(n_nodes -n_collapsed +n_created);
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1
         return 1;

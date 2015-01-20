@@ -169,7 +169,7 @@ int main()
     Tree eTree = debuggingTree();
     cout << "Debugging sampler" << endl;
     
-    testSamplerDistribution("test/ValidateSampler",400000,200000);
+    testSamplerDistribution("test/ValidateSampler",1800000,200000);
     
     cout << "------- END -------" << endl;
     return 0;

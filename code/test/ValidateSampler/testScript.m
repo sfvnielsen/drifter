@@ -4,7 +4,7 @@ clc;
 
 %simulated_p = importdata('loglikelihood.txt');
 occ = importdata('occurences.txt');
-occ = importdata('occ_500k_500k.txt');
+%occ = importdata('occ_500k_500k.txt');
 %simulated_p = importdata('loglikelihood_1000_4N.txt');
 %simulated_p = importdata('loglikelihood_1m_4N.txt');
 true_p = importdata('true_loglikelihood.txt');
