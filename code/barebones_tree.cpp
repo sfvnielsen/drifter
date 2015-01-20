@@ -159,7 +159,6 @@ Node * Tree::makeNleafTree(int a, int b, int N){
             //Create new internal node
             nodes.push_back(Node(this,getNextInternalNodeId()));
             Node * parent = & nodes.back();
-            parent->setInternalNodeValue(true);
 
             //Add the leaf nodes as children
             for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
@@ -175,14 +174,6 @@ Node * Tree::makeNleafTree(int a, int b, int N){
         //Create internal node, which
         nodes.push_back(Node(this,getNextInternalNodeId()));
         Node * parent = & nodes.back();
-        parent->setInternalNodeValue(true);
-
-        //Binary split
-//        Node * new_child = makeNleafTree(a, (b-a)/2+a, N);
-//        parent->addChild(new_child);
-//
-//        new_child = makeNleafTree((b-a)/2+a+1, b, N);
-//        parent->addChild(new_child);
 
         Node * new_child;// = makeNleafTree(a, (b-a)/N+a, N);;
         for (int i = 0; i < N; i++) {
@@ -360,7 +351,7 @@ double Tree::regraft(){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
  
-        int n_collapsed = this->cutSubtree(scionP);
+        cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
 
@@ -369,7 +360,7 @@ double Tree::regraft(){
         //Random child or sibling
         bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
 
-        int n_created = this->insertSubtree(stockP, scionP, unbiased_coinflip);
+        insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
 
@@ -474,7 +465,6 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
         // Create a new node
         Node * new_parent = addNode();
-        new_parent->setInternalNodeValue(true);
 
         // Constuct and add a new parent
         Node * stock_parent = stockP->getParent();

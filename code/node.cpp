@@ -23,7 +23,6 @@ Node::Node(){}
 Node::Node(Tree * tP): treeP(tP){
     // Trivial constructor.
     parentP = nullptr;
-    isInternal = true;
 }
 
 Node::Node(Tree * tP, int L): treeP(tP) {
@@ -32,7 +31,7 @@ Node::Node(Tree * tP, int L): treeP(tP) {
     parentP = nullptr;
     num_internal_nodes = 0;
     leafId = L;
-    isInternal = false;
+
 }
 
 /**
@@ -40,7 +39,6 @@ Node::Node(Tree * tP, int L): treeP(tP) {
 */
 void Node::copyFrom(Tree * tP, Node const & old_node){
     treeP = tP;
-    isInternal = old_node.isInternal;
     leafId = old_node.leafId;
     leaves = old_node.leaves;
 
@@ -66,7 +64,7 @@ void Node::setChildren(list<Node *> new_children){
 void Node::updateLeaves(){
     leaves.clear();
 
-    if(!isInternal){
+    if(!isInternalNode()){
         leaves.push_back(leafId);
     }else{
         for (auto it = children.begin(); it != children.end(); it++) {
@@ -77,12 +75,12 @@ void Node::updateLeaves(){
             leaves.splice(leaves.end(), childLeaves);
         }
     }
-    assert(isInternal == ((leafId < 0) && children.size() >0));
+    assert(isInternalNode() == ((leafId < 0) && children.size() >0));
     assert(leaves.size()>0);
 }
 
 list<int> * Node::getLeaves() {
-    assert(isInternal == ((leafId < 0) && children.size() >0));
+    assert(isInternalNode() == ((leafId < 0) && children.size() >0));
     return &leaves;
 }
 
@@ -141,20 +139,15 @@ int Node::removeChild(Node * child) {
 
 
 bool Node::isInternalNode() {
-    return isInternal;
+    return !children.empty();
 }
 
 bool Node::operator==( const Node &rhs ) const {
     return leafId == rhs.leafId;
-//  return parentP==rhs.parentP && leafId==rhs.leafId && children==rhs.children;
 }
 
 int Node::getNumInternalNodes(){
     return num_internal_nodes;
-}
-
-void Node::setInternalNodeValue(bool new_value){
-    isInternal = new_value;
 }
 
 /**
@@ -169,10 +162,8 @@ int Node::updateNumInternalNodes() {
             num_internal_below += (*it)->updateNumInternalNodes();
         }
         num_internal_nodes = num_internal_below+1; //Current node is also internal
-        isInternal = true;
     } else { //it is a leaf
         num_internal_nodes = 0;
-        isInternal = false;
     }
    return num_internal_nodes; //exited ok
 }
@@ -207,7 +198,7 @@ string Node::toString() {
 * - chooses internal nodes with weight 2 and leaves with weight 1
 */
 Node * Node::getRandomDescendant() {
-    if (isInternal){
+    if (isInternalNode()){
         list<Node *> node_list = getChildren();
         list<int> subtree_weight;
         for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
@@ -380,7 +371,7 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
                               , int rho_minus){
     double log_like = 0.0;
 
-    if (this->isInternal) {
+    if (this->isInternalNode()) {
         // First add this nodes contribution
         log_like += this->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
         list<Node *> list_of_children = this->getChildren();

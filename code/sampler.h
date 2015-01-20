@@ -13,8 +13,6 @@ class Sampler
         Sampler(std::list<std::pair<int,int>> data_graph, std::list<std::pair<int,int>> tree_struct_graph,
                 std::list<std::pair<int,int>> data_leaf_relation, double alpha, double beta, int rho_plus, int rho_minus); // Initialize with tree based on data, tree and data-tree relation
 
-        virtual ~Sampler();
-
         void run(); // normal run
         void run(int); // run int samples
         void run(int,int); // run with thinning

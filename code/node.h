@@ -43,7 +43,6 @@ public:
     int removeChild(Node *);
 
     bool isInternalNode();
-    void setInternalNodeValue(bool);
 
 
 	int getNumInternalNodes();
@@ -63,10 +62,10 @@ public:
 
 private:
     Node * parentP;
-	int num_internal_nodes;
+	int num_internal_nodes; //Is need for random selection
     std::list<Node *> children;
     int leafId;
-    bool isInternal;
+    
     Tree * treeP;
     std::list<int> leaves;
     bool modified;
