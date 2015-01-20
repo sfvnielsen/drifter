@@ -37,24 +37,10 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int 
 
     Tree T = Tree(N,&adjacencyList);
     chain.push_back(T);
-    lastLogLik = -std::numeric_limits<double>::infinity();
+    lastLogLik = -std::numeric_limits<double>::infinity();//TODO: calc actual log-like?
     likelihoods.push_back(lastLogLik);
 }
-/**
-*Initialize with tree based on data, tree and data-tree relation
-*/
-//Sampler::Sampler(list<pair<int,int>> data_graph, list<pair<int,int>> tree_struct_graph,
-//                 list<pair<int,int>> data_leaf_relation, double alpha, double beta, int rho_plus, int rho_minus):
-//                                                          alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
-//    Tree T = Tree(data_graph,tree_struct_graph,data_leaf_relation);
-//    chain.push_back(T);
-//}
 
-
-Sampler::~Sampler()
-{
-    //dtor
-}
 
 
 /**
@@ -250,11 +236,11 @@ void Sampler::writeLogLikelihood(string folder){
     if ((dir = opendir (folder.c_str())) == NULL) {
         throw runtime_error("Target directory for writing results not found");
     }
-    
+
     // write likelihood
     string filename = folder + "/loglikelihood.txt";
     ofstream out_file(filename);
-    
+
     for (auto it = likelihoods.begin(); it != likelihoods.end(); ++it){
         out_file << *it << " ";
     }
