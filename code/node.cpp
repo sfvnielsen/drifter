@@ -30,7 +30,7 @@ Node::Node(Tree * tP, int L): treeP(tP) {
     // This defines a leaf-node
     parentP = nullptr;
     num_internal_nodes = 0;
-    leafId = L;
+    nodeId = L;
 
 }
 
@@ -39,7 +39,7 @@ Node::Node(Tree * tP, int L): treeP(tP) {
 */
 void Node::copyFrom(Tree * tP, Node const & old_node){
     treeP = tP;
-    leafId = old_node.leafId;
+    nodeId = old_node.nodeId;
     leaves = old_node.leaves;
 
     for (auto it = old_node.children.begin(); it != old_node.children.end(); it++) {
@@ -65,7 +65,7 @@ void Node::updateLeaves(){
     leaves.clear();
 
     if(!isInternalNode()){
-        leaves.push_back(leafId);
+        leaves.push_back(nodeId);
     }else{
         for (auto it = children.begin(); it != children.end(); it++) {
             Node * childP = *it;
@@ -75,12 +75,12 @@ void Node::updateLeaves(){
             leaves.splice(leaves.end(), childLeaves);
         }
     }
-    assert(isInternalNode() == ((leafId < 0) && children.size() >0));
+    assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
     assert(leaves.size()>0);
 }
 
 list<int> * Node::getLeaves() {
-    assert(isInternalNode() == ((leafId < 0) && children.size() >0));
+    assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
     return &leaves;
 }
 
@@ -96,10 +96,10 @@ void Node::setParent(Node * new_parentP) {
 }
 
 int Node::getLeafId(){
-    return leafId;
+    return nodeId;
 }
 void Node::setLeafId(int new_id){
-    leafId = new_id;
+    nodeId = new_id;
 }
 
 /**
@@ -139,7 +139,7 @@ bool Node::isInternalNode() {
 }
 
 bool Node::operator==( const Node &rhs ) const {
-    return leafId == rhs.leafId;
+    return nodeId == rhs.nodeId;
 }
 
 int Node::getNumInternalNodes(){
@@ -419,10 +419,10 @@ Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
  * !!! Should not be run on large networks !!!
  */
 bool Node::isEqualSubtree(Node * copy_node){
-    
+
     list<int> leavesOriginal  = *getLeaves(),
     leavesCopy = * copy_node->getLeaves();
-    
+
     //If the number of leaves are diffent, they are never a match
     if (leavesCopy.size() != leavesOriginal.size()) {
         return false;
@@ -436,10 +436,10 @@ bool Node::isEqualSubtree(Node * copy_node){
                 }
             }
         }
-        
+
         // iff the following check passes, are the leaves identical
         if (num_equal == (int) leavesOriginal.size()) {
-            
+
             //Now the children must be comparred and as the trees can be symmetric
             // each possible combination of copy and original children are compared.
             int num_child_identical = 0;
@@ -452,18 +452,18 @@ bool Node::isEqualSubtree(Node * copy_node){
                         num_child_identical++;
                     }
                 }
-                
-                
+
+
             }
             // iff the following check passes, are the subtrees identical
             if (num_child_identical == (int) children.size()) {
                 return true;
             }
-            
-            
+
+
         }
-        
-        
+
+
     }
     return false;
 }

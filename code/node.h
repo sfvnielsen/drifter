@@ -22,7 +22,7 @@ public:
     Node(Tree * ,int ); // leaf node constructor
 
     void copyFrom(Tree *, Node const & old_node);
-    
+
     void setParent(Node *);
    	Node * getParent();
 
@@ -50,7 +50,7 @@ public:
 
     double evaluateNodeLogLike(double,double,int,int);
     double evaluateSubtreeLogLike(double,double,int,int);
-    
+
     bool isEqualSubtree(Node *);
     bool operator == ( const Node &rhs ) const;
     std::string toString();
@@ -59,8 +59,8 @@ private:
     Node * parentP;
 	int num_internal_nodes; //Is need for random selection
     std::list<Node *> children;
-    int leafId;
-    
+    int nodeId;
+
     Tree * treeP;
     std::list<int> leaves;
 };
