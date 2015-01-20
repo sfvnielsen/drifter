@@ -43,15 +43,18 @@ void Sampler::run(int L){
     for (int i=0; i<L; i++){
         // Create a proposal
         Tree proposal = chain.back();
-        
+
         double move_ratio = proposal.regraft(); //Try a move
-        
+
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
-        
+
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
-        if(a>(double)rand()/RAND_MAX){
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_real_distribution<> dis(0, 1);
+        if(a>dis(gen)){
             chain.push_back(proposal);
             likelihoods.push_back(propLogLik);
             lastLogLik = propLogLik;
@@ -59,12 +62,12 @@ void Sampler::run(int L){
             chain.push_back(chain.back());
             likelihoods.push_back(lastLogLik);
         }
-        
+
         if (((i+1) % step)==0){
             cout << "[Iteration: "<< i+1 << " of " << L << "] Accptance ration: " << a
             << " Loglikelihood: "<< lastLogLik << endl << endl << flush;
         }
-        
+
     }
 }
 
@@ -74,24 +77,27 @@ void Sampler::run(int L){
 * @param thinning: save only each thinning'th sample
 */
 void Sampler::run(int L, int thinning ){
-    
+
     lastLogLik = likelihoods.back();
     Tree lastTree = chain.back();
-    
+
     int step = max((int) L/100,10);
-    
+
     for (int i=0; i<L; i++){
         // Create a proposal
         Tree proposal = lastTree;
-        
+
         double move_ratio = proposal.regraft(); //Try a move
-        
+
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
-        
+
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
-        if(a > (double)rand()/RAND_MAX){
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_real_distribution<> dis(0, 1);
+        if(a>dis(gen)){
             if ( (i%thinning) == 0) {
                 chain.push_back(proposal);
                 likelihoods.push_back(propLogLik);
@@ -104,12 +110,12 @@ void Sampler::run(int L, int thinning ){
                 likelihoods.push_back(lastLogLik);
             }
         }
-        
+
         if (((i) % step)==0){
             cout << "[Iteration: "<< (int)(i*100)/L << "% of " << L << "] Acceptance ratio: " << a
             << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
         }
-        
+
     }
 }
 
@@ -119,30 +125,32 @@ void Sampler::run(int L, int thinning ){
 * @param L: number of iterations
 */
 void Sampler::run(int L, int burnin, int thinning){
-    
+
     Tree oldTree = chain.back();
     // Create a proposal
     Tree proposal = oldTree;
-    
+
     int bstep = max((int) burnin/100,10);
-    
+
     for (int i=0; i<burnin; i++){
-        
+
         double move_ratio = proposal.regraft(); //Try a move
-        
+
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
-        
+
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
-        
-        if(a>(double)rand()/RAND_MAX){
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_real_distribution<> dis(0, 1);
+        if(a>dis(gen)){
             oldTree = proposal;
             lastLogLik = propLogLik;
         }else{
             proposal = oldTree;
         }
-        
+
         if (((i) % bstep)==0){
             cout << "[burnin: "<< (int)(i*100)/burnin << "% of " << burnin << "] Acceptance ratio: " << a
             << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
@@ -152,7 +160,7 @@ void Sampler::run(int L, int burnin, int thinning){
     likelihoods.push_back(lastLogLik);
     chain.clear();
     chain.push_back(oldTree);
-    
+
     run(L,thinning);
 }
 

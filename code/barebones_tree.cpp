@@ -314,7 +314,7 @@ double Tree::regraft(){
     if(!(scionP==rootP)){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
- 
+
         cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
@@ -322,7 +322,10 @@ double Tree::regraft(){
         Node * stockP = this->getRandomStock();
 
         //Random child or sibling
-        bool unbiased_coinflip = ((double) rand()/RAND_MAX) > 0.5;
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::bernoulli_distribution dis(0.5);
+        bool unbiased_coinflip = dis(gen);
 
         insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
@@ -332,7 +335,7 @@ double Tree::regraft(){
 //        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
         n_nodes = (int) nodes.size();
         double p_stock = 1.0/n_nodes;
-        
+
 //        return n_nodes/(n_nodes -n_collapsed +n_created);
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1
@@ -371,22 +374,22 @@ Node * Tree::getRandomScion() {
     int num_nodes = (int) nodes.size();
     // Sample random id in nodes list
     std::random_device rd;
-    std::mt19937 gen(rd());
+    std::mt19937 random_generator(rd());
     std::uniform_int_distribution<> dis(0,num_nodes-1);
 
 //    int random_node_id = rand() % (num_nodes);
-    int random_node_id = dis(gen);
+    int random_node_id = dis(random_generator);
     list<Node>::iterator it = nodes.begin();
     for (int i = 0; i!= random_node_id; ++i) {
             // loop through list until you find the element
             //TODO: Convert all this to vector for random access PLZ!!!?!?
         ++it;
     }
-    
 
-    
-    
-    
+
+
+
+
     return &(*it);
 }
 

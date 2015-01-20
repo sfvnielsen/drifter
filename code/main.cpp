@@ -21,10 +21,13 @@ void testNetwork(string,int,int,int);
 int main() {
     srand ((unsigned int) time(NULL)); // set random seed
 
+    std::random_device rd;
+    std::mt19937 random_generator(rd());
+
     string data_file_name = "data/karate_edgelist.txt";
-    //data_file_name = "data/celegans_edgelist.txt";
+    data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
-    data_file_name = "data/facebook100_edgelist.txt";
+    //data_file_name = "data/facebook100_edgelist.txt";
 
     /**
      * Testing a network

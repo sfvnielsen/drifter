@@ -398,7 +398,11 @@ Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
 
     list<Node *>::iterator it_result = node_list.begin();
     list<double>::iterator it = cumulative_sum.begin();
-    double u = (double)rand()/RAND_MAX; // uniform [0,1] random number
+    std::random_device rd;
+    std::mt19937 random_generator(rd());
+    std::uniform_real_distribution<> dis(0, 1);
+    double u = dis(random_generator);
+    //double u = (double)rand()/RAND_MAX; // uniform [0,1] random number
 
     while (u>*it) { // finds interval (node) that u corresponds to
                     // i.e. the first time u is smaller than the cumulative element
