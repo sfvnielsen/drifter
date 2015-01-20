@@ -5,7 +5,7 @@
 // Copyright   : It is OURS!!
 // Description : Test function
 //============================================================================
-
+#include <random>
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
@@ -33,11 +33,11 @@ int main()
 
     srand((unsigned int) time(NULL));
 
+    testUniformsampling();
+    //Tree eTree = debuggingTree();
+    //cout << "Debugging sampler" << endl;
 
-    Tree eTree = debuggingTree();
-    cout << "Debugging sampler" << endl;
-
-    testSamplerDistribution("test/ValidateSampler",100,20);
+    //testSamplerDistribution("test/ValidateSampler",100,20);
 
     cout << "------- END -------" << endl;
     return 0;
@@ -138,8 +138,39 @@ void testMultinomialSampling(){
 }
 
 void testUniformsampling(){
+    cout << "Starting uniform sampling test...." << endl;
+    int ns = 80000000; // number of samples
 
+    int num_nodes = 10; // choose between n nodes
+    int random_node_id;
+    vector<int> counts(num_nodes,0);
+    for (int i = 0; i != ns; ++i){
+        random_node_id = rand() % (num_nodes);
+        counts[random_node_id]++;
+    }
+    // find frequency of each occurence
+    cout << "Frequency: " << endl;
+    for (auto it = counts.begin(); it != counts.end(); ++it) {
+            cout << (double)*it/ns << " ";
+    }
+    cout << endl;
 
+    // C++11 standard test
+    cout << "Starting C++11 uniform sampling test... " << endl;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 9);
+    counts = vector<int>(num_nodes,0);
+    for (int i = 0; i != ns; ++i){
+        random_node_id = dis(gen);
+        counts[random_node_id]++;
+    }
+    // find frequency of each occurence
+    cout << "Frequency: " << endl;
+    for (auto it = counts.begin(); it != counts.end(); ++it) {
+            cout << (double)*it/ns << " ";
+    }
+    cout << endl;
 }
 
 int testLikelihood(){
