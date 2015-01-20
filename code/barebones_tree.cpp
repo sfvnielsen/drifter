@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cassert>
 #include <numeric>
+#include <random>
 
 using namespace std;
 
@@ -369,14 +370,23 @@ void Tree::regraft(int scionVal, int stockVal){
 Node * Tree::getRandomScion() {
     int num_nodes = (int) nodes.size();
     // Sample random id in nodes list
-    //int random_node_id = (int) round( ((double)rand()/RAND_MAX)*(num_nodes-1));
-    int random_node_id = rand() % (num_nodes);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0,num_nodes-1);
+
+//    int random_node_id = rand() % (num_nodes);
+    int random_node_id = dis(gen);
     list<Node>::iterator it = nodes.begin();
     for (int i = 0; i!= random_node_id; ++i) {
             // loop through list until you find the element
             //TODO: Convert all this to vector for random access PLZ!!!?!?
         ++it;
     }
+    
+
+    
+    
+    
     return &(*it);
 }
 
