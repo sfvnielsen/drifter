@@ -371,10 +371,10 @@ double Tree::regraft(){
         rootP->updateLeaves();
 
         // Move probabilities
-        int n_nodes = (int)nodes.size();
+        int n_nodes = (int)nodes.size()-1;
         double p_scion = 1.0/(n_nodes);
         double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
-        
+
 //        return n_nodes/(n_nodes -n_collapsed +n_created);
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1

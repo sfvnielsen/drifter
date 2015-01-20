@@ -9,7 +9,7 @@
 #include <iostream>
 #include <cstdlib> // setting random seed
 #include <time.h> // ----
-#include <chrono> // chrono::timepoint, chono::system_clock
+#include <chrono> // chrono::timepoint, chrono::system_clock
 
 #include "barebones_tree.h"
 #include "sampler.h"
@@ -29,9 +29,9 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 10000;
-    int burnin = 100;
-    int thinning = 10;
+    int num_iterations = 50;
+    int burnin = 0;
+    int thinning = 1;
 
     testNetwork(data_file_name,num_iterations,burnin,thinning);
 
@@ -43,20 +43,13 @@ int main() {
 void testNetwork(string data_file_name, int num_of_iterations, int burnin, int thinning){
     cout << "Running on: " << data_file_name << endl;
     IoFileHandler data_file(data_file_name,0);
-    //data_file.read_graph();
-
-    //Tree new_tree(data_file.getDataEl(),"Binary"); // initialize flat tree
-    /*******/
-//    Tree new_tree = debuggingTree(); //DEBUG
-//    cout << new_tree.toString() << endl;
-//    cout << new_tree.toString() << endl;
 
     Sampler sampler = Sampler(data_file.getDataEl(),0.5, 0.5, 1, 1);
 
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();
 
-    sampler.run(num_of_iterations, 1000, 100);
+    sampler.run(num_of_iterations, burnin, thinning);
 
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
