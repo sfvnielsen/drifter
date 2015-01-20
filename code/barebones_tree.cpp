@@ -370,7 +370,7 @@ Node * Tree::getRandomScion() {
     int num_nodes = (int) nodes.size();
     // Sample random id in nodes list
     //int random_node_id = (int) round( ((double)rand()/RAND_MAX)*(num_nodes-1));
-    int random_node_id = rand() % (num_nodes-1);
+    int random_node_id = rand() % (num_nodes);
     list<Node>::iterator it = nodes.begin();
     for (int i = 0; i!= random_node_id; ++i) {
             // loop through list until you find the element

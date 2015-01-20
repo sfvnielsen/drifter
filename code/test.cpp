@@ -33,11 +33,12 @@ int main()
 
     srand((unsigned int) time(NULL));
 
-    testUniformsampling();
-    //Tree eTree = debuggingTree();
-    //cout << "Debugging sampler" << endl;
 
-    //testSamplerDistribution("test/ValidateSampler",100,20);
+    Tree eTree = debuggingTree();
+    cout << "Debugging sampler" << endl;
+
+    testSamplerDistribution("test/ValidateSampler",2000000,500000);
+    testCoinFlip();
 
     cout << "------- END -------" << endl;
     return 0;
@@ -130,7 +131,16 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn){
 }
 
 void testCoinFlip(){
-
+    //Testing coin flip method used in regraft and acceptance ratio
+    int num_true = 0, N = 1000000;
+    double accept_ratio = 0.5; //
+    for (int i=0; i < N; i++) {
+        if ((double) rand()/RAND_MAX > accept_ratio) {
+            num_true++;
+        }
+    }
+    cout<< "Fraction true: " << (double) num_true/N << endl <<
+    "Fraction false" << (double) (N-num_true)/N << endl;
 }
 
 void testMultinomialSampling(){
