@@ -85,8 +85,6 @@ int main()
 
             double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
             
-            unique_4_tree.push_back(pair<Tree,double>(test_tree,llike_test)); //Push back all test trees (of 3 and 4 nodes)
-
             if (abs(llike_test-llike_true)<epsilon)
             {
                 cout << "PASSED!" << endl;
@@ -108,6 +106,9 @@ int main()
             {
                 llike_all_n4.push_back(llike_test);
                 llike_all_n4_true.push_back(llike_true);
+                //Push back all test trees (of 4 nodes)
+                unique_4_tree.push_back(pair<Tree,double>(test_tree,llike_test));
+
             }
             number_files_read++;
         }
@@ -162,14 +163,43 @@ int main()
         return EXIT_FAILURE;
     }
                                     
-    
+
     srand((unsigned int) time(NULL));
 
     
-    Tree eTree = debuggingTree();
     cout << "Debugging sampler" << endl;
+//    
+//    pair<int,int> g1 (0,1);
+//    pair<int,int> g2 (1,2);
+//    pair<int,int> g3 (0,3);
+//    pair<int,int> g4 (1,3);
+//    pair<int,int> g5 (2,3);
+//    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
+//    
+//    Sampler sampler = Sampler(data_edge_list,0.5,0.5,1,1);;
     
-    testSamplerDistribution("test/ValidateSampler",100,20);
+//    Tree T = debuggingTree();
+////    Running sampler, num_samples
+//    sampler.run(10);
+    
+    
+    vector<double> occurences;
+    for (int i = 0; i < 10000; i++){
+//        Node * temp = T.getRandomStock();
+//        occurences.push_back(temp->getLeafId());
+//        occurences.push_back(rand() % 10);
+        occurences.push_back((double) rand()/RAND_MAX);
+    }
+    
+    ofstream out_file("test/occ_sampler_binary.txt");
+    
+    for (auto it = occurences.begin(); it != occurences.end(); ++it){
+        out_file << *it << " ";
+        
+    }
+    
+    
+//    testSamplerDistribution("test/ValidateSampler",500000,50000);
     
     cout << "------- END -------" << endl;
     return 0;
@@ -188,7 +218,7 @@ Tree debuggingTree(){
 
     Adj_list adj = Adj_list(data_edge_list);
 
-    return Tree(&adj);
+    return Tree(&adj,"Binary");
 }
 
 /**
@@ -204,12 +234,6 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn){
     pair<int,int> g4 (1,3);
     pair<int,int> g5 (2,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
-    
-    //Removing 3-node trees from the list
-    unique_4_tree.pop_front();
-    unique_4_tree.pop_front();
-    unique_4_tree.pop_front();
-    unique_4_tree.pop_front();
     
     //Initialisation
     Sampler sampler = Sampler(data_edge_list,0.5,0.5,1,1);;
