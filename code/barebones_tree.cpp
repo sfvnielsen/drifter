@@ -19,12 +19,10 @@ using namespace std;
  */
 Tree::Tree(Adj_list * AP): nextInternalNodeId(0) {
     adjacencyListP = AP;
-
     InitFlatTree(AP->getSize() );
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
 }
-
 
 /**
  * Tree constructor choice
@@ -37,6 +35,7 @@ Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
     } else { //Flat tree
         InitFlatTree(AP->getSize());
     }
+    //TODO: Incorperate N leaves/split tree
 
     //Correct internal number count
     rootP->updateNumInternalNodes();
@@ -172,11 +171,8 @@ Node * Tree::makeNleafTree(int a, int b, int N){
  * Initialise a flat treee structure
  */
 int Tree::InitFlatTree(int num_leaves){
-    /*
-     * Initialisation step, here init is worse case for parameters (flat tree).
-     */
+    //Initialisation step, here init is worse case for parameters (flat tree).
     // Add a new Node for each leaf and add is as a child of root
-
     nodes.push_back(Node(this,getNextInternalNodeId()));
     rootP = &(nodes.back());
 
@@ -191,13 +187,10 @@ int Tree::InitFlatTree(int num_leaves){
     return 0;
 }
 
-
-
-
 /**
-* Copy constructor
-*
-*/
+ * Copy constructor
+ *
+ */
 Tree::Tree(Tree const &old_tree){
     adjacencyListP = old_tree.adjacencyListP;
     nextInternalNodeId = old_tree.nextInternalNodeId;
@@ -213,9 +206,9 @@ Tree::Tree(Tree const &old_tree){
 *
 */
 Tree& Tree::operator=(const Tree& other) {
-         // check for self-assignment
-         if(&other == this)
-             return *this;
+    // check for self-assignment
+    if(&other == this)
+        return *this;
 
     adjacencyListP = other.adjacencyListP;
     nextInternalNodeId = other.nextInternalNodeId;
@@ -225,24 +218,25 @@ Tree& Tree::operator=(const Tree& other) {
     rootP = &(nodes.back());
 
     rootP->copyFrom(this, *(other.rootP));
-
-
-         // 1: allocate new memory and copy the elements
-
-         // 2: deallocate old memory
-
-         // 3: assign the new memory to the object
-
-         return *this;
-     }
-
+    return *this;
+}
 
 /**
  TODO: Rest of "Rule of 5"
  - Move
- - Copy-assign
  - Move-assign
  */
+
+/**
+ * Tests if two trees are equal, defined as when all internal nodes in the
+ *  original tree have the same children as the internal nodes in the "copy" tree.
+ *
+ * Also symmetric tree structure is allowed, as long as each node furfills the
+ *  same leaves requirement.
+ */
+bool Tree::isEqual(Tree copy_tree){
+    return rootP->isEqualSubtree(copy_tree.rootP);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -275,10 +269,9 @@ Node * Tree::addNode(){
     return &(nodes.back());
 }
 
-
 /**
  * Finds a specific node (characterized by an unique id) and
- * returns a pointer to this node or nullptr if it isn't pressent
+ * returns a pointer to this node or nullptr if it isn't present
  * (Basic implementation!)
  */
 Node * Tree::getNode(int leaf_id){
@@ -365,10 +358,8 @@ void Tree::regraft(int scionVal, int stockVal){
         this->insertSubtree(stockP, scionP, false);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
-
     }
 }
-
 
 /**
     Get random node in tree (based on nodes list)
@@ -382,13 +373,11 @@ Node * Tree::getRandomScion() {
     list<Node>::iterator it = nodes.begin();
     for (int i = 0; i!= random_node_id; ++i) {
             // loop through list until you find the element
-            // NB! Convert all this to vector for random access PLZ!!!?!?
+            //TODO: Convert all this to vector for random access PLZ!!!?!?
         ++it;
     }
     return &(*it);
 }
-
-
 
 /**
 * Get random node in tree (recursive operation)
@@ -399,7 +388,6 @@ Node * Tree::getRandomScion() {
 Node * Tree::getRandomStock() {
     return rootP->getRandomDescendant();
 }
-
 
 /**
 * Cuts subtree rooted at scion
@@ -423,12 +411,10 @@ int Tree::cutSubtree(Node * scionP){
 int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
     int created = 0;
-    //TODO: Fix less hot hotfix
     // Cannot be added as a child to a leaf, only as sibling
     if (! stockP->isInternalNode()){
         asChild = false;
     }
-
     if(asChild){
         stockP->addChild(scionP);
     }else{ //As sibling
@@ -446,7 +432,6 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
             setRootP(new_parent);
         }
 
-
         created++;
 
         new_parent->addChild(stockP);
@@ -461,14 +446,12 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 * Evaluating log-likelihood x prior of tree
 * - Recurses through tree
 */
-
 double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, int rho_minus){
     return rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
 }
 
 
 /** Printing */
-
 string Tree::toString(){
     return rootP->toString();
 }
@@ -477,7 +460,6 @@ string Tree::toString(){
 /** Write out the tree as a .txt file formatted
     for ease of use in MATLAB scripts (plotting)
 */
-
 void Tree::writeMatlabFormat(string filename) {
 
     // Give all nodes a proper new id
@@ -526,7 +508,6 @@ void Tree::writeMatlabFormat(string filename) {
 
     // Leaf->Data list
     vector<int> leaf_list(adjacencyListP->getSize(),-1);
-//    for (auto it = leaves.begin(); it != leaves.end(); ++it) {
     for (int i = 0; i < adjacencyListP->getSize(); i++){
         // find corresponding node in nodes
         list<Node>::iterator it_node = nodes.begin();
@@ -537,7 +518,6 @@ void Tree::writeMatlabFormat(string filename) {
         }
         leaf_list[i] = new_id[node_id]+1;
     }
-
 
     assert(find(leaf_list.begin(),leaf_list.end(),-1) == leaf_list.end());
 
@@ -553,15 +533,4 @@ void Tree::writeMatlabFormat(string filename) {
         out_file << *it << " ";
     }
 
-}
-
-/**
- * Tests if two trees are equal, defined as when all internal nodes in the
- *  original tree have the same children as the internal nodes in the "copy" tree.
- *
- * Also symmetric tree structure is allowed, as long as each node furfills the
- *  same leaves requirement.
- */
-bool Tree::isEqual(Tree copy_tree){
-    return rootP->isEqualSubtree(copy_tree.rootP);
 }

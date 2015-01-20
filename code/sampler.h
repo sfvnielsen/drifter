@@ -8,33 +8,27 @@ class Sampler
 {
     public:
         Sampler();
-        Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus);
-        Sampler(std::list<std::pair<int,int>> data_graph, double alpha, double beta, int rho_plus, int rho_minus); // Initialize with the naive tree building in the adjacency matrix.
-        Sampler(std::list<std::pair<int,int>> data_graph, std::list<std::pair<int,int>> tree_struct_graph,
-                std::list<std::pair<int,int>> data_leaf_relation, double alpha, double beta, int rho_plus, int rho_minus); // Initialize with tree based on data, tree and data-tree relation
+        Sampler(Tree T, double , double , int , int );
+        // Initialize with the naive tree building in the adjacency matrix.
+        Sampler(std::list<std::pair<int,int>> , double ,double , int , int );
 
-        void run(); // normal run
         void run(int); // run int samples
         void run(int,int); // run with thinning
-        void run(int, int, int); // run burnin (and call above after)
+        void run(int, int, int); // run burn-in (and call above after)
         Tree getLast();
         double getLastLikelihood();
-        std::list<Tree> getChain();
 
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
+    
         std::list<Tree> chain;
         std::list<double> likelihoods;
     protected:
 
     private:
         // Data storage
-
-
-        int L;
         Adj_list adjacencyList;
         double lastLogLik;
-
 
         // Hyperparameters:
         double alpha;

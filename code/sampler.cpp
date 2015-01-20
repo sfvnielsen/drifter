@@ -167,10 +167,6 @@ Tree Sampler::getLast(){
     return chain.back();
 }
 
-list<Tree> Sampler::getChain(){
-    return chain;
-}
-
 /**
 * Write results of sampling procedure
 */

@@ -34,6 +34,7 @@ private:
 
 public:
     // Constructors
+    Tree();
     Tree(Adj_list * AP);
     Tree(Adj_list * AP, std::string initType);
     Tree(std::list<std::pair<int, int>>, std::string);
@@ -47,6 +48,7 @@ public:
     //Tree(Tree&&) = default;                    // Move constructor
     //Tree& operator=(const Tree&) & = default;  // Copy assignment operator
     //Tree& operator=(Tree&&) & = default;       // Move assignment operator
+    bool isEqual(Tree);
 
     // Get and set - Trivial stuff
     Adj_list * getAdjacencyListP();
@@ -73,10 +75,6 @@ public:
     std::string toString();
     void writeMatlabFormat(std::string);
     
-    bool isEqual(Tree);
-
-    //TODO: Dont know what to do with this...?
-    // void recalculate(); // calculate all of the counts on the tree from the graph
 };
 
 
