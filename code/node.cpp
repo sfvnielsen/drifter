@@ -95,10 +95,6 @@ void Node::setParent(Node * new_parentP) {
     parentP = new_parentP;
 }
 
-void Node::setTreePointer(Tree * new_treeP){
-    treeP = new_treeP;
-}
-
 int Node::getLeafId(){
     return leafId;
 }

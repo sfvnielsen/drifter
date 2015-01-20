@@ -18,7 +18,21 @@ Adj_list::Adj_list(){}
  * N size of leaves
  *
  */
-Adj_list::Adj_list(int N, std::list<std::pair<int,int>> edge_list){
+Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
+    
+    list<int> leaves;
+    // insert all the indexes from the edge list into leaves
+    for (list<pair<int,int>>::iterator it = edge_list.begin(); it != edge_list.end(); it++){
+        leaves.push_back(it->first);
+        leaves.push_back(it->second);
+    }
+    
+    // Find only the unique elements
+    leaves.sort();
+    leaves.unique();
+    int N = (int) leaves.size();
+    
+    //Init. data structure
     adjacency_list = vector<vector<int>>(N);
     
     //Construct adjacency list
@@ -76,20 +90,12 @@ int Adj_list::removeUndirectedEdge(int from, int to){
  * Search for an element (TODO: in a sorted list)
  */
 bool Adj_list::isConnected(int current, int target){
-    /* Linear search for element *
-     bool existsConnection = false;
-     existsConnection = find(adjacency_list[current].begin(),
-                            adjacency_list[current].end(),target) != adjacency_list[current].end();
-     return existsConnection;
-     */
-
-
     try {
-//        return adjacency_matrix[current][target];
+        return adjacency_matrix[current][target];
 
         //Binary search for element
-        return binary_search(adjacency_list[current].begin(),
-                             adjacency_list[current].end(), target);
+//        return binary_search(adjacency_list[current].begin(),
+//                             adjacency_list[current].end(), target);
     // If something goes wrong, tell why, an make sure that the input given were valid
     } catch (exception e) {
         if (current < 0 || current > (int) adjacency_list.size()-1 ||
@@ -112,6 +118,10 @@ string Adj_list::toString(){
         }
     }
     return s;
+}
+
+int Adj_list::getSize(){
+    return (int) adjacency_matrix.size();
 }
 
 

@@ -22,12 +22,9 @@ public:
     Node(Tree * ,int ); // leaf node constructor
 
     void copyFrom(Tree *, Node const & old_node);
-
-    bool isDescendant(Node *);
+    
     void setParent(Node *);
    	Node * getParent();
-
-    void setTreePointer(Tree *);
 
     int getLeafId();
     void setLeafId(int);
@@ -48,8 +45,6 @@ public:
 	int getNumInternalNodes();
     int updateNumInternalNodes();
 
-    int getNumEdges();
-	int getNumPossibleEdges();
     Node * getRandomDescendant();
 
 
@@ -68,12 +63,11 @@ private:
     
     Tree * treeP;
     std::list<int> leaves;
-    bool modified;
 };
 
 double logbeta(double,double);
 double lgamma_ratio(double, double);
-double log_diff(double a, double b);
+double log_diff(double, double);
 
 Node * multinomialSampling(std::list<Node *>, std::list<double>);
 

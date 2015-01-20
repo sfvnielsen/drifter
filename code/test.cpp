@@ -69,9 +69,9 @@ int main()
             int rho_minus = test_case.getRhoMinus();
             double llike_true = test_case.getLlike();
 
-            int number_data_nodes = ( (int) test_case.getLeafDataRelation().size())/2;
             //Init adjacency list
-            Adj_list adjacency_list = Adj_list(number_data_nodes, data_edge_list);
+            Adj_list adjacency_list = Adj_list(data_edge_list);
+            int number_data_nodes = adjacency_list.getSize();
 
             //Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list);
@@ -186,10 +186,9 @@ Tree debuggingTree(){
     pair<int,int> g5 (2,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
 
-    int N = 4;
-    Adj_list adj = Adj_list(4, data_edge_list);
+    Adj_list adj = Adj_list(data_edge_list);
 
-    return Tree(N,&adj);
+    return Tree(&adj);
 }
 
 /**
@@ -213,8 +212,6 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn){
     unique_4_tree.pop_front();
     
     //Initialisation
-    int N = 4;
-    Adj_list adj = Adj_list(N, data_edge_list);
     Sampler sampler = Sampler(data_edge_list,0.5,0.5,1,1);;
     
     //Running sampler, num_samples

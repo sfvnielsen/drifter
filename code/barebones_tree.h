@@ -24,23 +24,18 @@ class Tree {
 private:
     Node * rootP;
     std::list<Node> nodes;
-    std::list<int> leaves;
-    std::vector<int> vec_leaves;
-    std::list<std::pair<int, int>> graph;
-    int InitBinaryTree();
-    Node * makeNleafTree(int, int, int);
-    Adj_list * adjacencyListP;
-
-    bool modified;
-
-    int InitFlatTree();
     int nextInternalNodeId;
-	// TODO make functions private when not debugging them.
+
+    Adj_list * adjacencyListP;
+ 
+    int InitFlatTree(int);
+    int InitBinaryTree(int);
+    Node * makeNleafTree(int, int, int);
 
 public:
     // Constructors
-    Tree(int N, Adj_list * AP);
-    Tree(int N, Adj_list * AP, std::string initType);
+    Tree(Adj_list * AP);
+    Tree(Adj_list * AP, std::string initType);
     Tree(std::list<std::pair<int, int>>, std::string);
     Tree(std::list<std::pair<int, int>>
          , std::vector<int>, Adj_list *); // Builds tree based on data, tree and data-tree relation

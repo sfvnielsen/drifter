@@ -17,47 +17,30 @@ using namespace std;
 /**
  * Construct flat tree from number of leaves
  */
-Tree::Tree(int N , Adj_list * AP): nextInternalNodeId(0) {
+Tree::Tree(Adj_list * AP): nextInternalNodeId(0) {
     adjacencyListP = AP;
-    leaves = list<int> (N);
-    iota(begin(leaves), end(leaves), 0); //0 is the starting number
 
-    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        cout << *it << ", ";
-    }
-
-    InitFlatTree();
+    InitFlatTree(AP->getSize() );
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
-    modified = false;
-    cout << toString();
-
 }
 
 
 /**
  * Tree constructor choice
  */
-Tree::Tree(int N , Adj_list * A, string initType): nextInternalNodeId(0) {
+Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
 
-    adjacencyListP = A;
-    leaves = list<int> (N);
-    iota(begin(leaves), end(leaves), 0); //0 is the starting number
-
-    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        cout << *it << ", ";
-    }
-
+    adjacencyListP = AP;
     if (initType == "Binary") {
-        InitBinaryTree();
+        InitBinaryTree(AP->getSize());
     } else { //Flat tree
-        InitFlatTree();
+        InitFlatTree(AP->getSize());
     }
 
     //Correct internal number count
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
-    modified = false;
 }
 
 /**
@@ -68,8 +51,6 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
            vector<int> data_leaf_relation, Adj_list * adj_list): nextInternalNodeId(0) {
 
     adjacencyListP = adj_list;
-    // - Construct adj list from data_graph
-
 
     // - Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
@@ -116,7 +97,6 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
      *  each internal node is assigned a unique negative number.
      */
     rootP->setLeafId(getNextInternalNodeId());
-
     for (auto it = nodes.begin(); it != nodes.end(); it++) {
         if (it->isInternalNode()){ //Internal node
             it->setLeafId(getNextInternalNodeId());
@@ -125,7 +105,6 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
              //Find what the fake_id corresponds to in real id
             int fake_id = it->getLeafId();
             it->setLeafId(data_leaf_relation[fake_id]);
-            leaves.push_back(it->getLeafId());
         }
     }
     rootP->updateLeaves();
@@ -134,8 +113,8 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
 /**
  * Initialises the data in a binary tree structure
  */
-int Tree::InitBinaryTree(){
-    setRootP(makeNleafTree(0, (int) vec_leaves.size() -1 ,2) );
+int Tree::InitBinaryTree(int num_leaves){
+    setRootP(makeNleafTree(0, num_leaves -1 ,2) );
     return 0;
 }
 
@@ -179,25 +158,20 @@ Node * Tree::makeNleafTree(int a, int b, int N){
         for (int i = 0; i < N; i++) {
             if (i == N-1){
                 new_child = makeNleafTree(i*((b-a+1)/N)+a, b, N);
-                cout << "parm1: "<< i*((b-a+1)/N)+a << "  ,  parmb: " << b <<endl;
             } else {
                 new_child = makeNleafTree(i*((b-a+1)/N)+a, (i+1)*((b-a+1)/N)+a-1, N);
-                cout << "parm1: "<< i*((b-a+1)/N)+a << "  ,  parm2: " << (i+1)*((b-a+1)/N)+a-1 <<endl;
             }
 
             parent->addChild(new_child);
         }
         return parent;
     }
-
-
-    //return nullptr; //Return nullptr when root is selected.
 }
 
 /**
  * Initialise a flat treee structure
  */
-int Tree::InitFlatTree(){
+int Tree::InitFlatTree(int num_leaves){
     /*
      * Initialisation step, here init is worse case for parameters (flat tree).
      */
@@ -207,8 +181,8 @@ int Tree::InitFlatTree(){
     rootP = &(nodes.back());
 
 
-    for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++){
-        nodes.push_back(Node(this,*it));
+    for (int i = 0; i < num_leaves; i++){
+        nodes.push_back(Node(this,i));
         rootP->addChild(&(nodes.back()));
     }
     rootP->updateNumInternalNodes();
@@ -225,8 +199,6 @@ int Tree::InitFlatTree(){
 *
 */
 Tree::Tree(Tree const &old_tree){
-    leaves = old_tree.leaves;
-    graph = old_tree.graph;
     adjacencyListP = old_tree.adjacencyListP;
     nextInternalNodeId = old_tree.nextInternalNodeId;
 
@@ -245,8 +217,6 @@ Tree& Tree::operator=(const Tree& other) {
          if(&other == this)
              return *this;
 
-    leaves = other.leaves;
-    graph = other.graph;
     adjacencyListP = other.adjacencyListP;
     nextInternalNodeId = other.nextInternalNodeId;
 
@@ -555,17 +525,17 @@ void Tree::writeMatlabFormat(string filename) {
     }
 
     // Leaf->Data list
-    vector<int> leaf_list((int)leaves.size(),-1);
-    for (auto it = leaves.begin(); it != leaves.end(); ++it) {
+    vector<int> leaf_list(adjacencyListP->getSize(),-1);
+//    for (auto it = leaves.begin(); it != leaves.end(); ++it) {
+    for (int i = 0; i < adjacencyListP->getSize(); i++){
         // find corresponding node in nodes
         list<Node>::iterator it_node = nodes.begin();
         int node_id = 0;
-        while (*it != it_node->getLeafId()) {
+        while (i != it_node->getLeafId()) {
             it_node++;
             node_id++;
         }
-        // set leaf_list[*it] = new_id[node_id];
-        leaf_list[*it] = new_id[node_id]+1;
+        leaf_list[i] = new_id[node_id]+1;
     }
 
 
