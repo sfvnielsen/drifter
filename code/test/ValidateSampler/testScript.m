@@ -10,7 +10,7 @@ occ = importdata('occurences.txt');
 true_p = importdata('true_loglikelihood.txt');
 
 %% Plot
-close all
+figure
 hold on
 plot(1:26,occ./sum(occ),'.r','MarkerSize',12);
 plot(1:26,exp(true_p)./sum(exp(true_p)),'ob','MarkerSize',12)

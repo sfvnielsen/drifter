@@ -129,7 +129,7 @@ for (int i=0; i<L; i++){
         }
         lastLogLik = propLogLik;
         lastTree = proposal;
-    }else if(a>(double)rand()/RAND_MAX){
+    }else if(a > (double)rand()/RAND_MAX){
         if ( (i%thinning) == 0) {
             chain.push_back(proposal);
             likelihoods.push_back(propLogLik);

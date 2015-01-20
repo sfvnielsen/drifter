@@ -357,6 +357,9 @@ double Tree::regraft(){
 // TODO: finish the regrafting
     Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
+        int n_nodes = (int)nodes.size();
+        double p_scion = 1.0/(n_nodes);
+ 
         int n_collapsed = this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
@@ -371,9 +374,9 @@ double Tree::regraft(){
         rootP->updateLeaves();
 
         // Move probabilities
-        int n_nodes = (int)nodes.size();
-        double p_scion = 1.0/(n_nodes);
-        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
+//        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
+        n_nodes = (int) nodes.size();
+        double p_stock = 1.0/n_nodes;
         
 //        return n_nodes/(n_nodes -n_collapsed +n_created);
         return p_stock/p_scion;
