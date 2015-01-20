@@ -21,7 +21,7 @@ using namespace std;
 void testMultinomialSampling();
 void testUniformsampling();
 void testCoinFlip();
-void testLikelihood();
+int testLikelihood();
 Tree debuggingTree();
 void testSamplerDistribution(string,int,int);
 list<pair<Tree, double>> unique_4_tree;
@@ -65,19 +65,15 @@ Tree debuggingTree(){
  * all the possible multi-furcating gibbs trees are know.
  */
 void testSamplerDistribution(string folder,int num_samples, int num_burn){
-    //Same network as used for testing that the likelihood is correct.
+
+	testLikelihood();
+//Same network as used for testing that the likelihood is correct.
     pair<int,int> g1 (0,1);
     pair<int,int> g2 (1,2);
     pair<int,int> g3 (0,3);
     pair<int,int> g4 (1,3);
     pair<int,int> g5 (2,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
-
-    //Removing 3-node trees from the list
-    unique_4_tree.pop_front();
-    unique_4_tree.pop_front();
-    unique_4_tree.pop_front();
-    unique_4_tree.pop_front();
 
     //Initialisation
     Sampler sampler = Sampler(data_edge_list,0.5,0.5,1,1);;
@@ -133,20 +129,20 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn){
 
 }
 
-testCoinFlip(){
+void testCoinFlip(){
 
 }
 
-testMultinomialSampling(){
+void testMultinomialSampling(){
 
 }
 
-testUniformsampling(){
+void testUniformsampling(){
 
 
 }
 
-testLikelihood(){
+int testLikelihood(){
 
 //     Tolerance on likelihood result
     double epsilon = 1e-6;
@@ -206,7 +202,7 @@ testLikelihood(){
 
             double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
 
-            unique_4_tree.push_back(pair<Tree,double>(test_tree,llike_test)); //Push back all test trees (of 3 and 4 nodes)
+
 
             if (abs(llike_test-llike_true)<epsilon)
             {
@@ -229,6 +225,9 @@ testLikelihood(){
             {
                 llike_all_n4.push_back(llike_test);
                 llike_all_n4_true.push_back(llike_true);
+                //Push back all test trees (of 4 nodes)
+                unique_4_tree.push_back(pair<Tree,double>(test_tree,llike_test));
+
             }
             number_files_read++;
         }
@@ -282,6 +281,7 @@ testLikelihood(){
         perror ("");
         return EXIT_FAILURE;
     }
+return 0;
 
 }
 
