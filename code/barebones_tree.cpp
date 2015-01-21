@@ -56,11 +56,12 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
     //Get first relation parrent --> child, assumption the root is first
     pair<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front();
-
+    
+    //Construct the parent
     nodes.push_back(Node(this, element.first));
     rootP = &(nodes.back());
 
-    //Add the first node as a child
+    //Add the second node as a child
     Node new_child = Node(this, element.second);
 
     nodes.push_back(new_child);
@@ -342,6 +343,43 @@ double Tree::regraft(){
         return 1;
     }
 }
+
+double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
+    Node * scionP = this->getRandomScion();
+    if(!(scionP==rootP)){
+        int n_nodes = (int)nodes.size();
+        double p_scion = 1.0/(n_nodes);
+        
+        Node * scionParentP = scionP->getParent();
+        cutSubtree(scionP);
+//        updateScion2Root(scionP,scionParentP,true);
+        
+        Node * stockP = this->getRandomStock();
+        
+        //Random child or sibling
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::bernoulli_distribution dis(0.5);
+        bool unbiased_coinflip = dis(gen);
+        
+        insertSubtree(stockP, scionP, unbiased_coinflip);
+        rootP->updateNumInternalNodes();
+        rootP->updateLeaves();
+        
+        // Move probabilities
+        //        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
+        n_nodes = (int) nodes.size();
+        double p_stock = 1.0/n_nodes;
+        
+        //        return n_nodes/(n_nodes -n_collapsed +n_created);
+        return p_stock/p_scion;
+    } else{ // scion was root - ratio of move probabilities is 1
+        return 1;
+    }
+
+    return 0.0;
+}
+
 
 /**
  * Regraft specific nodes !!! ASSUMES ITS A VALID OPERATION!!

@@ -55,6 +55,14 @@ public:
     bool operator == ( const Node &rhs ) const;
     std::string toString();
 
+    void updateScion2Root(Node *, Node *, bool);
+    void updateStock2Root(Node *, Node *, bool);
+    void updateScionAndStock(Node *, Node*, Node*, double, double, int, int);
+    double loglikelihood_cont=0;
+    double getLogLikeContribution();
+    void setLogLikeContribution(double);
+    void setNumInternalNodes(int);
+    bool isNCA(Node *);
 private:
     Node * parentP;
 	int num_internal_nodes; //Is need for random selection

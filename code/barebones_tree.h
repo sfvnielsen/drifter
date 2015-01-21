@@ -61,6 +61,7 @@ public:
 
     // Regrafting
 	double regraft(); // return new regrafted tree
+    double regraft(double, double, int, int);
     void regraft(int,int); // DEBUG testing specific move;
 	Node * getRandomScion();
 	Node * getRandomStock();

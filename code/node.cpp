@@ -472,3 +472,84 @@ bool Node::isEqualSubtree(Node * copy_node){
     }
     return false;
 }
+
+void Node::setNumInternalNodes(int new_num_internal){
+    num_internal_nodes = new_num_internal;
+}
+
+void Node::updateScion2Root(Node * scionP, Node * parentP, bool anyCollapsed){
+    list<int> leaves_to_rem = *(scionP->getLeaves() );
+    int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) anyCollapsed;
+    
+    while (parentP != nullptr) {
+        parentP->setNumInternalNodes(parentP->getNumInternalNodes()-internal_nodes_rem);
+        for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
+            parentP->leaves.remove(*it);
+        }
+        parentP = parentP->getParent();
+    }
+    
+}
+
+void Node::updateStock2Root(Node * scionP, Node * stockP, bool anyCreated){
+    list<int> leaves_to_add = *(stockP->getLeaves() );
+    int internal_nodes_add = stockP->getNumInternalNodes()+ (int) anyCreated;
+    
+    Node * parentP = stockP->getParent();
+    while (parentP != nullptr) {
+        parentP->setNumInternalNodes(parentP->getNumInternalNodes()+internal_nodes_add);
+        parentP->leaves.splice(parentP->leaves.end(), leaves_to_add);
+        
+        parentP = parentP->getParent();
+    }
+    
+}
+
+void Node::updateScionAndStock(Node * scionP, Node * scionParentP, Node* stockP
+                               ,double alpha, double beta, int rho_plus, int rho_minus){
+    
+    //Update Stock
+    Node * parentP = stockP;
+    while (parentP->isNCA(scionP)) {
+        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta,
+                                                            rho_plus, rho_minus));
+        parentP = parentP->getParent();
+        
+    }
+    
+    //Update Scion
+    parentP = scionParentP;
+    while (parentP->isNCA(stockP)) {
+        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta,
+                                                            rho_plus,rho_minus));
+        parentP = parentP->getParent();
+        
+    }
+    
+    //Update NCA
+    if (parentP == nullptr) {
+        treeP->getRoot()->setLogLikeContribution(evaluateNodeLogLike(
+                                            alpha, beta, rho_plus, rho_minus));
+    } else {
+        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
+    }
+}
+
+bool Node::isNCA(Node * targetP){
+    int target = targetP->getLeaves()->front();
+
+    for (auto it = parentP->getLeaves()->begin();
+         it != parentP->getLeaves()->end(); it++) {
+        if (*it == target){
+            return true;
+        }
+    }
+    return false;
+}
+
+double Node::getLogLikeContribution(){
+    return loglikelihood_cont;
+}
+void Node::setLogLikeContribution(double new_contribution){
+    loglikelihood_cont = new_contribution;
+}
