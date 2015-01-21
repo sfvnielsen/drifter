@@ -359,7 +359,8 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
         Node * scionOldParentP = scionP->getParent();
         Node *  scionParentP = cutSubtree(scionP);
         bool collapsed = scionParentP != scionOldParentP;
-        scionParentP->updateScion2Root(scionP,collapsed);
+        if(scionP!=rootP)
+            scionParentP->updateScion2Root(scionP,collapsed);
         cout << " -- cutting -- " << endl;
         cout << toString() <<flush;
 
@@ -373,8 +374,9 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
 
         bool created = (bool) insertSubtree(stockP, scionP, unbiased_coinflip);
         stockP->updateStock2Root(scionP,created);
+        cout << toString();
 
-        updateScionAndStock(scionP, scionOldParentP, stockP, alpha,beta,rho_plus,rho_minus);
+        updateScionAndStock(scionP, scionParentP, stockP, alpha,beta,rho_plus,rho_minus);
 
         // Move probabilities
         //        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
@@ -463,9 +465,13 @@ Node * Tree::cutSubtree(Node * scionP){
     Node * grandParentP = parentP->getParent();
     bool collapsed = parentP->removeChild(scionP);
     scionP->setParent(nullptr);
-    
+
     if (collapsed) {
-        return grandParentP;
+            if(grandParentP==nullptr){
+                return rootP;
+            }else{
+                return grandParentP;
+            }
     } else {
         return parentP;
     }
@@ -606,14 +612,22 @@ void Tree::writeMatlabFormat(string filename) {
 void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP
                                ,double alpha, double beta, int rho_plus, int rho_minus){
 
+    //relation between scion and stock after insert
+    assert(scionP->getParent()==stockP || scionP->getParent()==stockP->getParent());
+
+
     //Update Stock
     // start at scions new parent (NB! scion has been moved)
     Node * parentPointer = scionP->getParent();
+
     while ( !(parentPointer->isNCA(oldScionParentP))) {
         parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus));
         parentPointer = parentPointer->getParent();
 
     }
+            cout << "after stock update" << endl;
+
+            cout << toString();
 
     //Update Scion
     parentPointer = oldScionParentP;
@@ -622,7 +636,9 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
         parentPointer = parentPointer->getParent();
 
     }
+            cout << "after scion update" << endl;
 
+            cout << toString();
     //Update NCA
     if (parentPointer->getParent() == nullptr) {
         rootP->setLogLikeContribution(rootP->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));

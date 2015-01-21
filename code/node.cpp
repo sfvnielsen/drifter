@@ -152,6 +152,8 @@ Node * Node::getRandomDescendant() {
         for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
         // Each subtree has weight according to two times the number of
         // internal nodes plus the number of leaves
+            assert((*it)->getNumInternalNodes() == 0 || (*it)->isInternalNode());
+            assert((*it)->getNumInternalNodes()> 0 || !(*it)->isInternalNode());
             subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
                                  (int)(((*it)->getLeaves())->size()) );
         }
@@ -168,7 +170,11 @@ Node * Node::getRandomDescendant() {
         // assert that p_vals sums to 1
         double p_val_sum = 0;
         p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
+        if(!abs(p_val_sum-1.0)<1e-12)
+            cout << treeP->toString();
+
         assert(abs(p_val_sum-1.0)<1e-12);
+
 
         // Sample one of the nodes
         Node * sampled_node = multinomialSampling(node_list,p_vals);
@@ -508,6 +514,7 @@ void Node::setNumInternalNodes(int new_num_internal){
 }
 
 void Node::updateScion2Root(Node * scionP, bool anyCollapsed){
+
     //Leaves in the subtree that is removed, and number of internal nodes
     list<int> leaves_to_rem = *(scionP->getLeaves() );
     int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) anyCollapsed;
@@ -515,12 +522,13 @@ void Node::updateScion2Root(Node * scionP, bool anyCollapsed){
     Node * currentP = this;
     while (currentP != nullptr) {
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()-internal_nodes_rem);
+        assert(currentP->getNumInternalNodes()>=0);
         for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
             currentP->leaves.remove(*it);
         }
         currentP = currentP->getParent();
     }
-    
+
 
 }
 
@@ -542,12 +550,12 @@ void Node::updateStock2Root(Node * scionP, bool anyCreated){
 }
 
 bool Node::isNCA(Node * targetP){
-    
+
     if (this != treeP->getRoot()) {
         int target = targetP->getLeaves()->front();
-        
-        for (auto it = parentP->getLeaves()->begin();
-             it != parentP->getLeaves()->end(); it++) {
+
+        for (auto it = leaves.begin();
+             it != leaves.end(); it++) {
             if (*it == target){
                 return true;
             }
