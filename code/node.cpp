@@ -531,7 +531,7 @@ void Node::updateScionAndStock(Node * scionP, Node * scionParentP, Node* stockP
         treeP->getRoot()->setLogLikeContribution(evaluateNodeLogLike(
                                             alpha, beta, rho_plus, rho_minus));
     } else {
-        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
+        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta, rho_plus, rho))
     }
 }
 
