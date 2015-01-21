@@ -65,7 +65,7 @@ public:
     void regraft(int,int); // DEBUG testing specific move;
 	Node * getRandomScion();
 	Node * getRandomStock();
-	bool cutSubtree(Node * ); //Modifies the tree and returns change in the number of internal nodes
+	Node * cutSubtree(Node * ); //Modifies the tree and returns ...
     int insertSubtree(Node *, Node *, bool); //Modifies the tree and returns change in the number of internal nodes
 
 
@@ -76,6 +76,7 @@ public:
     std::string toString();
     void writeMatlabFormat(std::string);
 
+    void updateScionAndStock(Node *, Node *, Node *, double, double, int,int );
 };
 
 

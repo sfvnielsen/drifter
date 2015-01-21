@@ -60,7 +60,7 @@ public:
 
     void updateScion2Root(Node *, bool);
     void updateStock2Root(Node *, bool);
-    void updateScionAndStock(Node *, Node*, Node*, double, double, int, int);
+
     double loglikelihood_cont=0;
     double getLogLikeContribution();
     void setLogLikeContribution(double);

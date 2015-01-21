@@ -196,6 +196,7 @@ int Tree::InitFlatTree(int num_leaves){
 Tree::Tree(Tree const &old_tree){
     adjacencyListP = old_tree.adjacencyListP;
     nextInternalNodeId = old_tree.nextInternalNodeId;
+    // TODO: reset to -1
 
     nodes.push_back(Node(this,getNextInternalNodeId()));
     rootP = &(nodes.back());
@@ -354,11 +355,13 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
     if(!(scionP==rootP)){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
-
+        cout << toString();
         Node * scionOldParentP = scionP->getParent();
         Node *  scionParentP = cutSubtree(scionP);
-        bool collapsed = scionParenP != scionOldParentP;
+        bool collapsed = scionParentP != scionOldParentP;
         scionParentP->updateScion2Root(scionP,collapsed);
+        cout << " -- cutting -- " << endl;
+        cout << toString() <<flush;
 
         Node * stockP = this->getRandomStock();
 
@@ -454,12 +457,18 @@ Node * Tree::getRandomStock() {
 * but doesnt remove them from nodes list
 * - Returns the number of nodes that have been removed from the tree
 */
-bool Tree::cutSubtree(Node * scionP){
+Node * Tree::cutSubtree(Node * scionP){
     // assumes that scionP doesn't point to root.
     Node * parentP = scionP->getParent();
+    Node * grandParentP = parentP->getParent();
     bool collapsed = parentP->removeChild(scionP);
     scionP->setParent(nullptr);
-    return collapsed;
+    
+    if (collapsed) {
+        return grandParentP;
+    } else {
+        return parentP;
+    }
 }
 
 /**
@@ -616,7 +625,7 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
 
     //Update NCA
     if (parentPointer->getParent() == nullptr) {
-        treeP->getRoot()->setLogLikeContribution(treeP->getRoot()->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
+        rootP->setLogLikeContribution(rootP->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
     } else {
         parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
     }

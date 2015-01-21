@@ -23,7 +23,7 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int 
                                                   alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
     adjacencyList = Adj_list(data_graph);
 
-    Tree T = Tree(&adjacencyList,"Binary");
+    Tree T = Tree(&adjacencyList); //,"Binsssary");
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
     likelihoods.push_back(lastLogLik);
@@ -91,7 +91,7 @@ void Sampler::run(int L, int thinning ){
         // Create a proposal
         Tree proposal = lastTree;
 
-        double move_ratio = proposal.regraft(); //Try a move
+        double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus); //Try a move
 
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);

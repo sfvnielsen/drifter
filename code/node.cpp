@@ -14,6 +14,7 @@
 #include <cassert> // for assert statements
 #include <random>
 
+
 using namespace std;
 
 /** Constructors
@@ -43,6 +44,8 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
     treeP = tP;
     nodeId = old_node.nodeId;
     leaves = old_node.leaves;
+    num_internal_nodes = old_node.num_internal_nodes;
+    loglikelihood_cont = old_node.loglikelihood_cont;
 
     for (auto it = old_node.children.begin(); it != old_node.children.end(); it++) {
         // add new node
@@ -111,6 +114,10 @@ void Node::addChild(Node * childP) {
     //  - Adding the childs pointer to the child list.
     childP->setParent(this);
     children.push_back(childP);
+    list<int> childLeaves = *(childP->getLeaves());
+    leaves.splice(leaves.end(),childLeaves);
+    leaves.sort();
+    leaves.unique();
 }
 
 bool Node::removeChild(Node * child) {
@@ -220,6 +227,8 @@ void Node::updateLeaves(){
             list<int> childLeaves = *(childP->getLeaves());
             assert(childLeaves.size()>0);
             leaves.splice(leaves.end(), childLeaves);
+            leaves.sort();
+            leaves.unique();
         }
     }
     assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
@@ -503,14 +512,15 @@ void Node::updateScion2Root(Node * scionP, bool anyCollapsed){
     list<int> leaves_to_rem = *(scionP->getLeaves() );
     int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) anyCollapsed;
         //Remove the leafs for all nodes on the path from scion to root
-    Node * currentP = parentP;
+    Node * currentP = this;
     while (currentP != nullptr) {
-        parentP->setNumInternalNodes(parentP->getNumInternalNodes()-internal_nodes_rem);
+        currentP->setNumInternalNodes(currentP->getNumInternalNodes()-internal_nodes_rem);
         for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
-            parentP->leaves.remove(*it);
+            currentP->leaves.remove(*it);
         }
         currentP = currentP->getParent();
     }
+    
 
 }
 
@@ -518,52 +528,32 @@ void Node::updateStock2Root(Node * scionP, bool anyCreated){
     list<int> leaves_to_add = *(scionP->getLeaves() );
     int internal_nodes_add = scionP->getNumInternalNodes()+ (int) anyCreated;
 
-    Node * currentP = getParent();
+    Node * currentP = scionP->getParent();
     while (currentP != nullptr) {
+        leaves_to_add = *(scionP->getLeaves() );
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
         currentP->leaves.splice(currentP->leaves.end(), leaves_to_add);
+        currentP->leaves.sort();
+        currentP->leaves.unique();
 
         currentP = currentP->getParent();
     }
 
 }
 
-void Node::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP
-                               ,double alpha, double beta, int rho_plus, int rho_minus){
-
-    //Update Stock
-    // start at scions new parent (NB! scion has been moved)
-    Node * parentPointer = scionP->getParent();
-    while ( !(parentPointer->isNCA(oldScionParentP))) {
-        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus));
-        parentPointer = parentPointer->getParent();
-
-    }
-
-    //Update Scion
-    parentPointer = oldScionParentP;
-    while ( !(parentPointer->isNCA(stockP)) ) {
-        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus));
-        parentPointer = parentPointer->getParent();
-
-    }
-
-    //Update NCA
-    if (parentPointer->getParent() == nullptr) {
-        treeP->getRoot()->setLogLikeContribution(treeP->getRoot()->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
-    } else {
-        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
-    }
-}
-
 bool Node::isNCA(Node * targetP){
-    int target = targetP->getLeaves()->front();
-
-    for (auto it = parentP->getLeaves()->begin();
-         it != parentP->getLeaves()->end(); it++) {
-        if (*it == target){
-            return true;
+    
+    if (this != treeP->getRoot()) {
+        int target = targetP->getLeaves()->front();
+        
+        for (auto it = parentP->getLeaves()->begin();
+             it != parentP->getLeaves()->end(); it++) {
+            if (*it == target){
+                return true;
+            }
         }
+    } else {
+        return true;
     }
     return false;
 }

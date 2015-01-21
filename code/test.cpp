@@ -37,7 +37,7 @@ int main()
     Tree eTree = debuggingTree();
     cout << "Debugging sampler" << endl;
 
-    testSamplerDistribution("test/ValidateSampler",10000,10);
+    testSamplerDistribution("test/ValidateSampler",10000,1);
     testCoinFlip();
 
     cout << "------- END -------" << endl;
@@ -68,6 +68,7 @@ Tree debuggingTree(){
 void testSamplerDistribution(string folder,int num_samples, int num_burn){
 
 	testLikelihood();
+    cout << "---- Likelihood tests completed ----" << endl;
 //Same network as used for testing that the likelihood is correct.
     pair<int,int> g1 (0,1);
     pair<int,int> g2 (1,2);
