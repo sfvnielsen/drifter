@@ -14,6 +14,8 @@
 #include "barebones_tree.h"
 #include "sampler.h"
 #include "iofilehandler.h"
+#include <random>
+
 using namespace std;
 
 void testNetwork(string,int,int,int);

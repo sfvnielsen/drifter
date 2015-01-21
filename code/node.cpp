@@ -11,6 +11,7 @@
 #include <iostream> // should be removed at some point
 #include <numeric> // lets us use cumulative sum
 #include <cassert> // for assert statements
+#include <random>
 
 using namespace std;
 
