@@ -39,6 +39,9 @@ void Sampler::run(int L){
     lastLogLik = likelihoods.back();
 
     int step = max((int) L/100,10);
+    random_device rd; // random generator object
+    mt19937 gen(rd());
+    uniform_real_distribution<> dis(0, 1);
 
     for (int i=0; i<L; i++){
         // Create a proposal
@@ -51,9 +54,6 @@ void Sampler::run(int L){
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_real_distribution<> dis(0, 1);
         if(a>dis(gen)){
             chain.push_back(proposal);
             likelihoods.push_back(propLogLik);
@@ -77,6 +77,9 @@ void Sampler::run(int L){
 * @param thinning: save only each thinning'th sample
 */
 void Sampler::run(int L, int thinning ){
+    random_device rd; // random generator object
+    mt19937 gen(rd());
+    uniform_real_distribution<> dis(0, 1);
 
     lastLogLik = likelihoods.back();
     Tree lastTree = chain.back();
@@ -94,9 +97,7 @@ void Sampler::run(int L, int thinning ){
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_real_distribution<> dis(0, 1);
+
         if(a>dis(gen)){
             if ( (i%thinning) == 0) {
                 chain.push_back(proposal);
@@ -125,6 +126,9 @@ void Sampler::run(int L, int thinning ){
 * @param L: number of iterations
 */
 void Sampler::run(int L, int burnin, int thinning){
+    random_device rd; // random generator object
+    mt19937 gen(rd());
+    uniform_real_distribution<> dis(0, 1);
 
     Tree oldTree = chain.back();
     // Create a proposal
@@ -141,9 +145,6 @@ void Sampler::run(int L, int burnin, int thinning){
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_real_distribution<> dis(0, 1);
         if(a>dis(gen)){
             oldTree = proposal;
             lastLogLik = propLogLik;
