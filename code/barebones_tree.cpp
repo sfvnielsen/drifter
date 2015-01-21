@@ -97,15 +97,15 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
      * For each leaf node, correct the leaf ID, so it correspond to the data ID
      *  each internal node is assigned a unique negative number.
      */
-    rootP->setLeafId(getNextInternalNodeId());
+    rootP->setNodeId(getNextInternalNodeId());
     for (auto it = nodes.begin(); it != nodes.end(); it++) {
         if (it->isInternalNode()){ //Internal node
-            it->setLeafId(getNextInternalNodeId());
+            it->setNodeId(getNextInternalNodeId());
 
         } else { //Leaf node
              //Find what the fake_id corresponds to in real id
-            int fake_id = it->getLeafId();
-            it->setLeafId(data_leaf_relation[fake_id]);
+            int fake_id = it->getNodeId();
+            it->setNodeId(data_leaf_relation[fake_id]);
         }
     }
     rootP->updateLeaves();
@@ -278,13 +278,13 @@ Node * Tree::addNode(){
  */
 Node * Tree::getNode(int leaf_id){
     //Iterates over all internal and leaf nodes
-    if (leaf_id == rootP->getLeafId()) { // is root?
+    if (leaf_id == rootP->getNodeId()) { // is root?
         return rootP;
     }
     for(list<Node>::iterator it = nodes.begin();
         it != nodes.end(); it++){
 
-        if (it->getLeafId() == leaf_id) {
+        if (it->getNodeId() == leaf_id) {
             return &(* it);
         }
 
@@ -389,13 +389,13 @@ void Tree::regraft(int scionVal, int stockVal){
     // TODO: finish the regrafting
     Node * scionP = this->getNode(scionVal);
     if(!(scionP==rootP)){
-        cout << "cutting: " << scionP->getLeafId() << endl;
+        cout << "cutting: " << scionP->getNodeId() << endl;
         this->cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
 
         Node * stockP = this->getNode(stockVal);
-        cout << "inserting: " << stockP->getLeafId() << endl;
+        cout << "inserting: " << stockP->getNodeId() << endl;
         // TODO: random child or sibling
         this->insertSubtree(stockP, scionP, false);
         rootP->updateNumInternalNodes();
@@ -564,7 +564,7 @@ void Tree::writeMatlabFormat(string filename) {
         // find corresponding node in nodes
         list<Node>::iterator it_node = nodes.begin();
         int node_id = 0;
-        while (i != it_node->getLeafId()) {
+        while (i != it_node->getNodeId()) {
             it_node++;
             node_id++;
         }
