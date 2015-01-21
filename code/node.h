@@ -36,7 +36,7 @@ public:
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);
     void addChild(Node *);
-    int removeChild(Node *);
+    bool removeChild(Node *);
 
     // Node random sampling
     Node * getRandomDescendant();
@@ -58,8 +58,8 @@ public:
     // print
     std::string toString();
 
-    void updateScion2Root(Node *, Node *, bool);
-    void updateStock2Root(Node *, Node *, bool);
+    void updateScion2Root(Node *, bool);
+    void updateStock2Root(Node *, bool);
     void updateScionAndStock(Node *, Node*, Node*, double, double, int, int);
     double loglikelihood_cont=0;
     double getLogLikeContribution();

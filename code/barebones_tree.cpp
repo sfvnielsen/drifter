@@ -56,7 +56,7 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
     //Get first relation parrent --> child, assumption the root is first
     pair<int,int> element = tree_struct_graph.front();
     tree_struct_graph.pop_front();
-    
+
     //Construct the parent
     nodes.push_back(Node(this, element.first));
     rootP = &(nodes.back());
@@ -344,33 +344,40 @@ double Tree::regraft(){
     }
 }
 
+/**
+ * Modifies tree by random regrafting
+ * Updates the ornaments
+ * Returns the Metropolis-Hasting 'move-ratio' (NB! non-logarithmic)
+ */
 double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
     Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
-        
-        Node * scionParentP = scionP->getParent();
-        cutSubtree(scionP);
-//        updateScion2Root(scionP,scionParentP,true);
-        
+
+        Node * scionOldParentP = scionP->getParent();
+        Node *  scionParentP = cutSubtree(scionP);
+        bool collapsed = scionParenP != scionOldParentP;
+        scionParentP->updateScion2Root(scionP,collapsed);
+
         Node * stockP = this->getRandomStock();
-        
+
         //Random child or sibling
         std::random_device rd;
         std::mt19937 gen(rd());
         std::bernoulli_distribution dis(0.5);
         bool unbiased_coinflip = dis(gen);
-        
-        insertSubtree(stockP, scionP, unbiased_coinflip);
-        rootP->updateNumInternalNodes();
-        rootP->updateLeaves();
-        
+
+        bool created = (bool) insertSubtree(stockP, scionP, unbiased_coinflip);
+        stockP->updateStock2Root(scionP,created);
+
+        updateScionAndStock(scionP, scionOldParentP, stockP, alpha,beta,rho_plus,rho_minus);
+
         // Move probabilities
         //        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
         n_nodes = (int) nodes.size();
         double p_stock = 1.0/n_nodes;
-        
+
         //        return n_nodes/(n_nodes -n_collapsed +n_created);
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1
@@ -447,10 +454,10 @@ Node * Tree::getRandomStock() {
 * but doesnt remove them from nodes list
 * - Returns the number of nodes that have been removed from the tree
 */
-int Tree::cutSubtree(Node * scionP){
+bool Tree::cutSubtree(Node * scionP){
     // assumes that scionP doesn't point to root.
     Node * parentP = scionP->getParent();
-    int collapsed = parentP->removeChild(scionP);
+    bool collapsed = parentP->removeChild(scionP);
     scionP->setParent(nullptr);
     return collapsed;
 }
@@ -585,4 +592,32 @@ void Tree::writeMatlabFormat(string filename) {
         out_file << *it << " ";
     }
 
+}
+
+void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP
+                               ,double alpha, double beta, int rho_plus, int rho_minus){
+
+    //Update Stock
+    // start at scions new parent (NB! scion has been moved)
+    Node * parentPointer = scionP->getParent();
+    while ( !(parentPointer->isNCA(oldScionParentP))) {
+        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus));
+        parentPointer = parentPointer->getParent();
+
+    }
+
+    //Update Scion
+    parentPointer = oldScionParentP;
+    while ( !(parentPointer->isNCA(stockP)) ) {
+        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus));
+        parentPointer = parentPointer->getParent();
+
+    }
+
+    //Update NCA
+    if (parentPointer->getParent() == nullptr) {
+        treeP->getRoot()->setLogLikeContribution(treeP->getRoot()->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
+    } else {
+        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
+    }
 }

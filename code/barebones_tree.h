@@ -27,7 +27,7 @@ private:
     int nextInternalNodeId;
 
     Adj_list * adjacencyListP;
- 
+
     int InitFlatTree(int);
     int InitBinaryTree(int);
     Node * makeNleafTree(int, int, int);
@@ -65,7 +65,7 @@ public:
     void regraft(int,int); // DEBUG testing specific move;
 	Node * getRandomScion();
 	Node * getRandomStock();
-	int cutSubtree(Node * ); //Modifies the tree and returns change in the number of internal nodes
+	bool cutSubtree(Node * ); //Modifies the tree and returns change in the number of internal nodes
     int insertSubtree(Node *, Node *, bool); //Modifies the tree and returns change in the number of internal nodes
 
 
@@ -75,7 +75,7 @@ public:
     // Print
     std::string toString();
     void writeMatlabFormat(std::string);
-    
+
 };
 
 

@@ -27,15 +27,15 @@ int main() {
     std::mt19937 random_generator(rd());
 
     string data_file_name = "data/karate_edgelist.txt";
-    data_file_name = "data/celegans_edgelist.txt";
+    //data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
-    //data_file_name = "data/facebook100_edgelist.txt";
+    data_file_name = "data/facebook100_edgelist.txt";
 
     /**
      * Testing a network
      */
     int num_iterations = 1000;
-    int burnin = 1000;
+    int burnin = 10;
     int thinning = 100;
 
     testNetwork(data_file_name,num_iterations,burnin,thinning);
@@ -49,7 +49,7 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     cout << "Running on: " << data_file_name << endl;
     IoFileHandler data_file(data_file_name,0);
 
-    Sampler sampler = Sampler(data_file.getDataEl(),0.5, 0.5, 1, 1);
+    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1);
 
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();

@@ -23,7 +23,7 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int 
                                                   alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
     adjacencyList = Adj_list(data_graph);
 
-    Tree T = Tree(&adjacencyList);
+    Tree T = Tree(&adjacencyList,"Binary");
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
     likelihoods.push_back(lastLogLik);

@@ -113,8 +113,8 @@ void Node::addChild(Node * childP) {
     children.push_back(childP);
 }
 
-int Node::removeChild(Node * child) {
-    int collapsed = 0;
+bool Node::removeChild(Node * child) {
+    bool collapsed = false;
     children.remove(child);
     // if there is only one child left: collapse node.
     if(1==(int) children.size()){
@@ -122,12 +122,12 @@ int Node::removeChild(Node * child) {
             children.front()->setParent(nullptr);
             treeP->setRootP(children.front());
             treeP->removeNode(this);
-                collapsed++;
+            collapsed = true;
         }else{
             parentP->addChild(children.front());
             collapsed += parentP->removeChild(this);
             treeP->removeNode(this);
-               collapsed++;
+            collapsed = true;
         }
     }
     return collapsed;
@@ -498,58 +498,58 @@ void Node::setNumInternalNodes(int new_num_internal){
     num_internal_nodes = new_num_internal;
 }
 
-void Node::updateScion2Root(Node * scionP, Node * scionParentP, bool anyCollapsed){
-    
+void Node::updateScion2Root(Node * scionP, bool anyCollapsed){
     //Leaves in the subtree that is removed, and number of internal nodes
     list<int> leaves_to_rem = *(scionP->getLeaves() );
     int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) anyCollapsed;
-    
-    //Remove the leafs for all nodes on the path from scion to root
-    while (scionParentP != nullptr) {
-        scionParentP->setNumInternalNodes(scionParentP->getNumInternalNodes()-internal_nodes_rem);
+        //Remove the leafs for all nodes on the path from scion to root
+    Node * currentP = parentP;
+    while (currentP != nullptr) {
+        parentP->setNumInternalNodes(parentP->getNumInternalNodes()-internal_nodes_rem);
         for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
-            scionParentP->leaves.remove(*it);
+            parentP->leaves.remove(*it);
         }
-        scionParentP = scionParentP->getParent();
+        currentP = currentP->getParent();
     }
-    
+
 }
 
-void Node::updateStock2Root(Node * scionP, Node * stockP, bool anyCreated){
-    list<int> leaves_to_add = *(stockP->getLeaves() );
-    int internal_nodes_add = stockP->getNumInternalNodes()+ (int) anyCreated;
-    
-    Node * parentPointer = stockP->getParent();
-    while (parentPointer != nullptr) {
-        parentPointer->setNumInternalNodes(parentPointer->getNumInternalNodes()+internal_nodes_add);
-        parentPointer->leaves.splice(parentPointer->leaves.end(), leaves_to_add);
-        
-        parentPointer = parentPointer->getParent();
+void Node::updateStock2Root(Node * scionP, bool anyCreated){
+    list<int> leaves_to_add = *(scionP->getLeaves() );
+    int internal_nodes_add = scionP->getNumInternalNodes()+ (int) anyCreated;
+
+    Node * currentP = getParent();
+    while (currentP != nullptr) {
+        currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
+        currentP->leaves.splice(currentP->leaves.end(), leaves_to_add);
+
+        currentP = currentP->getParent();
     }
-    
+
 }
 
-void Node::updateScionAndStock(Node * scionP, Node * scionParentP, Node* stockP
+void Node::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP
                                ,double alpha, double beta, int rho_plus, int rho_minus){
-    
+
     //Update Stock
-    Node * parentPointer = stockP;
-    while (parentP->isNCA(scionP)) {
+    // start at scions new parent (NB! scion has been moved)
+    Node * parentPointer = scionP->getParent();
+    while ( !(parentPointer->isNCA(oldScionParentP))) {
         parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus));
         parentPointer = parentPointer->getParent();
-        
+
     }
-    
+
     //Update Scion
-    parentPointer = scionParentP;
-    while (parentP->isNCA(stockP)) {
+    parentPointer = oldScionParentP;
+    while ( !(parentPointer->isNCA(stockP)) ) {
         parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus));
         parentPointer = parentPointer->getParent();
-        
+
     }
-    
+
     //Update NCA
-    if (parentPointer == nullptr) {
+    if (parentPointer->getParent() == nullptr) {
         treeP->getRoot()->setLogLikeContribution(treeP->getRoot()->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
     } else {
         parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
@@ -558,7 +558,7 @@ void Node::updateScionAndStock(Node * scionP, Node * scionParentP, Node* stockP
 
 bool Node::isNCA(Node * targetP){
     int target = targetP->getLeaves()->front();
-    
+
     for (auto it = parentP->getLeaves()->begin();
          it != parentP->getLeaves()->end(); it++) {
         if (*it == target){
