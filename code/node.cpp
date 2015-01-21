@@ -459,6 +459,38 @@ bool Node::isEqualSubtree(Node * copy_node){
     return false;
 }
 
+/**
+ isInternal bool operation
+*/
+bool Node::isInternalNode() {
+    return !children.empty();
+}
+
+/** Printing
+*/
+string Node::toString() {
+    // Building a string representing the tree by printing all of the leaf-Sets
+
+    list<int> leaves = *(this->getLeaves());
+    string s = "Node: " +  to_string(getNodeId()) + "; Leaves: (";
+    if(!leaves.empty()) {
+        for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++) {
+            s += "," + to_string(*it);
+        }
+    }
+    s += ")\n";
+
+    // -- Recurse into children to print the entire subtree.
+    // s += "number of children: " + to_string(children.size()) + "\n";
+    if(!children.empty()) {
+        for (list<Node *>::iterator it = children.begin(); it != children.end(); it++) {
+            Node * childP = *it;
+            s += childP->toString();
+        }
+    }
+    return s ;
+}
+
 void Node::setNumInternalNodes(int new_num_internal){
     num_internal_nodes = new_num_internal;
 }
@@ -497,8 +529,7 @@ void Node::updateScionAndStock(Node * scionP, Node * scionParentP, Node* stockP
     //Update Stock
     Node * parentP = stockP;
     while (parentP->isNCA(scionP)) {
-        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta,
-                                                            rho_plus, rho_minus));
+        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus));
         parentP = parentP->getParent();
         
     }
@@ -506,24 +537,22 @@ void Node::updateScionAndStock(Node * scionP, Node * scionParentP, Node* stockP
     //Update Scion
     parentP = scionParentP;
     while (parentP->isNCA(stockP)) {
-        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta,
-                                                            rho_plus,rho_minus));
+        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus));
         parentP = parentP->getParent();
         
     }
     
     //Update NCA
     if (parentP == nullptr) {
-        treeP->getRoot()->setLogLikeContribution(evaluateNodeLogLike(
-                                            alpha, beta, rho_plus, rho_minus));
+        treeP->getRoot()->setLogLikeContribution(evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
     } else {
-        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta, rho_plus, rho))
+        parentP->setLogLikeContribution(evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
     }
 }
 
 bool Node::isNCA(Node * targetP){
     int target = targetP->getLeaves()->front();
-
+    
     for (auto it = parentP->getLeaves()->begin();
          it != parentP->getLeaves()->end(); it++) {
         if (*it == target){
