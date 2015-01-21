@@ -1,23 +1,24 @@
 /*
- * node.cpp
+ * Node.cpp
  *
- *  Created on: Jan 9, 2015
- *      Author: sfvn
+ *  Created on: Jan 9, 2015 as part of parmugit project
+ *      Authors: Jesper, Julian and Søren
+*
  */
 
 #include "node.h"
 #include "barebones_tree.h"
 
-#include <iostream> // should be removed at some point
+#include <iostream>
 #include <numeric> // lets us use cumulative sum
 #include <cassert> // for assert statements
 #include <random>
 
 using namespace std;
 
-/////////////////////////
-// Node class functions //
-//////////////////////////
+/** Constructors
+*
+*/
 
 Node::Node(){}
 
@@ -53,36 +54,11 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
     }
 }
 
-list<Node *> Node::getChildren(){
-    return children;
-}
-
-//Need when copying
-void Node::setChildren(list<Node *> new_children){
-    children = new_children;
-}
-
-void Node::updateLeaves(){
-    leaves.clear();
-
-    if(!isInternalNode()){
-        leaves.push_back(nodeId);
-    }else{
-        for (auto it = children.begin(); it != children.end(); it++) {
-            Node * childP = *it;
-            childP->updateLeaves();
-            list<int> childLeaves = *(childP->getLeaves());
-            assert(childLeaves.size()>0);
-            leaves.splice(leaves.end(), childLeaves);
-        }
-    }
-    assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
-    assert(leaves.size()>0);
-}
-
-list<int> * Node::getLeaves() {
-    assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
-    return &leaves;
+/**
+ * Parent
+ */
+void Node::setParent(Node * new_parentP) {
+    parentP = new_parentP;
 }
 
 Node * Node::getParent() {
@@ -90,22 +66,45 @@ Node * Node::getParent() {
 }
 
 /**
- * Set the pointer "parentP" to a new value.
- */
-void Node::setParent(Node * new_parentP) {
-    parentP = new_parentP;
-}
+* Node Id
+*/
 
-int Node::getLeafId(){
+int Node::getNodeId(){
     return nodeId;
 }
-void Node::setLeafId(int new_id){
+void Node::setNodeId(int new_id){
     nodeId = new_id;
 }
 
 /**
-* Adds child..
+ Get leaves
 */
+list<int> * Node::getLeaves() {
+    assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
+    return &leaves;
+}
+
+/**
+ Get Number of internal nodes
+ */
+int Node::getNumInternalNodes(){
+    return num_internal_nodes;
+}
+
+
+
+/** Children functions
+*
+*/
+
+list<Node *> Node::getChildren(){
+    return children;
+}
+
+void Node::setChildren(list<Node *> new_children){
+    children = new_children;
+}
+
 void Node::addChild(Node * childP) {
     // Add a child by:
     //  - Setting the childs parent pointer.
@@ -134,17 +133,97 @@ int Node::removeChild(Node * child) {
     return collapsed;
 }
 
+/**
+* Samples random node from subtree rooted at this node
+* - NB! Including root node!!
+* - chooses internal nodes with weight 2 and leaves with weight 1
+*/
+Node * Node::getRandomDescendant() {
+    if (isInternalNode()){
+        list<Node *> node_list = getChildren();
+        list<int> subtree_weight;
+        for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
+        // Each subtree has weight according to two times the number of
+        // internal nodes plus the number of leaves
+            subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
+                                 (int)(((*it)->getLeaves())->size()) );
+        }
+        int sum_weight = (int)((this->getLeaves())->size())
+                          +2*this->getNumInternalNodes();
+        list<double> p_vals; // probability vector for each node + root
+        for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
+            p_vals.push_back((double)*it/sum_weight);
+        }
 
-bool Node::isInternalNode() {
-    return !children.empty();
+        p_vals.push_back((double)2/sum_weight); // root probability
+        node_list.push_back(this);
+
+        // assert that p_vals sums to 1
+        double p_val_sum = 0;
+        p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
+        assert(abs(p_val_sum-1.0)<1e-12);
+
+        // Sample one of the nodes
+        Node * sampled_node = multinomialSampling(node_list,p_vals);
+        if (sampled_node!=this) { // recurse into subtree rooted at node
+            return sampled_node->getRandomDescendant();
+        } else { // else return this node
+            return this;
+        }
+
+    } else { // if we are at leaf node choose that
+        return this;
+    }
 }
 
-bool Node::operator==( const Node &rhs ) const {
-    return nodeId == rhs.nodeId;
+/**
+* Sampling a random node from a list using a Multinomial distribution
+* - p_vals
+*/
+
+Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
+    list<double> cumulative_sum(p_vals.size(),0);
+    // finding cumulative sum (partial sum) of p_vals
+    partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
+
+    assert(abs(cumulative_sum.back()-1.0 < 1e-12)); // check that p_vals is valid
+    assert(node_list.size() == p_vals.size());
+
+    list<Node *>::iterator it_result = node_list.begin();
+    list<double>::iterator it = cumulative_sum.begin();
+    std::random_device rd;
+    std::mt19937 random_generator(rd());
+    std::uniform_real_distribution<> dis(0, 1);
+    double u = dis(random_generator);
+    //double u = (double)rand()/RAND_MAX; // uniform [0,1] random number
+
+    while (u>*it) { // finds interval (node) that u corresponds to
+                    // i.e. the first time u is smaller than the cumulative element
+        it_result++;
+        it++;
+    }
+    return *it_result;
 }
 
-int Node::getNumInternalNodes(){
-    return num_internal_nodes;
+/**
+ Update leaves list at each node in tree
+*/
+void Node::updateLeaves(){
+    leaves.clear();
+
+    if(!isInternalNode()){
+        leaves.push_back(nodeId);
+    }else{
+        for (auto it = children.begin(); it != children.end(); it++) {
+            Node * childP = *it;
+            childP->updateLeaves();
+            list<int> childLeaves = *(childP->getLeaves());
+            assert(childLeaves.size()>0);
+            leaves.splice(leaves.end(), childLeaves);
+        }
+    }
+    assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
+    assert(leaves.size()>0);
 }
 
 /**
@@ -165,151 +244,8 @@ int Node::updateNumInternalNodes() {
    return num_internal_nodes; //exited ok
 }
 
-
-string Node::toString() {
-    // Building a string representing the tree by printing all of the leaf-Sets
-
-    list<int> leaves = *(this->getLeaves());
-    string s = "Node: " +  to_string(getLeafId()) + "; Leaves: (";
-    if(!leaves.empty()) {
-        for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++) {
-            s += "," + to_string(*it);
-        }
-    }
-    s += ")\n";
-
-    // -- Recurse into children to print the entire subtree.
-    // s += "number of children: " + to_string(children.size()) + "\n";
-    if(!children.empty()) {
-        for (list<Node *>::iterator it = children.begin(); it != children.end(); it++) {
-            Node * childP = *it;
-            s += childP->toString();
-        }
-    }
-    return s ;
-}
-
-/**
-* Samples random node from subtree rooted at this node
-* - NB! Including root node!!
-* - chooses internal nodes with weight 2 and leaves with weight 1
+/** Log-Like times prior calculation of node
 */
-Node * Node::getRandomDescendant() {
-    if (isInternalNode()){
-        list<Node *> node_list = getChildren();
-        list<int> subtree_weight;
-        for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
-        // Each subtree has weight according to two times the number of
-        // internal nodes plus the number of leaves
-            subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
-                                 (int)(((*it)->getLeaves())->size()) );
-        }
-//        // DEBUGGING CHECK SUM! ---
-        int sum_weight = (int)((this->getLeaves())->size())
-                          +2*this->getNumInternalNodes();
-//        int subtree_sum = 2;
-//        subtree_sum = accumulate(subtree_weight.begin(),subtree_weight.end(),subtree_sum);
-//        assert(subtree_sum == sum_weight);
-//        // -------
-
-        list<double> p_vals; // probability vector for each node + root
-        for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
-            p_vals.push_back((double)*it/sum_weight);
-        }
-
-        p_vals.push_back((double)2/sum_weight); // root probability
-        node_list.push_back(this);
-
-
-        // DEBUGGING CHECK!! -------
-        double p_val_sum = 0;
-        p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
-        assert(abs(p_val_sum-1.0)<1e-12);
-        // -------
-
-
-        Node * sampled_node = multinomialSampling(node_list,p_vals);
-        if (sampled_node!=this) { // recurse into chosen subtree
-            return sampled_node->getRandomDescendant();
-        } else { // else return this node
-            return this;
-        }
-
-    } else { // if we are at leaf node choose that
-        return this;
-    }
-}
-
-/**
- * Get counts of links and non-links between the pair of children
- */
-pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
-
-    list<int> * LA = childAP->getLeaves();
-    list<int> * LB = childBP->getLeaves();
-
-    // Number of possible links
-    int nA = (int) LA->size();
-    int nB = (int) LB->size();
-
-    int nPossible = nA*nB;
-
-    int nLinks = 0;
-
-    Adj_list * AP = treeP->getAdjacencyListP();
-
-    for (list<int>::iterator fst = LA->begin(); fst != LA->end(); fst++) {
-        for (list<int>::iterator snd = LB->begin(); snd != LB->end(); snd++) {
-            if(AP->isConnected(*fst,*snd)){
-                nLinks += 1;
-            }
-        }
-    }
-
-    pair<int, int> result (nLinks,nPossible);
-
-    return result;
-}
-
-
-/**
- * Get counts of links and non-links between all pairs of children
- */
-list<pair<int, int>> Node::getCountsAll() {
-    list<pair<int, int>> result;
-    // Loop through each child
-    for (list<Node *>::iterator fst = children.begin(); fst != children.end(); fst++) {
-        // iterator for the next child
-        list<Node *>::iterator nxt = fst;
-        // Loop through each child after it in the list
-        for (list<Node *>::iterator snd = ++nxt ; snd != children.end(); snd++) {
-            result.push_back(this->getCountsPair(*fst, *snd));
-        }
-    }
-    return result;
-}
-
-/**
-* Log-Beta function
-*/
-double logbeta(double a, double b){
-    return lgamma(a)+lgamma(b)-lgamma(a+b);
-}
-
-/**
-* Log-Gamma Ratio Function
-*/
-double lgamma_ratio(double a, double b) {
-    return lgamma(a+b)-lgamma(1+b);
-}
-
-/**
-* Log of Difference (numerically stable)
-*/
-double log_diff(double a, double b) {
-    double maxAB = max(a,b);
-    return maxAB + log(exp(a-maxAB)-exp(b-max(a,b)));
-}
 
 /**
 * Evaluate nodes contribution to likelihood
@@ -385,34 +321,84 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
 }
 
 /**
-* Sampling a random node from a list using a Multinomial distribution
-* - p_vals
-*/
-
-Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
-    list<double> cumulative_sum(p_vals.size(),0);
-    // finding cumulative sum (partial sum) of p_vals
-    partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
-
-    assert(abs(cumulative_sum.back()-1.0 < 1e-12)); // check that p_vals is valid
-    assert(node_list.size() == p_vals.size());
-
-    list<Node *>::iterator it_result = node_list.begin();
-    list<double>::iterator it = cumulative_sum.begin();
-    std::random_device rd;
-    std::mt19937 random_generator(rd());
-    std::uniform_real_distribution<> dis(0, 1);
-    double u = dis(random_generator);
-    //double u = (double)rand()/RAND_MAX; // uniform [0,1] random number
-
-    while (u>*it) { // finds interval (node) that u corresponds to
-                    // i.e. the first time u is smaller than the cumulative element
-        it_result++;
-        it++;
+ * Get counts of links and non-links between all pairs of children
+ */
+list<pair<int, int>> Node::getCountsAll() {
+    list<pair<int, int>> result;
+    // Loop through each child
+    for (list<Node *>::iterator fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        list<Node *>::iterator nxt = fst;
+        // Loop through each child after it in the list
+        for (list<Node *>::iterator snd = ++nxt ; snd != children.end(); snd++) {
+            result.push_back(this->getCountsPair(*fst, *snd));
+        }
     }
-    return *it_result;
+    return result;
 }
 
+/**
+ * Get counts of links and non-links between the pair of children
+ */
+pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
+
+    list<int> * LA = childAP->getLeaves();
+    list<int> * LB = childBP->getLeaves();
+
+    // Number of possible links
+    int nA = (int) LA->size();
+    int nB = (int) LB->size();
+
+    int nPossible = nA*nB;
+
+    int nLinks = 0;
+
+    Adj_list * AP = treeP->getAdjacencyListP();
+
+    // Loop through all all combinations of leaves and check if they are connected
+    for (list<int>::iterator fst = LA->begin(); fst != LA->end(); fst++) {
+        for (list<int>::iterator snd = LB->begin(); snd != LB->end(); snd++) {
+            if(AP->isConnected(*fst,*snd)){
+                nLinks += 1;
+            }
+        }
+    }
+
+    pair<int, int> result (nLinks,nPossible);
+    return result;
+}
+
+
+/**
+* Log-Beta function
+*/
+double logbeta(double a, double b){
+    return lgamma(a)+lgamma(b)-lgamma(a+b);
+}
+
+/**
+* Log-Gamma Ratio Function
+*/
+double lgamma_ratio(double a, double b) {
+    return lgamma(a+b)-lgamma(1+b);
+}
+
+/**
+* Log of Difference (numerically stable)
+*/
+double log_diff(double a, double b) {
+    double maxAB = max(a,b);
+    return maxAB + log(exp(a-maxAB)-exp(b-max(a,b)));
+}
+
+
+/**
+ Equality (Bool) operations
+*/
+
+bool Node::operator==( const Node &rhs ) const {
+    return nodeId == rhs.nodeId;
+}
 
 /**
  * Tests if two subtrees are equal, defined as when all internal nodes (below) in the
@@ -472,3 +458,36 @@ bool Node::isEqualSubtree(Node * copy_node){
     }
     return false;
 }
+
+/**
+ isInternal bool operation
+*/
+bool Node::isInternalNode() {
+    return !children.empty();
+}
+
+/** Printing
+*/
+string Node::toString() {
+    // Building a string representing the tree by printing all of the leaf-Sets
+
+    list<int> leaves = *(this->getLeaves());
+    string s = "Node: " +  to_string(getNodeId()) + "; Leaves: (";
+    if(!leaves.empty()) {
+        for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++) {
+            s += "," + to_string(*it);
+        }
+    }
+    s += ")\n";
+
+    // -- Recurse into children to print the entire subtree.
+    // s += "number of children: " + to_string(children.size()) + "\n";
+    if(!children.empty()) {
+        for (list<Node *>::iterator it = children.begin(); it != children.end(); it++) {
+            Node * childP = *it;
+            s += childP->toString();
+        }
+    }
+    return s ;
+}
+
