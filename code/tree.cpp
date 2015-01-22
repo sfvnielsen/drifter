@@ -19,6 +19,7 @@ using namespace std;
  * Construct flat tree from number of leaves
  */
 Tree::Tree(Adj_list * AP): nextInternalNodeId(0) {
+    isLoglikeInitialised = false;
     adjacencyListP = AP;
     InitFlatTree(AP->getSize() );
     rootP->updateNumInternalNodes();
@@ -29,7 +30,7 @@ Tree::Tree(Adj_list * AP): nextInternalNodeId(0) {
  * Tree constructor choice
  */
 Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
-
+    isLoglikeInitialised = false;
     adjacencyListP = AP;
     if (initType == "Binary") {
         InitBinaryTree(AP->getSize());
@@ -50,7 +51,7 @@ Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
 */
 Tree::Tree(list<pair<int,int>> tree_struct_graph,
            vector<int> data_leaf_relation, Adj_list * adj_list): nextInternalNodeId(0) {
-
+    isLoglikeInitialised = false;
     adjacencyListP = adj_list;
 
     // - Construct the tree from tree_struct_graph

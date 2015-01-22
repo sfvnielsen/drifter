@@ -48,7 +48,7 @@ void Sampler::run(int L){
         // Create a proposal
         Tree proposal = chain.back();
 
-        double move_ratio = proposal.regraft(); //Try a move
+        double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus); //Try a move
 
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
@@ -139,7 +139,7 @@ void Sampler::run(int L, int burnin, int thinning){
 
     for (int i=0; i<burnin; i++){
 
-        double move_ratio = proposal.regraft(); //Try a move
+        double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus);; //Try a move
 
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
