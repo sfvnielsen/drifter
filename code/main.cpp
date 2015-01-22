@@ -34,9 +34,9 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 1000;
-    int burnin = 1;
-    int thinning = 1;
+    int num_iterations = 500000;
+    int burnin = 10000;
+    int thinning = 3;
 
     testNetwork(data_file_name,num_iterations,burnin,thinning);
 

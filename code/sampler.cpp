@@ -154,7 +154,7 @@ void Sampler::run(int L, int burnin, int thinning){
         }
 
         if (((i) % bstep)==0){
-            cout << "[burnin: "<< (int)(i*100)/burnin << "% of " << burnin << "] Acceptance ratio: " << a
+            cout << "[Burnin: "<< (int)(i*100)/burnin << "% of " << burnin << "] Acceptance ratio: " << a
             << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
         }
     }
