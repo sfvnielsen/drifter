@@ -170,9 +170,9 @@ Node * Node::getRandomDescendant() {
         // assert that p_vals sums to 1
         double p_val_sum = 0;
         p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
-        if(!abs(p_val_sum-1.0)<1e-12)
+/*        if(!(abs(p_val_sum-1.0) < 1e-12))
             cout << treeP->toString();
-
+*/
         assert(abs(p_val_sum-1.0)<1e-12);
 
 
@@ -487,7 +487,7 @@ string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
 
     list<int> leaves = *(this->getLeaves());
-    string s = "Node: " +  to_string(getNodeId()) + "; Leaves: (";
+    string s = "Node: " +  to_string(getNodeId()) +"; Num_internal: ("+to_string(getNumInternalNodes())+ "); Leaves: (";
     if(!leaves.empty()) {
         for (list<int>::iterator it = leaves.begin(); it != leaves.end(); it++) {
             s += "," + to_string(*it);
@@ -518,18 +518,32 @@ void Node::updateScion2Root(Node * scionP, bool anyCollapsed){
     //Leaves in the subtree that is removed, and number of internal nodes
     list<int> leaves_to_rem = *(scionP->getLeaves() );
     int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) anyCollapsed;
-        //Remove the leafs for all nodes on the path from scion to root
-    Node * currentP = this;
-    while (currentP != nullptr) {
-        currentP->setNumInternalNodes(currentP->getNumInternalNodes()-internal_nodes_rem);
-        assert(currentP->getNumInternalNodes()>=0);
-        for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
-            currentP->leaves.remove(*it);
+
+    if(this!=(treeP->getRoot()) ){
+
+        Node * currentP = this;
+        while (currentP != nullptr) {
+            currentP->setNumInternalNodes(currentP->getNumInternalNodes()-internal_nodes_rem);
+            assert(currentP->getNumInternalNodes()>=0);
+            for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
+                currentP->leaves.remove(*it);
+            }
+            currentP = currentP->getParent();
         }
-        currentP = currentP->getParent();
+    } else { //If roooooooooot
+        for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
+            this->leaves.remove(*it);
+        }
+        int new_num_int = 0;
+        for (auto it = this->children.begin(); it != this->children.end(); it++) {
+            new_num_int += (*it)->getNumInternalNodes();
+        }
+        if (this->isInternalNode()) {
+            setNumInternalNodes(new_num_int+1);
+        } else {
+            setNumInternalNodes(new_num_int);
+        }
     }
-
-
 }
 
 void Node::updateStock2Root(Node * scionP, bool anyCreated){
@@ -537,16 +551,15 @@ void Node::updateStock2Root(Node * scionP, bool anyCreated){
     int internal_nodes_add = scionP->getNumInternalNodes()+ (int) anyCreated;
 
     Node * currentP = scionP->getParent();
-    while (currentP != nullptr) {
-        leaves_to_add = *(scionP->getLeaves() );
-        currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
-        currentP->leaves.splice(currentP->leaves.end(), leaves_to_add);
-        currentP->leaves.sort();
-        currentP->leaves.unique();
-
-        currentP = currentP->getParent();
-    }
-
+        while (currentP != nullptr) {
+            leaves_to_add = *(scionP->getLeaves() );
+            currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
+            currentP->leaves.splice(currentP->leaves.end(), leaves_to_add);
+            currentP->leaves.sort();
+            currentP->leaves.unique();
+            
+            currentP = currentP->getParent();
+        }
 }
 
 bool Node::isNCA(Node * targetP){

@@ -29,14 +29,14 @@ int main() {
     string data_file_name = "data/karate_edgelist.txt";
     //data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
-    data_file_name = "data/facebook100_edgelist.txt";
+//    data_file_name = "data/facebook100_edgelist.txt";
 
     /**
      * Testing a network
      */
     int num_iterations = 1000;
-    int burnin = 10;
-    int thinning = 100;
+    int burnin = 1;
+    int thinning = 1;
 
     testNetwork(data_file_name,num_iterations,burnin,thinning);
 

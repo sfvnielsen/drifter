@@ -359,7 +359,7 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
         Node * scionOldParentP = scionP->getParent();
         Node *  scionParentP = cutSubtree(scionP);
         bool collapsed = scionParentP != scionOldParentP;
-        if(scionP!=rootP)
+//        if(scionParentP!=rootP)
             scionParentP->updateScion2Root(scionP,collapsed);
         cout << " -- cutting -- " << endl;
         cout << toString() <<flush;
@@ -373,6 +373,9 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
         bool unbiased_coinflip = dis(gen);
 
         bool created = (bool) insertSubtree(stockP, scionP, unbiased_coinflip);
+        cout << " -- inserting -- " << endl;
+        cout << toString();
+        cout << " -- inserting update -- " << endl;        
         stockP->updateStock2Root(scionP,created);
         cout << toString();
 
@@ -384,10 +387,13 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
         double p_stock = 1.0/n_nodes;
 
         //        return n_nodes/(n_nodes -n_collapsed +n_created);
+        cout << "--- end of a regraft ---"<< endl << endl;
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1
+        cout << "--- end of a regraft ---"<< endl << endl;
         return 1;
     }
+    
 
     return 0.0;
 }
@@ -468,6 +474,7 @@ Node * Tree::cutSubtree(Node * scionP){
 
     if (collapsed) {
             if(grandParentP==nullptr){
+                cout << "Num internal nodes, at root: " << rootP->getNumInternalNodes() << endl;
                 return rootP;
             }else{
                 return grandParentP;
@@ -495,7 +502,7 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
         // Create a new node
         Node * new_parent = addNode();
-
+        
         // Constuct and add a new parent
         Node * stock_parent = stockP->getParent();
         if(stock_parent != nullptr){ // if stock is not root
@@ -510,6 +517,13 @@ int Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
         new_parent->addChild(stockP);
         new_parent->addChild(scionP);
+//        int new_num_internal = 1;
+//        for (auto it = new_parent->getChildren().begin();
+//             it != new_parent->getChildren().end(); ++it) {
+//            new_num_internal += (*it)->getNumInternalNodes();
+//        }
+//        new_parent->setNumInternalNodes(new_num_internal);
+        new_parent->setNumInternalNodes(stockP->getNumInternalNodes());
     }
     return created;
 }
@@ -527,6 +541,7 @@ double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, 
 
 /** Printing */
 string Tree::toString(){
+    cout << "I am root: " << rootP->getNodeId() << "; num_int: "<< rootP->getNumInternalNodes() << endl;
     return rootP->toString();
 }
 
@@ -625,9 +640,9 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
         parentPointer = parentPointer->getParent();
 
     }
-            cout << "after stock update" << endl;
-
-            cout << toString();
+//            cout << "after stock update" << endl;
+//
+//            cout << toString();
 
     //Update Scion
     parentPointer = oldScionParentP;
@@ -636,9 +651,9 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
         parentPointer = parentPointer->getParent();
 
     }
-            cout << "after scion update" << endl;
-
-            cout << toString();
+//            cout << "after scion update" << endl;
+//
+//            cout << toString();
     //Update NCA
     if (parentPointer->getParent() == nullptr) {
         rootP->setLogLikeContribution(rootP->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
