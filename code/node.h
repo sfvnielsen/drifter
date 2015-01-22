@@ -66,6 +66,7 @@ public:
     void setLogLikeContribution(double);
     void setNumInternalNodes(int);
     bool isNCA(Node *);
+    bool isSubsetOf(Node *);
 private:
     Node * parentP;
 	int num_internal_nodes; //Is need for stock sampling

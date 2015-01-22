@@ -114,12 +114,6 @@ void Node::addChild(Node * childP) {
     //  - Adding the childs pointer to the child list.
     childP->setParent(this);
     children.push_back(childP);
-    
-    //TODO: MAKE DISSAPEAR??
-    list<int> childLeaves = *(childP->getLeaves());
-    leaves.splice(leaves.end(),childLeaves);
-    leaves.sort();
-    leaves.unique();
 }
 
 bool Node::removeChild(Node * child) {
@@ -528,19 +522,38 @@ void Node::setNumInternalNodes(int new_num_internal){
 
 bool Node::isNCA(Node * targetP){
 
-    if (this != treeP->getRoot()) {
+//    if (this != treeP->getRoot()) {
         int target = targetP->getLeaves()->front();
 
-        for (auto it = leaves.begin();
-             it != leaves.end(); it++) {
+        for (auto it = leaves.begin(); it != leaves.end(); it++) {
             if (*it == target){
                 return true;
             }
         }
-    } else {
-        return true;
-    }
+  //  } else {
+    //    return true;
+   // }
     return false;
+}
+
+bool Node::isSubsetOf(Node * targetP){
+    
+    if (leaves.size() > targetP->leaves.size()) {
+        return false;
+    }
+    
+    for (auto it = leaves.begin(); it != leaves.end(); it++) {
+        bool element_found = false;
+        for (auto it2 = targetP->leaves.begin(); it2 != targetP->leaves.end(); ++it2) {
+            if (*it == * it2) {
+                element_found = true;
+            }
+        }
+        if (!element_found) {
+            return false;
+        }
+    }
+    return true;
 }
 
 double Node::getLogLikeContribution(){

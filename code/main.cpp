@@ -35,7 +35,7 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 10000;
+    int num_iterations = 100000;
     int burnin = 100;
     int thinning = 100;
 

@@ -387,6 +387,7 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
         //        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
         n_nodes = (int) nodes.size();
         double p_stock = 1.0/n_nodes;
+//        cout << toString() << endl;
 
         //        return n_nodes/(n_nodes -n_collapsed +n_created);
 //        cout << "--- end of a regraft ---"<< endl << endl;
@@ -673,29 +674,59 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
 
     //relation between scion and stock after insert
     assert(scionP->getParent()==stockP || scionP->getParent()==stockP->getParent());
-
-
-    //Update Stock
-    // start at scions new parent (NB! scion has been moved)
-    Node * parentPointer = scionP->getParent();
-    while ( !(parentPointer->isNCA(oldScionParentP))) {
-        parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
-        parentPointer = parentPointer->getParent();
-
+    Node * scionPathP = scionP->getParent();
+    Node * stockPathP = oldScionParentP;
+    
+    while (scionPathP != nullptr) {
+        scionPathP->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
+        scionPathP = scionPathP->getParent();
     }
-
-    //Update Scion
-    parentPointer = oldScionParentP;
-    while ( !(parentPointer->isNCA(stockP)) ) {
-        parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus);
-        parentPointer = parentPointer->getParent();
-
+    
+    while (stockPathP != nullptr) {
+        stockPathP->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
+        stockPathP = stockPathP->getParent();
     }
+    
+    
 
-    //Update NCA
-    if (parentPointer->getParent() == nullptr) {
-        rootP->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
-    } else {
-        parentPointer->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
-    }
+//    if (scionP->getParent()->isSubsetOf(oldScionParentP)){
+//        Node * parentPointer = scionP->getParent();
+//        //Update until oldscionParentP has been updated
+//        while (parentPointer != oldScionParentP->getParent()) {
+//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
+//            parentPointer = parentPointer->getParent();
+//        }
+//        return;
+//    } else if (oldScionParentP->isSubsetOf(scionP->getParent() ) ){
+//        Node * parentPointer = oldScionParentP;
+//        //Update until oldscionParentP has been updated
+//        while (parentPointer != scionP->getParent()) {
+//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
+//            parentPointer = parentPointer->getParent();
+//        }
+//        return;
+//    } else { //Neither scion or stock is desendant of the other
+//        //Update Stock
+//        // start at scions new parent (NB! scion has been moved)
+//        Node * parentPointer = scionP->getParent();
+//        while ( !(parentPointer->isNCA(oldScionParentP))) {
+//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
+//            parentPointer = parentPointer->getParent();
+//            
+//        }
+//        Node * nca1 = parentPointer;
+//        //Update Scion
+//        parentPointer = oldScionParentP;
+//        while ( !(parentPointer->isNCA(stockP)) ) {
+//            //    while (parentPointer != nca1 ) {
+//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus);
+//            parentPointer = parentPointer->getParent();
+//            
+//        }
+//        assert(nca1 == parentPointer);
+//        nca1->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
+//        return;
+//    }
+    
+
 }
