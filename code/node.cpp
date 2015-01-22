@@ -114,10 +114,6 @@ void Node::addChild(Node * childP) {
     //  - Adding the childs pointer to the child list.
     childP->setParent(this);
     children.push_back(childP);
-    list<int> childLeaves = *(childP->getLeaves());
-    leaves.splice(leaves.end(),childLeaves);
-    leaves.sort();
-    leaves.unique();
 }
 
 bool Node::removeChild(Node * child) {

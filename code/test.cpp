@@ -37,7 +37,7 @@ int main()
     Tree eTree = debuggingTree();
     cout << "Debugging sampler" << endl;
 
-    testSamplerDistribution("test/ValidateSampler",10000,1);
+    testSamplerDistribution("test/ValidateSampler",200000,1);
     testCoinFlip();
 
     cout << "------- END -------" << endl;
