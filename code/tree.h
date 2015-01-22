@@ -71,6 +71,7 @@ public:
 
     // Evaluating likelihood
     double evaluateLogLikeTimesPrior(double, double, int, int);
+    bool isLoglikeInitialised = false;
 
     // Print
     std::string toString();

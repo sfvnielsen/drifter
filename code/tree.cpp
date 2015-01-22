@@ -41,6 +41,7 @@ Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
     //Correct internal number count
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
+    
 }
 
 /**
@@ -355,10 +356,10 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
     if(!(scionP==rootP)){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
-        cout << toString();
+//        cout << toString();
         Node *  scionParentP = cutSubtree(scionP);
-        cout << " -- cutting -- " << endl;
-        cout << toString() <<flush;
+//        cout << " -- cutting -- " << endl;
+//        cout << toString() <<flush;
 
         Node * stockP = this->getRandomStock();
 
@@ -369,9 +370,9 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
         bool unbiased_coinflip = dis(gen);
 
         insertSubtree(stockP, scionP, unbiased_coinflip);
-        cout << " -- inserting -- " << endl;
-        cout << toString();
-//        cout << " -- inserting update -- " << endl;        
+//        cout << " -- inserting -- " << endl;
+//        cout << toString();
+//        cout << " -- inserting update -- " << endl;
 ////        stockP->updateStock2Root(scionP,created);
 //        cout << toString();
 
@@ -383,10 +384,10 @@ double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
         double p_stock = 1.0/n_nodes;
 
         //        return n_nodes/(n_nodes -n_collapsed +n_created);
-        cout << "--- end of a regraft ---"<< endl << endl;
+//        cout << "--- end of a regraft ---"<< endl << endl;
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1
-        cout << "--- end of a regraft ---"<< endl << endl;
+//        cout << "--- end of a regraft ---"<< endl << endl;
         return 1;
     }
     
@@ -553,15 +554,22 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
-
 /**
 * Evaluating log-likelihood x prior of tree
 * - Recurses through tree
 */
 double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, int rho_minus){
-    return rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
+    if (isLoglikeInitialised) {
+        double sum = 0.0;
+        for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+            sum += it->getLogLikeContribution();
+        }
+        return sum;
+    } else {
+        isLoglikeInitialised = true;
+        return rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
+    }
 }
 
 
@@ -659,30 +667,24 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
     //Update Stock
     // start at scions new parent (NB! scion has been moved)
     Node * parentPointer = scionP->getParent();
-
     while ( !(parentPointer->isNCA(oldScionParentP))) {
-        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus));
+        parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
         parentPointer = parentPointer->getParent();
 
     }
-//            cout << "after stock update" << endl;
-//
-//            cout << toString();
 
     //Update Scion
     parentPointer = oldScionParentP;
     while ( !(parentPointer->isNCA(stockP)) ) {
-        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus));
+        parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus);
         parentPointer = parentPointer->getParent();
 
     }
-//            cout << "after scion update" << endl;
-//
-//            cout << toString();
+
     //Update NCA
     if (parentPointer->getParent() == nullptr) {
-        rootP->setLogLikeContribution(rootP->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
+        rootP->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
     } else {
-        parentPointer->setLogLikeContribution(parentPointer->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus));
+        parentPointer->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
     }
 }
