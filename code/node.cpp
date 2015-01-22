@@ -132,7 +132,7 @@ bool Node::removeChild(Node * child) {
             collapsed = true;
         }else{
             parentP->addChild(children.front());
-            collapsed += parentP->removeChild(this);
+            parentP->removeChild(this);
             treeP->removeNode(this);
             collapsed = true;
         }
@@ -511,55 +511,6 @@ string Node::toString() {
  */
 void Node::setNumInternalNodes(int new_num_internal){
     num_internal_nodes = new_num_internal;
-}
-
-void Node::updateScion2Root(Node * scionP, bool anyCollapsed){
-
-    //Leaves in the subtree that is removed, and number of internal nodes
-    list<int> leaves_to_rem = *(scionP->getLeaves() );
-    int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) anyCollapsed;
-
-    if(this!=(treeP->getRoot()) ){
-
-        Node * currentP = this;
-        while (currentP != nullptr) {
-            currentP->setNumInternalNodes(currentP->getNumInternalNodes()-internal_nodes_rem);
-            assert(currentP->getNumInternalNodes()>=0);
-            for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
-                currentP->leaves.remove(*it);
-            }
-            currentP = currentP->getParent();
-        }
-    } else { //If roooooooooot
-        for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
-            this->leaves.remove(*it);
-        }
-        int new_num_int = 0;
-        for (auto it = this->children.begin(); it != this->children.end(); it++) {
-            new_num_int += (*it)->getNumInternalNodes();
-        }
-        if (this->isInternalNode()) {
-            setNumInternalNodes(new_num_int+1);
-        } else {
-            setNumInternalNodes(new_num_int);
-        }
-    }
-}
-
-void Node::updateStock2Root(Node * scionP, bool anyCreated){
-    list<int> leaves_to_add = *(scionP->getLeaves() );
-    int internal_nodes_add = scionP->getNumInternalNodes()+ (int) anyCreated;
-
-    Node * currentP = scionP->getParent();
-        while (currentP != nullptr) {
-            leaves_to_add = *(scionP->getLeaves() );
-            currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
-            currentP->leaves.splice(currentP->leaves.end(), leaves_to_add);
-            currentP->leaves.sort();
-            currentP->leaves.unique();
-            
-            currentP = currentP->getParent();
-        }
 }
 
 bool Node::isNCA(Node * targetP){

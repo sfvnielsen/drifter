@@ -66,7 +66,7 @@ public:
 	Node * getRandomScion();
 	Node * getRandomStock();
 	Node * cutSubtree(Node * ); //Modifies the tree and returns ...
-    int insertSubtree(Node *, Node *, bool); //Modifies the tree and returns change in the number of internal nodes
+    void insertSubtree(Node *, Node *, bool); //Modifies the tree and returns change in the number of internal nodes
 
 
     // Evaluating likelihood
