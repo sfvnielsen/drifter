@@ -37,7 +37,7 @@ int main()
     Tree eTree = debuggingTree();
     cout << "Debugging sampler" << endl;
 
-    testSamplerDistribution("test/ValidateSampler",200000,1);
+    testSamplerDistribution("test/ValidateSampler",1500000,500000);
     testCoinFlip();
 
     cout << "------- END -------" << endl;
@@ -82,7 +82,7 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn){
 
     //Running sampler, num_samples
 //    sampler.run(num_samples);
-    sampler.run(num_samples, 1, num_burn);
+    sampler.run(num_samples,num_burn, 1);
 
     //There are exactly 26 possible trees for a 4 node network
     vector<int> num_occ = vector<int>(26,0);

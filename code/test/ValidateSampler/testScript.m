@@ -19,7 +19,7 @@ h_legend=legend('MCMC estimate','True distr.');
 set(h_legend,'FontSize',16);
 xlabel('Tree (T)','FontSize',16)
 ylabel('P(T|X)','FontSize',16)
-title('1.5m MCMC samples, with 0.5m burn-in','FontSize',20)
+%title('1.5m MCMC samples, with 0.5m burn-in','FontSize',20)
 
 %%
 s = sort(unique(simulated_p));

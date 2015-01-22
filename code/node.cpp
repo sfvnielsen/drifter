@@ -114,6 +114,12 @@ void Node::addChild(Node * childP) {
     //  - Adding the childs pointer to the child list.
     childP->setParent(this);
     children.push_back(childP);
+    
+    //TODO: MAKE DISSAPEAR??
+    list<int> childLeaves = *(childP->getLeaves());
+    leaves.splice(leaves.end(),childLeaves);
+    leaves.sort();
+    leaves.unique();
 }
 
 bool Node::removeChild(Node * child) {
@@ -263,6 +269,12 @@ int Node::updateNumInternalNodes() {
 */
 double Node::evaluateNodeLogLike(double alpha, double beta,
                                  int rho_plus, int rho_minus) {
+    //Never evaluate on leaf nodes
+    if (! isInternalNode()) {
+        loglikelihood_cont = 0.0;
+        return 0.0;
+    }
+    
     double log_like = 0.0;
     double log_prior = 0.0;
 
@@ -305,6 +317,8 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
     // cout << "Like: " << log_like << "  Prior: " << log_prior << endl;
     
+    assert(!isinf(log_like) );
+    assert(!isinf(log_prior) );
     loglikelihood_cont = log_like+log_prior;
     return log_like+log_prior;
 };
@@ -330,6 +344,7 @@ double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
     } else {
         log_like = 0.0;
     }
+//    loglikelihood_cont = log_like;
     return log_like;
 }
 

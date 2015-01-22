@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cstdio>
 #include <random>
+#include <cassert>
 
 using namespace std;
 
@@ -92,12 +93,16 @@ void Sampler::run(int L, int thinning ){
         Tree proposal = lastTree;
 
         double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus); //Try a move
+//        double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
+        assert(!isnan(a));
+        assert(!isinf(propLogLik) );
+        assert(!isinf(lastLogLik) );
 
         if(a>dis(gen)){
             if ( (i%thinning) == 0) {
@@ -140,12 +145,18 @@ void Sampler::run(int L, int burnin, int thinning){
     for (int i=0; i<burnin; i++){
 
         double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus);; //Try a move
+//        double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
         double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
+        assert(!isnan(a));
+        assert(!isinf(propLogLik) );
+        assert(!isinf(lastLogLik) );
+
+        
         if(a>dis(gen)){
             oldTree = proposal;
             lastLogLik = propLogLik;
@@ -158,6 +169,7 @@ void Sampler::run(int L, int burnin, int thinning){
             << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
         }
     }
+    
     likelihoods.clear();
     likelihoods.push_back(lastLogLik);
     chain.clear();

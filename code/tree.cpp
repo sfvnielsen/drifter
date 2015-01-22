@@ -196,6 +196,7 @@ int Tree::InitFlatTree(int num_leaves){
  *
  */
 Tree::Tree(Tree const &old_tree){
+//    cout << "The copy constructor was called" << endl;
     adjacencyListP = old_tree.adjacencyListP;
     nextInternalNodeId = old_tree.nextInternalNodeId;
     isLoglikeInitialised = old_tree.isLoglikeInitialised;
@@ -212,6 +213,7 @@ Tree::Tree(Tree const &old_tree){
 *
 */
 Tree& Tree::operator=(const Tree& other) {
+//    cout << "The copy assignment constructor was called" << endl;
     // check for self-assignment
     if(&other == this)
         return *this;
@@ -563,11 +565,17 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 * - Recurses through tree
 */
 double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, int rho_minus){
+    
     if (isLoglikeInitialised) {
         double sum = 0.0;
         for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+//            double a = it->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
+//            double b = it->getLogLikeContribution();
             sum += it->getLogLikeContribution();
+//            assert(a == b);
+
         }
+//        assert(abs(sum - rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus)) < 1e-12);
         return sum;
     } else {
         isLoglikeInitialised = true;
