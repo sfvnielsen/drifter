@@ -1,7 +1,7 @@
 #ifndef SAMPLER_H
 #define SAMPLER_H
 
-#include "barebones_tree.h"
+#include "tree.h"
 #include <cstdlib>
 
 class Sampler

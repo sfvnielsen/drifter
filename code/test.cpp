@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <dirent.h>
 #include <cmath>
-#include "barebones_tree.h"
+#include "tree.h"
 #include "iofilehandler.h"
 #include "sampler.h"
 #include "time.h"

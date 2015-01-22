@@ -5,7 +5,7 @@
  *      Author: sfvn
  */
 
-#include "barebones_tree.h"
+#include "tree.h"
 
 #include <iostream>
 #include <cmath>

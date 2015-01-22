@@ -7,7 +7,7 @@
  */
 
 #include "node.h"
-#include "barebones_tree.h"
+#include "tree.h"
 
 #include <iostream>
 #include <numeric> // lets us use cumulative sum

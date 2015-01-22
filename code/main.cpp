@@ -11,7 +11,7 @@
 #include <time.h> // ----
 #include <chrono> // chrono::timepoint, chrono::system_clock
 
-#include "barebones_tree.h"
+#include "tree.h"
 #include "sampler.h"
 #include "iofilehandler.h"
 #include <random>
