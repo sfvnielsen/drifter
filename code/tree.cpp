@@ -7,7 +7,6 @@
  */
 
 #include "tree.h"
-
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -311,11 +310,7 @@ void Tree::removeNode(Node * nodeP){
     nodes.remove(*nodeP);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-
 /** Regrafting */
-
 
 /**
  * Modifies tree by random regrafting (Naive implementation)

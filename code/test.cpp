@@ -1,10 +1,11 @@
 /**
  *  Project:        Parmugit
- *  Class:          Test script, not part of the main program
+ *  Class:          Test script, not part of the main program and only meant for diagnostics and sparsely commented.
  *  Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
  *  Affiliation:    Technical University of Denmark
  *  Date:           January 2015
  */
+
 #include <random>
 #include <iostream>
 #include <fstream>
@@ -39,24 +40,24 @@ int main()
     pair<int,int> g4 (1,3);
     pair<int,int> g5 (2,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
-    
+
     Adj_list adj = Adj_list(data_edge_list);
 
     Tree eTree = Tree(&adj);
-    
+
     cout << "Does copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1)
     << " == " << Tree(eTree).evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-    
-    
+
+
     Tree tempTest = Tree(eTree);
     tempTest.regraft(0.5, 0.5, 1, 1);
-    
+
     cout << "Does regraft + copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1)
     << " == " << tempTest.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl << endl;
-    
 
-    
-    
+
+
+
     cout << "Debugging sampler" << endl;
     testSamplerDistribution("test/ValidateSampler",200000,50000);
 //    testSamplerDistribution("test/ValidateSampler",1500000,500000);
@@ -248,7 +249,7 @@ int testLikelihood(){
             test_tree.writeMatlabFormat(mat_out_file);
             // Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test..." << endl << flush ;
-            
+
             test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
             double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
             cout << "llike_test: " << llike_test << " == " << llike_true << " True" <<endl;

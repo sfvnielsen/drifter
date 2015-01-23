@@ -17,13 +17,11 @@
 #include <cmath> //lgamma and other math functions
 #include <stdexcept>
 
-
 using namespace std;
 
-/** Constructors
- *
+/**
+ * Constructors
  */
-
 Node::Node(){}
 
 /**

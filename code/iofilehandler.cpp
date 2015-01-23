@@ -20,9 +20,8 @@ using namespace std;
 IoFileHandler::IoFileHandler(): write(0) {}
 
 /**
- New filehandler - sets filename, and if file is used for read or write
+* New filehandler - sets filename, and if file is used for read or write
 */
-
 IoFileHandler::IoFileHandler(string new_filename): filename(new_filename) {
  // check that filename is valid (if read is performed)
     ifstream inStream(filename);
@@ -37,7 +36,6 @@ IoFileHandler::IoFileHandler(string new_filename): filename(new_filename) {
  * Possiblity of reading test case
  * Only used for testing/debugging
  */
-
 IoFileHandler::IoFileHandler(string new_filename, bool test):
 filename(new_filename) {
     ifstream inStream(filename);
@@ -142,9 +140,9 @@ void IoFileHandler::setLlike(double new_llike) {
 
 
 /**
- Reads in real network data
-    - Assumes that file is an edge list
-    - If data-field in object is non-empty function does nothing and returns 1
+*Reads in real network data
+*   - Assumes that file is an edge list
+*   - If data-field in object is non-empty function does nothing and returns 1
 */
 int IoFileHandler::read_graph() {
     if(!data_edge_list.empty()) {
@@ -165,10 +163,8 @@ int IoFileHandler::read_graph() {
 
 
 /**
- Reads test cases from MATLAB testing framework
-
+* Reads test cases from MATLAB testing framework
 */
-
 int IoFileHandler::read_test_case() {
     if(!data_edge_list.empty() | !tree_edge_list.empty() |
        !leaf_data_relation.empty()) {
@@ -226,12 +222,8 @@ int IoFileHandler::read_test_case() {
 
 
 /**
-
-Print functions
-
+*Print function
 */
-
-
 string IoFileHandler::toDataEdgeListString() {
     string result = "";
     for (auto it = data_edge_list.begin(); it != data_edge_list.end(); ++it) {
