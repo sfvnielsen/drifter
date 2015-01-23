@@ -1,12 +1,15 @@
-//
-//  adjacency_list.cpp
-//  gift
-//
-//  Created by Jesper Hinrich on 09/01/15.
-//  Copyright (c) 2015 Jesper Hinrich. All rights reserved.
-//
+/**
+    Project:        Parmugit
+    Class:          Adj_list
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
 
 #include "adjacency_list.h"
+#include <string>
+#include <vector>
+#include <list>
 
 using namespace std;
 
