@@ -1,9 +1,9 @@
 /**
-    Project:        Parmugit (main file)
-    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
-    Affiliation:    Technical University of Denmark
-    Date:           January 2014
-*/
+ *  Project:        Parmugit (main file)
+ *  Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+ *  Affiliation:    Technical University of Denmark
+ *  Date:           January 2015
+ */
 
 #include <iostream>
 #include <time.h> // ----
