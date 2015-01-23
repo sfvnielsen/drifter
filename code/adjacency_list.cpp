@@ -7,119 +7,59 @@
 //
 
 #include "adjacency_list.h"
-#include <iostream>
-#include <algorithm> //std::binary_search, std::sort
 
 using namespace std;
 
-Adj_list::Adj_list(){}
-
 /**
- * N size of leaves
- *
+ * Constructing the adjacency matrix from an adjacency list passed as list of pairs of its.
  */
 Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
-    
+
     list<int> leaves;
+
     // insert all the indexes from the edge list into leaves
     for (list<pair<int,int>>::iterator it = edge_list.begin(); it != edge_list.end(); it++){
         leaves.push_back(it->first);
         leaves.push_back(it->second);
     }
-    
+
     // Find only the unique elements
     leaves.sort();
     leaves.unique();
     int N = (int) leaves.size();
-    
-    //Init. data structure
-    adjacency_list = vector<vector<int>>(N);
-    
-    //Construct adjacency list
+
+    //Construct adjacency_matrix
+    adjacency_matrix = vector<vector<bool>>(N,vector<bool>(N,false));
     for (list<pair<int,int>>::iterator it = edge_list.begin();
          it != edge_list.end(); it++){
-            addUndirectedEdge(it->first, it->second);
+            adjacency_matrix[it->first][it->second] = true;
+            adjacency_matrix[it->second][it->first] = true;
     }
-    for (auto it = adjacency_list.begin(); it != adjacency_list.end(); it++) {
-        sort(it->begin(),it->end());
-    }
-    
-    //Construct adjacency_matrix (set the value to true if a connection
-    //  exists in the adjacency list)
-    adjacency_matrix = vector<vector<bool>>(N,vector<bool>(N,false));
-    for (auto i = 0; i < N; i++) {
-        for (auto it = adjacency_list[i].begin(); it != adjacency_list[i].end(); it++) {
-            adjacency_matrix[i][*it] = true;
-            adjacency_matrix[*it][i] = true;
-        }
-    }
-
-};
-/*
- * Adds an directed edge in the adjacency list
- */
-int Adj_list::addDirectedEdge(int from, int to){
-    //adjacency_list[from].push_back(neighbor(to));
-    adjacency_list[from].push_back(to);
-    return 0;
 }
 
-/*
- * Adds an undirected edge, by adding two opposit directed edges
- */
-int Adj_list::addUndirectedEdge(int from, int to){
-    addDirectedEdge(from, to);
-    addDirectedEdge(to, from);
-    return 0;
-};
 /**
- * NOT IMPLEMENTED
- */
-int Adj_list::removeDirectedEdge(int from, int to){
-    return 0;
-};
-/**
- * REQUIRES IMPLEMENTATION OF removeDirectedEdge!
- */
-int Adj_list::removeUndirectedEdge(int from, int to){
-    removeDirectedEdge(from, to);
-    removeDirectedEdge(to, from);
-    return 0;
-};
-/**
- * Search for an element (TODO: in a sorted list)
+ * Query the connection between two nodes.
  */
 bool Adj_list::isConnected(int current, int target){
-    try {
         return adjacency_matrix[current][target];
+}
 
-        //Binary search for element
-//        return binary_search(adjacency_list[current].begin(),
-//                             adjacency_list[current].end(), target);
-    // If something goes wrong, tell why, an make sure that the input given were valid
-    } catch (exception e) {
-        if (current < 0 || current > (int) adjacency_list.size()-1 ||
-            target < 0 || target > (int) adjacency_list.size()-1) {
-            cout << "ERROR: Trying to look up element beyond adjacency list " << endl;
-            cout << "current: " << current << " , target: " << target <<
-            " : adj_list_size: " << (int) adjacency_list.size() << endl;
-        }
-        throw e;
-    }
-    
-};
-
+/**
+ * Make a string of all links
+ */
 string Adj_list::toString(){
     string s = "adj:\n";
-    for(vector<list<int>>::size_type i = 0; i != adjacency_list.size(); i++) {
-    /* std::cout << someVector[i]; ... */
-        for (auto snd = adjacency_list[i].begin(); snd != adjacency_list[i].end(); snd++){
-            s += "  ("+to_string(i)+","+to_string(*snd)+")\n";
+    for(int i = 0; i != (int) adjacency_matrix.size(); i++) {
+        for(int j = 0; j != (int) adjacency_matrix.size(); j++) {
+            s += "  ("+to_string(i)+","+to_string(j)+")\n";
         }
     }
     return s;
 }
 
+/**
+ * Get the number of nodes.
+ */
 int Adj_list::getSize(){
     return (int) adjacency_matrix.size();
 }

@@ -1,41 +1,51 @@
+/**
+    Project:        Parmugit
+    Class:          Sampler
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
+
 #ifndef SAMPLER_H
 #define SAMPLER_H
 
 #include "tree.h"
+#include <random>
 #include <cstdlib>
 
 class Sampler
 {
     public:
+        // Constructors
         Sampler();
-        Sampler(Tree T, double , double , int , int );
-        // Initialize with the naive tree building in the adjacency matrix.
-        Sampler(std::list<std::pair<int,int>> , double ,double , int , int );
+        Sampler(Tree,double,double,int,int);
+        Sampler(std::list<std::pair<int,int>>,double,double,int,int);
 
-        void run(int); // run int samples
-        void run(int,int); // run with thinning
-        void run(int, int, int); // run burn-in (and call above after)
-        Tree getLast();
-        double getLastLikelihood();
+        // Various Run methods.
+        void run(int);
+        void run(int,int);
+        void run(int,int,int);
 
+        // Accessing the end of the chain.
+        Tree getLastTree();
+        double getLastLogLikelihood();
+
+        // Writing the results to files.
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
-    
-        std::list<Tree> chain;
-        std::list<double> likelihoods;
-    protected:
 
     private:
         // Data storage
         Adj_list adjacencyList;
         double lastLogLik;
+        std::list<Tree> chain;
+        std::list<double> likelihoods;
 
         // Hyperparameters:
         double alpha;
         double beta;
         int rho_plus;
         int rho_minus;
-
 };
 
 #endif // SAMPLER_H
