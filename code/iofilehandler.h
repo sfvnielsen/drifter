@@ -1,3 +1,11 @@
+/**
+    Project:        Parmugit
+    Class:          IoFileHandler
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
+
 #ifndef IOFILEHANDLER_H
 #define IOFILEHANDLER_H
 
@@ -43,8 +51,6 @@ class IoFileHandler
 
         // Print functions
         std::string toDataEdgeListString();
-        // Write out credability tree?
-        // write out other results from tests?
 
     private:
         bool write;

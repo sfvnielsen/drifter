@@ -1,3 +1,11 @@
+/**
+    Project:        Parmugit
+    Class:          IoFileHandler
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
+
 #include "iofilehandler.h"
 #include <fstream>
 #include <stdexcept>
@@ -26,8 +34,9 @@ IoFileHandler::IoFileHandler(string new_filename): filename(new_filename) {
 }
 
 /**
- Testing filehandler
-*/
+ * Possiblity of reading test case
+ * Only used for testing/debugging
+ */
 
 IoFileHandler::IoFileHandler(string new_filename, bool test):
 filename(new_filename) {
