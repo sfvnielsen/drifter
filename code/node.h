@@ -1,13 +1,12 @@
-/*
- * node.h
- *
- *  Created on: Jan 9, 2015 as part of parmugit-project
- *      Author: Jesper, Julian and Søren
- */
+/**
+    Project:        Parmugit
+    Class:          Node
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
 
 #include <list>
-
-
 #include "adjacency_list.h"
 
 #ifndef NODE_H_
@@ -32,7 +31,7 @@ public:
     std::list<int> * getLeaves();
     int getNumInternalNodes();
     void setNumInternalNodes(int);
-    
+
     // Children methods
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);

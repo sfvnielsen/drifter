@@ -1,10 +1,9 @@
-//============================================================================
-// Name        : main.cpp
-// Author      : Julian
-// Version     :
-// Copyright   : It is OURS!!
-// Description : Hello World in C++, Ansi-style
-//============================================================================
+/**
+    Project:        Parmugit (main file)
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
 
 #include <iostream>
 #include <cstdlib> // setting random seed
