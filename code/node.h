@@ -6,7 +6,7 @@
  */
 
 #include <list>
-#include <cmath>
+
 
 #include "adjacency_list.h"
 
@@ -23,8 +23,8 @@ public:
 
     void copyFrom(Tree *, Node const & old_node);
 
-    void setParent(Node *);
    	Node * getParent();
+    void setParent(Node *);
 
     int getNodeId();
     void setNodeId(int);

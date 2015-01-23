@@ -1,6 +1,6 @@
 #include "sampler.h"
 #include <iostream>
-#include <numeric>
+//#include <numeric>
 #include <dirent.h>
 #include <fstream>
 #include <cstdio>

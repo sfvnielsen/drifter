@@ -3,34 +3,41 @@
  *
  *  Created on: Jan 9, 2015 as part of parmugit project
  *      Authors: Jesper, Julian and Søren
-*
+ *
  */
 
 #include "node.h"
 #include "tree.h"
 
 #include <iostream>
-#include <numeric> // lets us use cumulative sum
+#include <numeric>  // lets us use cumulative sum
 #include <cassert> // for assert statements
-#include <random>
+#include <random> // C++11 random generator
+#include <cmath> //lgamma and other math functions
 
 
 using namespace std;
 
 /** Constructors
-*
-*/
+ *
+ */
 
 Node::Node(){}
 
+/**
+ * Initialises a empty node beloning to an already constructed tree
+ */
 Node::Node(Tree * tP): treeP(tP){
     // Trivial constructor.
     parentP = nullptr;
 }
 
+/**
+ * Initialises a node in a tree with a specified id (which should be unique)
+ * Leafs ids should be in range 0 to N
+ * Internal node ids should be negative.
+ */
 Node::Node(Tree * tP, int L): treeP(tP) {
-    // Construct a node with the leaf L
-    // This defines a leaf-node
     parentP = nullptr;
     num_internal_nodes = 0;
     nodeId = L;
@@ -41,12 +48,14 @@ Node::Node(Tree * tP, int L): treeP(tP) {
 * Recursively copy nodes from another tree.
 */
 void Node::copyFrom(Tree * tP, Node const & old_node){
+    //Copies old fields to new node
     treeP = tP;
     nodeId = old_node.nodeId;
     leaves = old_node.leaves;
     num_internal_nodes = old_node.num_internal_nodes;
     loglikelihood_cont = old_node.loglikelihood_cont;
-
+    
+    //Recurses through the children of the current node
     for (auto it = old_node.children.begin(); it != old_node.children.end(); it++) {
         // add new node
         Node * new_child = treeP->addNode();
@@ -58,75 +67,93 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
 }
 
 /**
- * Parent
+ * Returns a pointer to the nodes parent
  */
-void Node::setParent(Node * new_parentP) {
-    parentP = new_parentP;
-}
-
 Node * Node::getParent() {
     return parentP;
 }
 
 /**
-* Node Id
-*/
+ * Changes the parent of the node
+ */
+void Node::setParent(Node * new_parentP) {
+    parentP = new_parentP;
+}
 
+/**
+* Returns node ID
+*/
 int Node::getNodeId(){
     return nodeId;
 }
+/**
+ * Changes the node id to the input value
+ */
 void Node::setNodeId(int new_id){
     nodeId = new_id;
 }
 
 /**
- Get leaves
-*/
+ * Returns a list of pointers to the leaf nodes of the current node
+ */
 list<int> * Node::getLeaves() {
     assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
     return &leaves;
 }
 
 /**
- Get Number of internal nodes
+ * Returns the number of internal nodes at this node
+ * IFF leaf node:       always zero (0) internal nodes
+ * IFF internal node:   number of internal nodes below this + 1
  */
 int Node::getNumInternalNodes(){
     return num_internal_nodes;
 }
 
-
-
-/** Children functions
-*
-*/
-
+/**
+ * Returns a list of pointers to all the current nodes children
+ */
 list<Node *> Node::getChildren(){
     return children;
 }
 
+/**
+ * Replaces the current children Node * list with the new_children list
+ *      NOTE: This function simply changes the list, it does not update
+ *            anything further!
+ */
 void Node::setChildren(list<Node *> new_children){
     children = new_children;
 }
 
-void Node::addChild(Node * childP) {
-    // Add a child by:
-    //  - Setting the childs parent pointer.
-    //  - Adding the childs pointer to the child list.
-    childP->setParent(this);
-    children.push_back(childP);
+/**
+ * Add a new child to the current nodes children list, and changes the parent
+ *  of the added node.
+ */
+void Node::addChild(Node * new_childP) {
+    new_childP->setParent(this);
+    children.push_back(new_childP);
 }
 
+/**
+ * Removes the provided child as a child the current node. And maintains a 
+ *  valid tree structure by collapsing the node if it only has 1 child left
+ */
 bool Node::removeChild(Node * child) {
     bool collapsed = false;
     children.remove(child);
-    // if there is only one child left: collapse node.
+    
+    //IFF: The current node only have two children, it is collapsed as every
+    //     internal node must have atleast 2 children)
     if(1==(int) children.size()){
-        if(this == (treeP->getRoot()) ){ //If the node is the tree root
+        //If the node is the tree root, the single child should be the new root
+        if(this == (treeP->getRoot()) ){
             children.front()->setParent(nullptr);
             treeP->setRootP(children.front());
             treeP->removeNode(this);
             collapsed = true;
         }else{
+        //Collaps this node, and adds its child to the grandparent
             parentP->addChild(children.front());
             parentP->removeChild(this);
             treeP->removeNode(this);
@@ -137,50 +164,53 @@ bool Node::removeChild(Node * child) {
 }
 
 /**
-* Samples random node from subtree rooted at this node
-* - NB! Including root node!!
-* - chooses internal nodes with weight 2 and leaves with weight 1
+* Recursively samples a random node from subtree rooted at this node, if called
+*  on the root a random node from the entire tree is sampled.
+*  
+* Internal nodes are sampled with weight two (2), and leaf nodes are sampled
+*    with weight one (1) . 
+*
+* The reason for this weighting is that at internal nodes a scion can be inserted
+*  as either a child or a sibling, where as at leaf nodes a scion can only be
+*  inserted as a sibling (leaf nodes have no children).
 */
 Node * Node::getRandomDescendant() {
-    if (isInternalNode()){
-        list<Node *> node_list = getChildren();
-        list<int> subtree_weight;
-        for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
+    
+    if (!isInternalNode()) {
+        return this;
+    }
+    
+    //If it is an internal node
+    list<Node *> node_list = getChildren();
+    list<int> subtree_weight;
+    for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
         // Each subtree has weight according to two times the number of
         // internal nodes plus the number of leaves
-            assert((*it)->getNumInternalNodes() == 0 || (*it)->isInternalNode());
-            assert((*it)->getNumInternalNodes()> 0 || !(*it)->isInternalNode());
-            subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
+        assert((*it)->getNumInternalNodes() == 0 || (*it)->isInternalNode());
+        assert((*it)->getNumInternalNodes()> 0 || !(*it)->isInternalNode());
+        subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
                                  (int)(((*it)->getLeaves())->size()) );
-        }
-        int sum_weight = (int)((this->getLeaves())->size())
-                          +2*this->getNumInternalNodes();
-        list<double> p_vals; // probability vector for each node + root
-        for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
-            p_vals.push_back((double)*it/sum_weight);
-        }
-
-        p_vals.push_back((double)2/sum_weight); // root probability
-        node_list.push_back(this);
-
-        // assert that p_vals sums to 1
-        double p_val_sum = 0;
-        p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
-/*        if(!(abs(p_val_sum-1.0) < 1e-12))
-            cout << treeP->toString();
-*/
-        assert(abs(p_val_sum-1.0)<1e-12);
-
-
-        // Sample one of the nodes
-        Node * sampled_node = multinomialSampling(node_list,p_vals);
-        if (sampled_node!=this) { // recurse into subtree rooted at node
-            return sampled_node->getRandomDescendant();
-        } else { // else return this node
-            return this;
-        }
-
-    } else { // if we are at leaf node choose that
+    }
+    int sum_weight = (int)((this->getLeaves())->size())
+    +2*this->getNumInternalNodes();
+    list<double> p_vals; // probability vector for each node + root
+    for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
+        p_vals.push_back((double)*it/sum_weight);
+    }
+    
+    p_vals.push_back((double)2/sum_weight); // root probability
+    node_list.push_back(this);
+    
+    // assert that p_vals sums to 1
+    double p_val_sum = 0;
+    p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
+    assert(abs(p_val_sum-1.0)<1e-12);
+    
+    // Sample one of the nodes
+    Node * sampled_node = multinomialSampling(node_list,p_vals);
+    if (sampled_node!=this) { // recurse into subtree rooted at node
+        return sampled_node->getRandomDescendant();
+    } else { // else return this node
         return this;
     }
 }
@@ -192,6 +222,7 @@ Node * Node::getRandomDescendant() {
 
 Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
     list<double> cumulative_sum(p_vals.size(),0);
+    
     // finding cumulative sum (partial sum) of p_vals
     partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
 
