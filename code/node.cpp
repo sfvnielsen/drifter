@@ -15,6 +15,7 @@
 #include <cassert> // for assert statements
 #include <random> // C++11 random generator
 #include <cmath> //lgamma and other math functions
+#include <stdexcept>
 
 
 using namespace std;

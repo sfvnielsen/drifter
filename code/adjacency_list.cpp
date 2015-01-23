@@ -10,8 +10,12 @@
 #include <string>
 #include <vector>
 #include <list>
-
 using namespace std;
+
+/**
+ * Dummy constructor for an empty adjacency list.
+ */
+Adj_list::Adj_list(){}
 
 /**
  * Constructing the adjacency matrix from an adjacency list passed as list of pairs of its.

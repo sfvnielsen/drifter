@@ -13,6 +13,8 @@
 #include <fstream>
 #include <cstdio>
 #include <cassert>
+#include <stdexcept>
+
 
 using namespace std;
 /**
