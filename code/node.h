@@ -31,7 +31,8 @@ public:
 
     std::list<int> * getLeaves();
     int getNumInternalNodes();
-
+    void setNumInternalNodes(int);
+    
     // Children methods
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);
@@ -41,6 +42,7 @@ public:
     // Node random sampling
     Node * getRandomDescendant();
     int updateNumInternalNodes();
+
     void updateLeaves();
 
     // evaluating likelihood
@@ -64,9 +66,7 @@ public:
     double loglikelihood_cont=0;
     double getLogLikeContribution();
     void setLogLikeContribution(double);
-    void setNumInternalNodes(int);
-    bool isNCA(Node *);
-    bool isSubsetOf(Node *);
+
 private:
     Node * parentP;
 	int num_internal_nodes; //Is need for stock sampling
