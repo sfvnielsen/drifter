@@ -1,10 +1,10 @@
 /**
-    Project:        Parmugit
-    Class:          Sampler
-    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
-    Affiliation:    Technical University of Denmark
-    Date:           January 2014
-*/
+ *  Project:        Parmugit
+ *  Class:          Sampler
+ *  Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+ *  Affiliation:    Technical University of Denmark
+ *  Date:           January 2015
+ */
 
 #ifndef SAMPLER_H
 #define SAMPLER_H
@@ -33,13 +33,15 @@ class Sampler
         // Writing the results to files.
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
+    
+        // Data storage, publicity need for test function.
+        std::list<Tree> chain;
+        std::list<double> likelihoods;
 
     private:
         // Data storage
         Adj_list adjacencyList;
         double lastLogLik;
-        std::list<Tree> chain;
-        std::list<double> likelihoods;
 
         // Hyperparameters:
         double alpha;

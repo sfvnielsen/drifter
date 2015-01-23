@@ -1,8 +1,9 @@
-/*
- * tree.cpp
- *
- *  Created on: Jan 6, 2015
- *      Author: sfvn
+/**
+ *  Project:        Parmugit
+ *  Class:          Tree
+ *  Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+ *  Affiliation:    Technical University of Denmark
+ *  Date:           January 2015
  */
 
 #include "tree.h"
