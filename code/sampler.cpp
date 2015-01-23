@@ -1,3 +1,11 @@
+/**
+    Project:        Parmugit
+    Class:          Sampler
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
+
 #include "sampler.h"
 #include <iostream>
 //#include <numeric>
@@ -7,9 +15,6 @@
 #include <cassert>
 
 using namespace std;
-
-
-
 /**
  * Initialize with a tree already constructed.
  * The Adjacency matrix must be kept in memory outside the function.
@@ -46,7 +51,7 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int 
 
 
 /**
-* Running the Metropolis hastings sampler
+* Running the Metropolis Hastings sampler
 * @param L: number of iterations
 */
 void Sampler::run(int L){
@@ -119,6 +124,7 @@ void Sampler::run(int L, int thinning ){
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
+        // Following asserts do not work for some compilers
         //assert(!isnan(a));
         //assert(!isinf(propLogLik) );
         //assert(!isinf(lastLogLik) );
@@ -150,6 +156,7 @@ void Sampler::run(int L, int thinning ){
 /**
 * Running the Metropolis hastings sampler with burnin and thinning
 * @param L: number of iterations
+* NB! Calls above run method after burn-in
 */
 void Sampler::run(int L, int burn_in, int thinning){
     Tree oldTree = chain.back();
@@ -173,6 +180,7 @@ void Sampler::run(int L, int burn_in, int thinning){
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
+        // Following asserts do not work for some compilers
         //assert(!isnan(a));
         //assert(!isinf(propLogLik) );
         //assert(!isinf(lastLogLik) );
@@ -202,7 +210,7 @@ void Sampler::run(int L, int burn_in, int thinning){
 }
 
 /**
-* Get the last LogLikelihood times prior (non-normalized posterior)
+* Get the last Log(Likelihood times prior) (non-normalized posterior)
 */
 double Sampler::getLastLogLikelihood(){
     return likelihoods.back();
@@ -220,7 +228,7 @@ Tree Sampler::getLastTree(){
 */
 void Sampler::writeResults(std::string folder) {
 
-    // If folder doesnt exist - create it
+    // If folder doesnt exist - create it yourself!
     DIR *dir;
     if ((dir = opendir (folder.c_str())) == NULL) {
         throw runtime_error("Target directory for writing results not found");
@@ -265,5 +273,3 @@ void Sampler::writeLogLikelihood(string folder){
         out_file << *it << " ";
     }
 }
-
-
