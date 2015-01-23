@@ -8,7 +8,8 @@
 #include "tree.h"
 
 #include <iostream>
-#include <alogrithm>
+#include <fstream>
+#include <algorithm>
 #include <cmath>
 #include <cassert>
 //#include <numeric>
@@ -293,7 +294,7 @@ Node * Tree::getNode(int node_id){
     for(list<Node>::iterator it = nodes.begin();
         it != nodes.end(); it++){
 
-        if (it->getNodeId() == leaf_id) {
+        if (it->getNodeId() == node_id) {
             return &(* it);
         }
 

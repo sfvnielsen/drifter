@@ -14,6 +14,7 @@
 #include <cassert> // for assert statements
 #include <random> // C++11 random generator
 #include <cmath> //lgamma and other math functions
+#include <stdexcept>
 
 
 using namespace std;
@@ -54,7 +55,7 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
     leaves = old_node.leaves;
     num_internal_nodes = old_node.num_internal_nodes;
     loglikelihood_cont = old_node.loglikelihood_cont;
-    
+
     //Recurses through the children of the current node
     for (auto it = old_node.children.begin(); it != old_node.children.end(); it++) {
         // add new node
@@ -143,13 +144,13 @@ void Node::addChild(Node * new_childP) {
 }
 
 /**
- * Removes the provided child as a child the current node. And maintains a 
+ * Removes the provided child as a child the current node. And maintains a
  *  valid tree structure by collapsing the node if it only has 1 child left
  */
 bool Node::removeChild(Node * child) {
     bool collapsed = false;
     children.remove(child);
-    
+
     //IFF: The current node only have two children, it is collapsed as every
     //     internal node must have atleast 2 children)
     if(1==(int) children.size()){
@@ -173,9 +174,9 @@ bool Node::removeChild(Node * child) {
 /**
 * Recursively samples a random node from subtree rooted at this node, if called
 *  on the root a random node from the entire tree is sampled.
-*  
+*
 * Internal nodes are sampled with weight two (2), and leaf nodes are sampled
-*    with weight one (1) . 
+*    with weight one (1) .
 *
 * The reason for this weighting is that at internal nodes a scion can be inserted
 *  as either a child or a sibling, where as at leaf nodes a scion can only be
@@ -185,11 +186,11 @@ Node * Node::getRandomDescendant() {
     if (!isInternalNode()) {
         return this;
     }
-    
+
     //Otherwise it is an internal node
     list<Node *> node_list = getChildren();
     list<int> subtree_weight;
-    
+
     // Each child is a subtree and it weight is calculated and stored for each subtree (child)
     for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
         subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
@@ -197,7 +198,7 @@ Node * Node::getRandomDescendant() {
         //Checks for consistency in isInternal
         assert((*it)->getNumInternalNodes() == 0 || (*it)->isInternalNode());
         assert((*it)->getNumInternalNodes()> 0 || !(*it)->isInternalNode());
-        
+
     }
     //The weights summes to the weight of the subtree rooted at the current node
     int sum_weight = (int)((this->getLeaves())->size())+
@@ -207,15 +208,15 @@ Node * Node::getRandomDescendant() {
     for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
         p_vals.push_back((double)*it/sum_weight);
     }
-    
+
     p_vals.push_back((double)2/sum_weight); // Root probability added
     node_list.push_back(this);
-    
+
     // assert that p_vals sums to 1
     double p_val_sum = 0;
     p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
     assert(abs(p_val_sum-1.0)<1e-12);
-    
+
     // Sample from this distribution
     Node * sampled_node = multinomialSampling(node_list,p_vals);
     if (sampled_node!=this) {
@@ -233,10 +234,10 @@ Node * Node::getRandomDescendant() {
  */
 Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
     list<double> cumulative_sum(p_vals.size(),0);
-    
+
     // Finding cumulative sum (partial sum) of p_vals
     partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
-    
+
     // check that p_vals is valid
     assert(abs(cumulative_sum.back()-1.0 < 1e-12));
     assert(node_list.size() == p_vals.size());
@@ -258,7 +259,7 @@ Node *  multinomialSampling(list<Node *> node_list,list<double> p_vals)  {
 }
 
 /**
- * Update leaves list at each node in tree, by asking the nodes children for 
+ * Update leaves list at each node in tree, by asking the nodes children for
  *  their leaves and combining them as the leaves list for the current node.
  *
  * Recurses through all nodes below.
@@ -272,7 +273,7 @@ void Node::updateLeaves(){
         for (auto it = children.begin(); it != children.end(); it++) {
             Node * childP = *it;
             childP->updateLeaves(); //Make sure the childs leafs are updated
-            
+
             //For each child copy the child list to this node.
             // NOTE: Using splices removes the elements from the list.
             list<int> childLeaves = *(childP->getLeaves());
@@ -300,7 +301,7 @@ int Node::updateNumInternalNodes() {
     } else { //It is a leaf
         num_internal_nodes = 0;
     }
-    
+
    return num_internal_nodes;
 }
 
@@ -322,10 +323,10 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
         loglikelihood_cont = 0.0;
         return 0.0;
     }
-    
+
     double log_like = 0.0;
     double log_prior = 0.0;
-    
+
     //Count parameter pairs, get number of links and possible links
     list<pair<int,int>> allCountPairs = this->getCountsAll();
     int num_links, num_pos_links;
@@ -339,7 +340,7 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                         num_pos_links-num_links+rho_minus)-
                         logbeta(rho_plus,rho_minus);
     }
-    
+
     // Prior contribution for each node
     if (abs(alpha-0) < 1e-10) { //TODO: Add special case when alpha = 0!
         throw runtime_error("Prior contribution not implemented for alpha = 0");
@@ -366,10 +367,10 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                 -log_diff(lgamma_ratio(num_leaves_total,beta),
                 lgamma_ratio(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
-    
+
 //    assert(!isinf(log_like) ); //isinf() not working for some compilers
 //    assert(!isinf(log_prior) );
-    
+
     //Caches loglikelihood_cont, which is the non-normalised posterior
     loglikelihood_cont = log_like+log_prior;
     return log_like+log_prior;
@@ -482,7 +483,7 @@ bool Node::operator==( const Node &rhs ) const {
 
 /**
  * Tests if two subtrees are equal, defined as when all internal nodes (below) the
- *  original tree have the same children as the internal nodes (below) 
+ *  original tree have the same children as the internal nodes (below)
  *  in the "copy" tree.
  *
  * Also symmetric subtree structure is allowed, as long as each node furfills the
