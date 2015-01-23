@@ -180,7 +180,7 @@ Node * Node::getRandomDescendant() {
         return this;
     }
     
-    //If it is an internal node
+    //Otherwise it is an internal node
     list<Node *> node_list = getChildren();
     list<int> subtree_weight;
     for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
