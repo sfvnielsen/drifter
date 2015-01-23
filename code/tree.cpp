@@ -8,6 +8,7 @@
 #include "tree.h"
 
 #include <iostream>
+#include <alogrithm>
 #include <cmath>
 #include <cassert>
 //#include <numeric>
@@ -17,17 +18,20 @@ using namespace std;
 
 /**
  * Construct flat tree from number of leaves
+ * - i.e. Root has only leaves as children
  */
 Tree::Tree(Adj_list * AP): nextInternalNodeId(0) {
     isLoglikeInitialised = false;
     adjacencyListP = AP;
     InitFlatTree(AP->getSize() );
+    // recurses through tree and updates cached values
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
 }
 
 /**
  * Tree constructor choice
+ * - choose between flat and binary tree
  */
 Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
     isLoglikeInitialised = false;
@@ -37,9 +41,7 @@ Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
     } else { //Flat tree
         InitFlatTree(AP->getSize());
     }
-    //TODO: Incorperate N leaves/split tree
-
-    //Correct internal number count
+    //Assure correct node fields by recursion through tree
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
 
@@ -48,6 +50,7 @@ Tree::Tree(Adj_list * AP, string initType): nextInternalNodeId(0) {
 /**
 * Special test constructor
 * (First element in tree_struct_graph must contain root)
+* NB!: Only used to pass likelihood test in debugging phase
 */
 Tree::Tree(list<pair<int,int>> tree_struct_graph,
            vector<int> data_leaf_relation, Adj_list * adj_list): nextInternalNodeId(0) {
@@ -90,10 +93,8 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
 
 
     }
-
     //Updates internal count.
     rootP->updateNumInternalNodes();
-
 
     /*
      * For each leaf node, correct the leaf ID, so it correspond to the data ID
@@ -114,17 +115,17 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
 }
 
 /**
- * Initialises the data in a binary tree structure
+ * Initializes the data in a binary tree structure
  */
 int Tree::InitBinaryTree(int num_leaves){
-    setRootP(makeNleafTree(0, num_leaves -1 ,2) );
+    setRootP(makeNsplitTree(0, num_leaves -1 ,2) );
     return 0;
 }
 
 /**
- *
+ * Makes N-split Tree s.t. each split is into N nodes (if possible)
  */
-Node * Tree::makeNleafTree(int a, int b, int N){
+Node * Tree::makeNsplitTree(int a, int b, int N){
 
     //If (b-a) < N, we are a leaf level in the tree (or just above).
     if ((b-a) < N) {
@@ -160,9 +161,9 @@ Node * Tree::makeNleafTree(int a, int b, int N){
         Node * new_child;// = makeNleafTree(a, (b-a)/N+a, N);;
         for (int i = 0; i < N; i++) {
             if (i == N-1){
-                new_child = makeNleafTree(i*((b-a+1)/N)+a, b, N);
+                new_child = makeNsplitTree(i*((b-a+1)/N)+a, b, N);
             } else {
-                new_child = makeNleafTree(i*((b-a+1)/N)+a, (i+1)*((b-a+1)/N)+a-1, N);
+                new_child = makeNsplitTree(i*((b-a+1)/N)+a, (i+1)*((b-a+1)/N)+a-1, N);
             }
 
             parent->addChild(new_child);
@@ -173,51 +174,48 @@ Node * Tree::makeNleafTree(int a, int b, int N){
 
 /**
  * Initialise a flat treee structure
+ *  NB! Initialisation step, here init is worse case for parameters (flat tree)
+ *  - Add a new node for each leaf and add it as a child of root
  */
 int Tree::InitFlatTree(int num_leaves){
-    //Initialisation step, here init is worse case for parameters (flat tree).
-    // Add a new Node for each leaf and add is as a child of root
+    // add new nodes to tree
     nodes.push_back(Node(this,getNextInternalNodeId()));
     rootP = &(nodes.back());
 
-
+    // add nodes as children of root
     for (int i = 0; i < num_leaves; i++){
         nodes.push_back(Node(this,i));
         rootP->addChild(&(nodes.back()));
     }
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
-
     return 0;
 }
 
 /**
  * Copy constructor
- *
  */
 Tree::Tree(Tree const &old_tree){
-//    cout << "The copy constructor was called" << endl;
     adjacencyListP = old_tree.adjacencyListP;
     nextInternalNodeId = old_tree.nextInternalNodeId;
     isLoglikeInitialised = old_tree.isLoglikeInitialised;
-    // TODO: reset to -1
 
     nodes.push_back(Node(this,getNextInternalNodeId()));
     rootP = &(nodes.back());
 
+    // Copy all root information
     rootP->copyFrom(this, *(old_tree.rootP));
 }
 
 /**
 * Copy assignment constructor
-*
 */
 Tree& Tree::operator=(const Tree& other) {
-//    cout << "The copy assignment constructor was called" << endl;
     // check for self-assignment
     if(&other == this)
         return *this;
 
+    // else copy fields
     adjacencyListP = other.adjacencyListP;
     nextInternalNodeId = other.nextInternalNodeId;
     isLoglikeInitialised = other.isLoglikeInitialised;
@@ -232,6 +230,7 @@ Tree& Tree::operator=(const Tree& other) {
 
 /**
  TODO: Rest of "Rule of 5"
+ - Destructor
  - Move
  - Move-assign
  */
@@ -240,7 +239,7 @@ Tree& Tree::operator=(const Tree& other) {
  * Tests if two trees are equal, defined as when all internal nodes in the
  *  original tree have the same children as the internal nodes in the "copy" tree.
  *
- * Also symmetric tree structure is allowed, as long as each node furfills the
+ * Also symmetric tree structure is allowed, as long as each node fulfills the
  *  same leaves requirement.
  */
 bool Tree::isEqual(Tree copy_tree){
@@ -253,18 +252,20 @@ bool Tree::isEqual(Tree copy_tree){
  * Get and Set - "Trivial" Stuff the proof is up to the reader
  */
 
+
+ /** Get pointer to adjacency lit */
 Adj_list * Tree::getAdjacencyListP(){
     return adjacencyListP;
-}
-
-/** Set Root Node */
-void Tree::setRootP(Node * node){
-    rootP = node;
 }
 
 /** Get pointer to root node */
 Node * Tree::getRoot(){
     return rootP;
+}
+
+/** Set root Node */
+void Tree::setRootP(Node * node){
+    rootP = node;
 }
 
 /** Decrements nextInternalNodeId and returns it */
@@ -283,11 +284,12 @@ Node * Tree::addNode(){
  * returns a pointer to this node or nullptr if it isn't present
  * (Basic implementation!)
  */
-Node * Tree::getNode(int leaf_id){
+Node * Tree::getNode(int node_id){
     //Iterates over all internal and leaf nodes
-    if (leaf_id == rootP->getNodeId()) { // is root?
+    if (node_id == rootP->getNodeId()) { // is root?
         return rootP;
     }
+    // else loop trough nodes list
     for(list<Node>::iterator it = nodes.begin();
         it != nodes.end(); it++){
 
@@ -296,6 +298,7 @@ Node * Tree::getNode(int leaf_id){
         }
 
     }
+    // if not found return null
     return nullptr;
 }
 
@@ -313,38 +316,48 @@ void Tree::removeNode(Node * nodeP){
 
 
 /**
- * Modifies tree by random regrafting
+ * Modifies tree by random regrafting (Naive implementation)
  * Returns the Metropolis-Hasting 'move-ratio' (NB! non-logarithmic)
+ * - Steps are
+ *      - Sample scion (node to be removed)
+ *      - Cut respective subtree
+ *      - Update relevant attributes on tree (naive)
+ *      - Sample stock (insertion position)
+ *      - Insert scion at stock (either as child or as sibling)
+ *      - Update relevant attributes on tree (naive)
+ *      - Return ratio of move probabilities
  */
 double Tree::regraft(){
-// TODO: finish the regrafting
+    // Sample removal node
     Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
+        // Probability of choosing scion
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
 
+        // Cut and update
         cutSubtree(scionP);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
 
+        // Sample insertion
         Node * stockP = this->getRandomStock();
 
-        //Random child or sibling
+        // Coinflip (random C++11 standard)
         std::random_device rd;
         std::mt19937 gen(rd());
         std::bernoulli_distribution dis(0.5);
         bool unbiased_coinflip = dis(gen);
 
+        // Insert subtree as child or sibling and update tree
         insertSubtree(stockP, scionP, unbiased_coinflip);
         rootP->updateNumInternalNodes();
         rootP->updateLeaves();
 
-        // Move probabilities
-//        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
+        // Probability of choosing stock node
         n_nodes = (int) nodes.size();
         double p_stock = 1.0/n_nodes;
 
-//        return n_nodes/(n_nodes -n_collapsed +n_created);
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1
         return 1;
@@ -352,53 +365,56 @@ double Tree::regraft(){
 }
 
 /**
- * Modifies tree by random regrafting
- * Updates the ornaments
+ * Modifies tree by random regrafting (smart update)
+ * Updates the likelihood at each node on the fly
  * Returns the Metropolis-Hasting 'move-ratio' (NB! non-logarithmic)
+ * - Steps are
+ *      - Sample scion (node to be removed)
+ *      - Cut respective subtree
+ *          - While cutting: Update relevant attributes on tree
+ *      - Sample stock (insertion position)
+ *      - Insert scion at stock (either as child or as sibling)
+ *           - While inserting: Update relevant attributes
+ *       - Update log-likelihood contribution on two branches:
+ *           - Scion -> Root
+ *           - Stock -> Root
+ *      - Return ratio of move probabilities
  */
 double Tree::regraft(double alpha, double beta, int rho_plus, int rho_minus){
+    // Get random scion
     Node * scionP = this->getRandomScion();
     if(!(scionP==rootP)){
+        // Probability of choosing scion
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
-//        cout << toString();
-        Node *  scionParentP = cutSubtree(scionP);
-//        cout << " -- cutting -- " << endl;
-//        cout << toString() <<flush;
 
+        // Cut subtree rooted at scion (and update accordingly)
+        Node *  scionParentP = cutSubtree(scionP);
+
+        // Sample stock (insertion)
         Node * stockP = this->getRandomStock();
 
-        //Random child or sibling
+        // Coinflip object (C++11 standard)
         std::random_device rd;
         std::mt19937 gen(rd());
         std::bernoulli_distribution dis(0.5);
         bool unbiased_coinflip = dis(gen);
 
+        // Insert cut subtree as child or sibling to stock
+        // Update accordingly (inside insertSubtree)
         insertSubtree(stockP, scionP, unbiased_coinflip);
-//        cout << " -- inserting -- " << endl;
-//        cout << toString();
-//        cout << " -- inserting update -- " << endl;
-////        stockP->updateStock2Root(scionP,created);
-//        cout << toString();
 
-        updateScionAndStock(scionP, scionParentP, stockP, alpha,beta,rho_plus,rho_minus);
+        // Update node-loglike on paths to root
+        updateScionAndStock(scionP, scionParentP, stockP,
+                            alpha,beta,rho_plus,rho_minus);
 
         // Move probabilities
-        //        double p_stock = 1.0/(n_nodes - n_collapsed + n_created);
         n_nodes = (int) nodes.size();
         double p_stock = 1.0/n_nodes;
-//        cout << toString() << endl;
-
-        //        return n_nodes/(n_nodes -n_collapsed +n_created);
-//        cout << "--- end of a regraft ---"<< endl << endl;
         return p_stock/p_scion;
     } else{ // scion was root - ratio of move probabilities is 1
-//        cout << "--- end of a regraft ---"<< endl << endl;
         return 1;
     }
-
-
-    return 0.0;
 }
 
 
@@ -425,30 +441,23 @@ void Tree::regraft(int scionVal, int stockVal){
 }
 
 /**
-    Get random node in tree (based on nodes list)
-    All nodes are weigthed equally
-    Used for sampling the SCION
-*/
+ *    Get random node in tree (based on nodes list)
+ *    All nodes are weigthed equally
+ *    Used for sampling the SCION (node to remove)
+ */
 Node * Tree::getRandomScion() {
     int num_nodes = (int) nodes.size();
-    // Sample random id in nodes list
+    // C++11 random generator objects
     std::random_device rd;
     std::mt19937 random_generator(rd());
     std::uniform_int_distribution<> dis(0,num_nodes-1);
-
-//    int random_node_id = rand() % (num_nodes);
+    // Sample random id in nodes list
     int random_node_id = dis(random_generator);
     list<Node>::iterator it = nodes.begin();
     for (int i = 0; i!= random_node_id; ++i) {
             // loop through list until you find the element
-            //TODO: Convert all this to vector for random access PLZ!!!?!?
         ++it;
     }
-
-
-
-
-
     return &(*it);
 }
 
@@ -456,29 +465,32 @@ Node * Tree::getRandomScion() {
 * Get random node in tree (recursive operation)
 * - Chooses internal nodes with weight 2 and leaves with weight 1
 * - calls getRandomChild from node-class
-* - Usd for sampling the STOCK!
+* - Used for sampling the STOCK!
 */
 Node * Tree::getRandomStock() {
     return rootP->getRandomDescendant();
 }
 
 /**
-* Cuts subtree rooted at scion
-* , i.e. cuts connection between subtree and rest of tree
-* but doesnt remove them from nodes list
-* - Returns the number of nodes that have been removed from the tree
+* Cuts subtree rooted at scion i.e.
+*    - cuts connection between subtree and rest of tree
+*     - but doesnt remove them from nodes list
+* Updates leaves and number of internal nodes where it is necessary
+* - Returns the nodeP from where the following likelihood update should start from
 */
 Node * Tree::cutSubtree(Node * scionP){
-    // assumes that scionP doesn't point to root.
+    // Remove scion from parents child list (and collapse if needed)
     Node * parentP = scionP->getParent();
     Node * grandParentP = parentP->getParent();
     bool collapsed = parentP->removeChild(scionP);
 
+    // Set parent to null
     scionP->setParent(nullptr);
+    // Save what leaves and number of internal nodes scion had
     list<int> leaves_to_rem = *(scionP->getLeaves() );
     int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) collapsed;
 
-    Node * currentP;// = parentP;
+    Node * currentP;
     Node * parent_to_return;
 
     if (collapsed) {
@@ -486,7 +498,8 @@ Node * Tree::cutSubtree(Node * scionP){
             //in this case the last remaining node is root and nothing should be done
             return rootP;
         }else{
-            //Scions parent were collapsed, so the update should start from its grand parent
+            //Scions parent were collapsed,
+            // so the update should start from its grand parent
             parent_to_return = grandParentP;
             currentP = grandParentP;
         }
@@ -509,7 +522,7 @@ Node * Tree::cutSubtree(Node * scionP){
 /**
 * Inserts subtree (cut from above method) and modifies tree accordingly
 *  - inserts either as child or as sibling of stock-node
-*  - returns number of nodes created by insertion (0 or 1)
+*  - Updates leaves and number of internal nodes based on inserted subtree
 */
 void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
@@ -518,14 +531,12 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     if (! stockP->isInternalNode()){
         asChild = false;
     }
-
+    //Update from stock to root, add leaves and num. internal nodes
     if(asChild){
         stockP->addChild(scionP);
-        //Update from stock to root, add leaves and num. internal nodes
     }else{ //As sibling
         // Create a new node
         Node * new_parent = addNode();
-
         // Constuct and add a new parent
         Node * stock_parent = stockP->getParent();
         if(stock_parent != nullptr){ // if stock is not root
@@ -536,6 +547,7 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
             setRootP(new_parent);
         }
 
+        // Add both scion and stock as children
         new_parent->addChild(stockP);
         new_parent->addChild(scionP);
 
@@ -545,6 +557,7 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         new_parent->getLeaves()->splice(new_parent->getLeaves()->end(), leaves_to_add);
     }
 
+    // Start from current node and update up to root
     leaves_to_add = *(scionP->getLeaves() );
     int internal_nodes_add = scionP->getNumInternalNodes()+ (int) !asChild;
 
@@ -553,32 +566,56 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         leaves_to_add = *(scionP->getLeaves() );
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
         currentP->getLeaves()->splice(currentP->getLeaves()->end(), leaves_to_add);
-        currentP->getLeaves()->sort();
-        currentP->getLeaves()->unique();
-
+        currentP->getLeaves()->sort(); //TODO: REMOVE? A GULL ?
+        currentP->getLeaves()->unique(); //TODO: REMOVE? A GULL ?
         currentP = currentP->getParent();
     }
 }
 
+/**
+ * Updates log-like contribution of each node along two paths
+ * - From Scion -> Root
+ * - From Stock -> Root
+ */
+
+
+void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP
+                               ,double alpha, double beta, int rho_plus, int rho_minus){
+
+    // Relation between scion and stock after insert
+    assert(scionP->getParent()==stockP || scionP->getParent()==stockP->getParent());
+    Node * scionPathP = scionP->getParent();
+    Node * stockPathP = oldScionParentP;
+
+    // Update scion path
+    while (scionPathP != nullptr) {
+        scionPathP->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
+        scionPathP = scionPathP->getParent();
+    }
+
+    // Update stock path
+    while (stockPathP != nullptr) {
+        stockPathP->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
+        stockPathP = stockPathP->getParent();
+    }
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 /**
-* Evaluating log-likelihood x prior of tree
-* - Recurses through tree
+* Evaluating log(likelihood x prior) of tree
+* Either:
+*   - Recurses through tree and calculates every nodes contribution
+*   - Or , sums up each nodes current set contribution
 */
 double Tree::evaluateLogLikeTimesPrior(double alpha, double beta, int rho_plus, int rho_minus){
-    
     if (isLoglikeInitialised) {
         double sum = 0.0;
         for (auto it = nodes.begin(); it != nodes.end(); ++it) {
-//            double a = it->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
-//            double b = it->getLogLikeContribution();
             sum += it->getLogLikeContribution();
-//            assert(a == b);
-
         }
-//        assert(abs(sum - rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus)) < 1e-12);
         return sum;
-    } else {
+    } else { // if log likelihood hasnt been calculated recurse through
         isLoglikeInitialised = true;
         return rootP->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
     }
@@ -667,66 +704,4 @@ void Tree::writeMatlabFormat(string filename) {
     for (auto it = leaf_list.begin(); it != leaf_list.end(); ++it) {
         out_file << *it << " ";
     }
-}
-
-void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP
-                               ,double alpha, double beta, int rho_plus, int rho_minus){
-
-    //relation between scion and stock after insert
-    assert(scionP->getParent()==stockP || scionP->getParent()==stockP->getParent());
-    Node * scionPathP = scionP->getParent();
-    Node * stockPathP = oldScionParentP;
-    
-    while (scionPathP != nullptr) {
-        scionPathP->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
-        scionPathP = scionPathP->getParent();
-    }
-    
-    while (stockPathP != nullptr) {
-        stockPathP->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
-        stockPathP = stockPathP->getParent();
-    }
-    
-    
-
-//    if (scionP->getParent()->isSubsetOf(oldScionParentP)){
-//        Node * parentPointer = scionP->getParent();
-//        //Update until oldscionParentP has been updated
-//        while (parentPointer != oldScionParentP->getParent()) {
-//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
-//            parentPointer = parentPointer->getParent();
-//        }
-//        return;
-//    } else if (oldScionParentP->isSubsetOf(scionP->getParent() ) ){
-//        Node * parentPointer = oldScionParentP;
-//        //Update until oldscionParentP has been updated
-//        while (parentPointer != scionP->getParent()) {
-//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
-//            parentPointer = parentPointer->getParent();
-//        }
-//        return;
-//    } else { //Neither scion or stock is desendant of the other
-//        //Update Stock
-//        // start at scions new parent (NB! scion has been moved)
-//        Node * parentPointer = scionP->getParent();
-//        while ( !(parentPointer->isNCA(oldScionParentP))) {
-//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus, rho_minus);
-//            parentPointer = parentPointer->getParent();
-//            
-//        }
-//        Node * nca1 = parentPointer;
-//        //Update Scion
-//        parentPointer = oldScionParentP;
-//        while ( !(parentPointer->isNCA(stockP)) ) {
-//            //    while (parentPointer != nca1 ) {
-//            parentPointer->evaluateNodeLogLike(alpha, beta,rho_plus,rho_minus);
-//            parentPointer = parentPointer->getParent();
-//            
-//        }
-//        assert(nca1 == parentPointer);
-//        nca1->evaluateNodeLogLike(alpha, beta, rho_plus, rho_minus);
-//        return;
-//    }
-    
-
 }
