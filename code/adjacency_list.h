@@ -1,47 +1,35 @@
-//
-//  adjacency_list.h
-//  gift
-//
-//  Created by Jesper Hinrich on 09/01/15.
-//  Copyright (c) 2015 Jesper Hinrich. All rights reserved.
-//
+/**
+    Project:        Parmugit
+    Class:          Adj_list
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2014
+*/
 
-#ifndef __gift__adjacency_list__
-#define __gift__adjacency_list__
-
-#include <stdio.h>
+#ifndef ADJACENCY_LIST
+#define ADJACENCY_LIST
 
 #include <string>
 #include <vector>
-//#include <math.h>
 #include <list>
-#include <algorithm> //std::binary_search, std::sort
-
-//    struct neighbor;
-//    struct neighbor {
-//        int id;
-//        //Potential to add a weight
-//    };
 
 class Adj_list {
 
 public:
-//    std::vector<std::vector<neighbor> > adjacency_list;
+    // Constructors
     Adj_list();
     Adj_list(std::list<std::pair<int,int>>);
-    int addDirectedEdge(int, int);
-    int addUndirectedEdge(int, int);
-    int removeDirectedEdge(int, int);
-    int removeUndirectedEdge(int, int);
-    bool isConnected(int, int);
 
-    std::string toString();
+    // Querying the adjacency
+    bool isConnected(int, int);
     int getSize();
 
+    std::string toString();
+
 private:
-    std::vector<std::vector<int>> adjacency_list;
+    // Data structure
     std::vector<std::vector<bool> > adjacency_matrix;
 };
 
 
-#endif /* defined(__gift__adjacency_list__) */
+#endif /* defined(ADJACENCY_LIST) */
