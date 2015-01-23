@@ -94,7 +94,6 @@ void Sampler::run(int L){
 /**
 * Running the Metropolis hastings sampler with thinning
 * @param L: number of iterations
-* @param thinning: save only each thinning'th sample
 */
 void Sampler::run(int L, int thinning ){
     lastLogLik = likelihoods.back();

@@ -6,42 +6,32 @@
 //  Copyright (c) 2015 Jesper Hinrich. All rights reserved.
 //
 
-#ifndef __gift__adjacency_list__
-#define __gift__adjacency_list__
+#ifndef ADJACENCY_LIST
+#define ADJACENCY_LIST
 
 #include <stdio.h>
-
 #include <string>
 #include <vector>
-//#include <math.h>
 #include <list>
-#include <algorithm> //std::binary_search, std::sort
-
-//    struct neighbor;
-//    struct neighbor {
-//        int id;
-//        //Potential to add a weight
-//    };
+#include <algorithm>
 
 class Adj_list {
 
 public:
-//    std::vector<std::vector<neighbor> > adjacency_list;
+    // Constructors
     Adj_list();
     Adj_list(std::list<std::pair<int,int>>);
-    int addDirectedEdge(int, int);
-    int addUndirectedEdge(int, int);
-    int removeDirectedEdge(int, int);
-    int removeUndirectedEdge(int, int);
-    bool isConnected(int, int);
 
-    std::string toString();
+    // Querying the adjacency
+    bool isConnected(int, int);
     int getSize();
 
+    std::string toString();
+
 private:
-    std::vector<std::vector<int>> adjacency_list;
+    // Data structure
     std::vector<std::vector<bool> > adjacency_matrix;
 };
 
 
-#endif /* defined(__gift__adjacency_list__) */
+#endif /* defined(ADJACENCY_LIST) */
