@@ -1,10 +1,10 @@
-//============================================================================
-// Name        : test.cpp
-// Author      : Søren
-// Version     :
-// Copyright   : It is OURS!!
-// Description : Test function
-//============================================================================
+/**
+ *  Project:        Parmugit
+ *  Class:          Test script, not part of the main program
+ *  Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+ *  Affiliation:    Technical University of Denmark
+ *  Date:           January 2015
+ */
 #include <random>
 #include <iostream>
 #include <fstream>

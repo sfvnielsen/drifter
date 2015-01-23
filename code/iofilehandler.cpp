@@ -1,10 +1,10 @@
 /**
-    Project:        Parmugit
-    Class:          IoFileHandler
-    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
-    Affiliation:    Technical University of Denmark
-    Date:           January 2014
-*/
+ *  Project:        Parmugit
+ *  Class:          IoFileHandler
+ *  Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+ *  Affiliation:    Technical University of Denmark
+ *  Date:           January 2015
+ */
 
 #include "iofilehandler.h"
 #include <fstream>
