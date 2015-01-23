@@ -1,7 +1,7 @@
 CC=g++
-CFLAGS=-c -Wall -std=c++11 -DNDEBUG -fexceptions -O2
-LDFLAGS=
-SOURCES=release.cpp adjacency_list.cpp barebones_tree.cpp node.cpp sampler.cpp iofilehandler.cpp
+CFLAGS=-c -Wall -std=c++11 -DNDEBUG -fexceptions -O3
+LDFLAGS=-lm -std=c++11 -O3
+SOURCES=release.cpp adjacency_list.cpp tree.cpp node.cpp sampler.cpp iofilehandler.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=run_parmugit
 

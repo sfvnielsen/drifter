@@ -1,17 +1,16 @@
-//============================================================================
-// Name        : release.cpp
-// Author      : Julian, Jesper and Søren
-// Version     : alpha
-// Copyright   : It is OURS!!
-// Description : Release mode version of alpha-program
-//============================================================================
+/**
+    Project:        Parmugit - Release file
+    Class:          Node
+    Created by:     Jesper L. Hinrich, Julian K. Larsen and Soeren F. V. Nielsen
+    Affiliation:    Technical University of Denmark
+    Date:           January 2015
+*/
 
 #include <iostream>
-#include <cstdlib> // setting random seed
-#include <time.h> // ----
 #include <chrono> // chrono::timepoint, chono::system_clock
+#include <stdexcept> // throwing runtime errors
 
-#include "barebones_tree.h"
+#include "tree.h"
 #include "sampler.h"
 #include "iofilehandler.h"
 using namespace std;
@@ -19,7 +18,6 @@ using namespace std;
 Sampler runNetwork(string,int,int,int);
 
 int main(int argc, char* argv[]) {
-    srand ((unsigned int) time(NULL)); // set random seed
 
     string data_file_name;
     int num_iterations;
@@ -28,11 +26,7 @@ int main(int argc, char* argv[]) {
 
     bool write_out;
     if (argc < 2) {
-        data_file_name = "data/karate_edgelist.txt";
-        num_iterations = 10000/2;
-        num_burnin = num_iterations;
-        thinning = 10;
-        write_out = false;
+	throw runtime_error("Not enough input arguments");
     }else if (argc == 2) {
         data_file_name = (string) argv[1];
         num_iterations = 100/2;
