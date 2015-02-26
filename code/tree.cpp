@@ -187,7 +187,9 @@ int Tree::InitFlatTree(int num_leaves){
     for (int i = 0; i < num_leaves; i++){
         nodes.push_back(Node(this,i));
         rootP->addChild(&(nodes.back()));
+        
     }
+    
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
     return 0;
@@ -291,7 +293,7 @@ Node * Tree::getNode(int node_id){
         return rootP;
     }
     // else loop trough nodes list
-    for(list<Node>::iterator it = nodes.begin();
+    for(auto it = nodes.begin();
         it != nodes.end(); it++){
 
         if (it->getNodeId() == node_id) {
@@ -484,7 +486,7 @@ Node * Tree::cutSubtree(Node * scionP){
     // Set parent to null
     scionP->setParent(nullptr);
     // Save what leaves and number of internal nodes scion had
-    list<int> leaves_to_rem = *(scionP->getLeaves() );
+    vector<int> leaves_to_rem = *(scionP->getLeaves() );
     int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) collapsed;
 
     Node * currentP;
@@ -508,9 +510,7 @@ Node * Tree::cutSubtree(Node * scionP){
     while (currentP != nullptr) {
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()-internal_nodes_rem);
         assert(currentP->getNumInternalNodes()>=0);
-        for (auto it = leaves_to_rem.begin(); it != leaves_to_rem.end(); it++) {
-            currentP->getLeaves()->remove(*it);
-        }
+        currentP->removeLeaves(leaves_to_rem);
         currentP = currentP->getParent();
     }
     return parent_to_return;
@@ -523,7 +523,7 @@ Node * Tree::cutSubtree(Node * scionP){
 */
 void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
-    list<int> leaves_to_add;
+    vector<int> leaves_to_add;
     // Cannot be added as a child to a leaf, only as sibling
     if (! stockP->isInternalNode()){
         asChild = false;
@@ -551,7 +551,8 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         //Update the num. internal and leaves
         new_parent->setNumInternalNodes(stockP->getNumInternalNodes());
         leaves_to_add = *(stockP->getLeaves() );
-        new_parent->getLeaves()->splice(new_parent->getLeaves()->end(), leaves_to_add);
+        new_parent->addLeaves(leaves_to_add);
+
     }
 
     // Start from current node and update up to root
@@ -562,9 +563,8 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
     while (currentP != nullptr) {
         leaves_to_add = *(scionP->getLeaves() );
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
-        currentP->getLeaves()->splice(currentP->getLeaves()->end(), leaves_to_add);
-        currentP->getLeaves()->sort(); //TODO: REMOVE? A GULL ?
-        currentP->getLeaves()->unique(); //TODO: REMOVE? A GULL ?
+        currentP->addLeaves(leaves_to_add);
+        
         currentP = currentP->getParent();
     }
 }

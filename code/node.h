@@ -6,6 +6,7 @@
  *  Date:           January 2015
  */
 
+#include <vector>
 #include <list>
 #include "adjacency_list.h"
 
@@ -28,7 +29,8 @@ public:
     int getNodeId();
     void setNodeId(int);
 
-    std::list<int> * getLeaves();
+    std::vector<int> * getLeaves();
+    void setLeaves(std::vector<int>);
     int getNumInternalNodes();
     void setNumInternalNodes(int);
 
@@ -43,6 +45,9 @@ public:
     int updateNumInternalNodes();
 
     void updateLeaves();
+    void combineLeavesSet(std::vector<int>,std::vector<int>);
+    void addLeaves(std::vector<int>);
+    void removeLeaves(std::vector<int>);
 
     // evaluating likelihood
     double evaluateNodeLogLike(double,double,int,int);
@@ -68,18 +73,21 @@ public:
 
 private:
     Node * parentP;
-	int num_internal_nodes; //Is need for stock sampling
+    int num_internal_nodes; //Is need for stock sampling
     std::list<Node *> children; //TODO vector
     int nodeId;
 
     Tree * treeP;
-    std::list<int> leaves; //TODO vector
+    std::vector<int> leaves; //TODO vector
 };
 
 double logbeta(double,double);
 double lgamma_ratio(double, double);
 double log_diff(double, double);
 
-Node * multinomialSampling(std::list<Node *>, std::list<double>);  //TODO vector
+//template <class someVector, class someElement>;
+//bool removeElement(someVector vec, someElement elem);
+
+Node * multinomialSampling(std::list<Node *>, std::vector<double>);  //TODO vector
 
 #endif /* NODE_H_ */
