@@ -21,7 +21,7 @@ class Tree {
 
 private:
     Node * rootP;
-    std::list<Node> nodes;
+    std::list<Node> nodes;  //TODO vector
     int nextInternalNodeId;
 
     Adj_list * adjacencyListP;

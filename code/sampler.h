@@ -35,8 +35,8 @@ class Sampler
         void writeLogLikelihood(std::string);
     
         // Data storage, publicity need for test function.
-        std::list<Tree> chain;
-        std::list<double> likelihoods;
+        std::list<Tree> chain;  //TODO vector
+        std::list<double> likelihoods;  //TODO vector
 
     private:
         // Data storage

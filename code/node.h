@@ -47,7 +47,7 @@ public:
     // evaluating likelihood
     double evaluateNodeLogLike(double,double,int,int);
     double evaluateSubtreeLogLike(double,double,int,int);
-    std::list<std::pair<int,int>> getCountsAll();
+    std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
     std::pair<int,int> getCountsPair(Node *, Node *);
 
 
@@ -69,17 +69,17 @@ public:
 private:
     Node * parentP;
 	int num_internal_nodes; //Is need for stock sampling
-    std::list<Node *> children;
+    std::list<Node *> children; //TODO vector
     int nodeId;
 
     Tree * treeP;
-    std::list<int> leaves;
+    std::list<int> leaves; //TODO vector
 };
 
 double logbeta(double,double);
 double lgamma_ratio(double, double);
 double log_diff(double, double);
 
-Node * multinomialSampling(std::list<Node *>, std::list<double>);
+Node * multinomialSampling(std::list<Node *>, std::list<double>);  //TODO vector
 
 #endif /* NODE_H_ */
