@@ -66,7 +66,7 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
         // add new node
         Node * new_child = treeP->addNode();
         // add as child
-        this->addChild(new_child);
+        addToChildList(new_child);
         // recurse
         new_child->copyFrom(treeP, **it);
     }
@@ -139,14 +139,17 @@ void Node::setChildren(list<Node *> new_children){
     children = new_children;
 }
 
+void Node::addToChildList(Node * new_childP){
+    new_childP->setParent(this);
+    children.push_back(new_childP);
+}
+
 /**
  * Add a new child to the current nodes children list, and changes the parent
  *  of the added node.
  */
 void Node::addChild(Node * new_childP) {
-    new_childP->setParent(this);
-    children.push_back(new_childP);
-
+    addToChildList(new_childP);
     auto it = loglikePair_cont.begin();
     vector<double> new_loglikPair;
     new_loglikPair.reserve(loglikePair_cont.size() + children.size() - 1);
@@ -167,6 +170,8 @@ void Node::addChild(Node * new_childP) {
     }
     loglikePair_cont = new_loglikPair;
 }
+
+
 
 /**
  * Removes the provided child as a child the current node. And maintains a

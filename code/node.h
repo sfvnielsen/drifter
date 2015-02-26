@@ -35,6 +35,7 @@ public:
     // Children methods
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);
+    void addToChildList(Node *);
     void addChild(Node *);
     bool removeChild(Node *);
 
