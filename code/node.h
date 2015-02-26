@@ -45,17 +45,19 @@ public:
     void updateLeaves();
 
     // evaluating likelihood
-    double evaluateNodeLogLike(double,double,int,int);
-    double evaluateSubtreeLogLike(double,double,int,int);
-    double evaluateNodeLogPrior(double,double,int,int);
-    double evaluatePairLogLike(Node *, Node *, double,double,int,int);
+    double evaluateNodeLogLike();
+    double evaluateSubtreeLogLike();
+    double evaluateNodeLogPrior();
+    double evaluatePairLogLike(Node *, Node *);
     std::list<std::pair<int,int>> getCountsAll();
     std::pair<int,int> getCountsPair(Node *, Node *);
 
     // getting and updating cached likelihood contributions
     double getNodeLogLike();
-    void updateNodeLogPrior(double,double,int,int);
-    void updatePairLogLike(double,double,int,int);
+    void updateNodeLogPrior();
+    //void updatePairLogLike();
+    void updateAllPairsLogLike();
+    void updateChildPairsLogLike(Node *);
 
     // equality
     bool isEqualSubtree(Node *);

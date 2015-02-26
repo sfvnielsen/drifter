@@ -13,6 +13,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <tuple>
 
 #include "node.h"
 
@@ -30,14 +31,20 @@ private:
     int InitBinaryTree(int);
     Node * makeNsplitTree(int, int, int);
 
+    // Hyperparameters:
+    double alpha;
+    double beta;
+    int rho_plus;
+    int rho_minus;
+
 public:
     // Constructors
     Tree();
-    Tree(Adj_list * AP);
-    Tree(Adj_list * AP, std::string initType);
-    Tree(std::list<std::pair<int, int>>, std::string);
+    Tree(Adj_list * AP,double, double, int, int);
+    Tree(Adj_list * AP, std::string initType,double, double, int, int);
+    Tree(std::list<std::pair<int, int>>, std::string,double, double, int, int);
     Tree(std::list<std::pair<int, int>>
-         , std::vector<int>, Adj_list *);
+         , std::vector<int>, Adj_list *,double, double, int, int);
 
     //Rule of "5"
     //virtual ~Tree();                           // Default destructor
@@ -56,19 +63,23 @@ public:
     Node * addNode();
     Node * getNode(int);
     void removeNode(Node *);
+    std::tuple<double,double,int,int> getHyperparameters();
+    void setHyperparameters(std::tuple<double,double,int,int>);
 
     // Regrafting
-	double regraft();
-    double regraft(double, double, int, int);
+	double naive_regraft();
+    double regraft();
     void regraft(int,int); // Only used for debug
 	Node * getRandomScion();
 	Node * getRandomStock();
 	Node * cutSubtree(Node * );
     void insertSubtree(Node *, Node *, bool);
-    void updateScionAndStock(Node *, Node *, Node *, double, double, int, int);
+    void updateScionAndStock(Node *, Node *, Node * );
+
+    void initalizeLikelihoodCache();
 
     // Evaluating likelihood
-    double evaluateLogLikeTimesPrior(double, double, int, int);
+    double evaluateLogLikeTimesPrior();
     bool isLoglikeInitialised = false;
 
     // Print

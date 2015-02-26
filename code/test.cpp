@@ -43,19 +43,10 @@ int main()
 
     Adj_list adj = Adj_list(data_edge_list);
 
-    Tree eTree = Tree(&adj);
+    Tree eTree = Tree(&adj,0.5, 0.5, 1, 1);
 
-    cout << "Does copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1)
-    << " == " << Tree(eTree).evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
-
-
-    Tree tempTest = Tree(eTree);
-    tempTest.regraft(0.5, 0.5, 1, 1);
-
-    cout << "Does regraft + copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1)
-    << " == " << tempTest.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl << endl;
-
-
+    cout << "Does copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior()
+    << " == " << Tree(eTree).evaluateLogLikeTimesPrior() << endl;
 
 
     cout << "Debugging sampler" << endl;
@@ -241,7 +232,7 @@ int testLikelihood(){
             int number_data_nodes = adjacency_list.getSize();
 
             //Format into tree-class structure (approriate constructors)
-            Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list);
+            Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list,  alpha,  beta,  rho_plus,  rho_minus);
 
 
             // Test of matlab format method
@@ -250,8 +241,8 @@ int testLikelihood(){
             // Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test..." << endl << flush ;
 
-            test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
-            double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
+            test_tree.evaluateLogLikeTimesPrior();
+            double llike_test = test_tree.evaluateLogLikeTimesPrior();
             cout << "llike_test: " << llike_test << " == " << llike_true << " True" <<endl;
 
             if (abs(llike_test-llike_true)<epsilon)
