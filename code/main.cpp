@@ -43,17 +43,34 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     // Loading the data.
     cout << "Running on: " << data_file_name << endl;
     IoFileHandler data_file(data_file_name,0);
+    
+    pair<int,int> g1 (0,1);
+    pair<int,int> g2 (1,2);
+    pair<int,int> g3 (0,3);
+    pair<int,int> g4 (1,3);
+    pair<int,int> g5 (2,3);
+    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
+    
 
     // Constructing the sampler.
-    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1);
+//    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1);
+    Sampler sampler = Sampler(data_edge_list, 0.5, 0.5, 1, 1);
 
     // Start timing
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();
 
     // Run the sampler
-    sampler.run(num_of_iterations, burnin, thinning);
+//    sampler.run(num_of_iterations, burnin, thinning);
+    sampler.run(num_of_iterations, 0,1);
+//    Tree test = sampler.chain.back();
+/*    test.regraft(1,2,3,4);
+    for (int i = 0; i < 100; i++) {
+        cout << test.toString() << endl << endl;
+        test.regraft();
+        cout << test.toString() << endl << endl;
 
+    }*/
     // End timing
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
