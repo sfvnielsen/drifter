@@ -367,12 +367,6 @@ int Node::updateNumInternalNodes() {
  */
 double Node::evaluateNodeLogLike() {
 
-    std::tuple<double,double,int,int> p = treeP->getHyperparameters();
-    double alpha = get<0>(p);
-    double beta = get<1>(p);
-    int rho_plus = get<2>(p);
-    int rho_minus = get<3>(p);
-
     //Evaluation on leaves are always zero (0.0)
     if (! isInternalNode()) {
         loglikelihood_cont = 0.0;
@@ -392,6 +386,9 @@ double Node::evaluateNodeLogLike() {
     }
 
     // Prior contribution for each node
+    std::tuple<double,double,int,int> * pP = treeP->getHyperparametersP();
+    double alpha = get<0>(*pP);
+
     if (abs(alpha-0) < 1e-10) { //TODO: Add special case when alpha = 0!
         throw runtime_error("Prior contribution not implemented for alpha = 0");
     }
@@ -414,12 +411,6 @@ double Node::evaluateNodeLogLike() {
  * NOTE: Only used for initialisation, as the values are cached at each node.
  */
 double Node::evaluateSubtreeLogLike(){
-
-    std::tuple<double,double,int,int> p = treeP->getHyperparameters();
-    double alpha = get<0>(p);
-    double beta = get<1>(p);
-    int rho_plus = get<2>(p);
-    int rho_minus = get<3>(p);
 
     double log_like = 0.0;
     if (this->isInternalNode()) {
@@ -446,12 +437,6 @@ double Node::evaluateSubtreeLogLike(){
 double Node::evaluateNodeLogPrior(){
     double log_prior = 0.0;
 
-    std::tuple<double,double,int,int> p = treeP->getHyperparameters();
-    double alpha = get<0>(p);
-    double beta = get<1>(p);
-    int rho_plus = get<2>(p);
-    int rho_minus = get<3>(p);
-
     //Evaluation on leaves are always zero (0.0)
     if (! isInternalNode()) {
         return 0.0;
@@ -468,6 +453,13 @@ double Node::evaluateNodeLogPrior(){
         int num_leaves = (int) (*it)->getLeaves()->size();
         num_leaves_each_child.push_back(num_leaves);
     }
+
+
+    std::tuple<double,double,int,int> * pP = treeP->getHyperparametersP();
+    double alpha = get<0>(*pP);
+    double beta = get<1>(*pP);
+//    int rho_plus = get<2>(*pP);
+//    int rho_minus = get<3>(*pP);
 
     // - First term in prior contribution - each child
     for (list<int>::iterator it = num_leaves_each_child.begin();
@@ -489,11 +481,11 @@ double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
     int num_links, num_pos_links;
     double log_like;
 
-    tuple<double,double,int,int> p = treeP->getHyperparameters();
-    double alpha = get<0>(p);
-    double beta = get<1>(p);
-    int rho_plus = get<2>(p);
-    int rho_minus = get<3>(p);
+    std::tuple<double,double,int,int> * pP = treeP->getHyperparametersP();
+    //double alpha = get<0>(*pP);
+    //double beta = get<1>(*pP);
+    int rho_plus = get<2>(*pP);
+    int rho_minus = get<3>(*pP);
 
     assert(alpha>0);
     assert(beta>0);

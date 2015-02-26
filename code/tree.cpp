@@ -26,6 +26,7 @@ Tree::Tree(Adj_list * AP, double alpha_n, double beta_n, int rho_plus_n, int rho
     beta = beta_n;
     rho_plus = rho_plus_n;
     rho_minus = rho_minus_n;
+    p = make_tuple(alpha,beta,rho_plus,rho_minus);
     isLoglikeInitialised = false;
     adjacencyListP = AP;
     InitFlatTree(AP->getSize() );
@@ -43,6 +44,7 @@ Tree::Tree(Adj_list * AP, string initType, double alpha, double beta, int rho_pl
     beta = beta;
     rho_plus = rho_plus;
     rho_minus = rho_minus;
+    p = make_tuple(alpha,beta,rho_plus,rho_minus);
     isLoglikeInitialised = false;
     adjacencyListP = AP;
     if (initType == "Binary") {
@@ -71,6 +73,7 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
     beta = beta_n;
     rho_plus = rho_plus_n;
     rho_minus = rho_minus_n;
+    p = make_tuple(alpha,beta,rho_plus,rho_minus);
 
     // - Construct the tree from tree_struct_graph
     //Get first relation parrent --> child, assumption the root is first
@@ -85,7 +88,7 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
     Node new_child = Node(this, element.second);
 
     nodes.push_back(new_child);
-    rootP->addChild(&(nodes.back()));
+    rootP->addToChildList(&(nodes.back()));
 
     //Insert parent-->child relations for the rest
     while (!tree_struct_graph.empty()) {
@@ -101,9 +104,9 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
         if (existing_nodeP==nullptr) {
             new_child = Node(this,element.second);
             nodes.push_back(new_child);
-            parent->addChild(& (nodes.back()));
+            parent->addToChildList(& (nodes.back()));
         } else{ //Exists, and we just need to add a pointer to its child
-            parent->addChild(existing_nodeP);
+            parent->addToChildList(existing_nodeP);
         }
 
 
@@ -162,7 +165,7 @@ Node * Tree::makeNsplitTree(int a, int b, int N){
             for (int i = 0; (i < N) && (i <= (b-a)) ; i++) {
                 nodes.push_back(Node(this,a+i));
                 Node * child_P = & nodes.back();
-                parent->addChild(child_P);
+                parent->addToChildList(child_P);
             }
             return parent;
         }
@@ -181,7 +184,7 @@ Node * Tree::makeNsplitTree(int a, int b, int N){
                 new_child = makeNsplitTree(i*((b-a+1)/N)+a, (i+1)*((b-a+1)/N)+a-1, N);
             }
 
-            parent->addChild(new_child);
+            parent->addToChildList(new_child);
         }
         return parent;
     }
@@ -200,7 +203,7 @@ int Tree::InitFlatTree(int num_leaves){
     // add nodes as children of root
     for (int i = 0; i < num_leaves; i++){
         nodes.push_back(Node(this,i));
-        rootP->addChild(&(nodes.back()));
+        rootP->addToChildList(&(nodes.back()));
     }
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
@@ -218,6 +221,7 @@ Tree::Tree(Tree const &old_tree){
     beta = old_tree.beta;
     rho_plus = old_tree.rho_plus;
     rho_minus = old_tree.rho_minus;
+    p = old_tree.p;
 
     nodes.push_back(Node(this,getNextInternalNodeId()));
     rootP = &(nodes.back());
@@ -328,13 +332,13 @@ void Tree::removeNode(Node * nodeP){
     nodes.remove(*nodeP);
 }
 
-tuple<double,double,int,int> Tree::getHyperparameters(){
+tuple<double,double,int,int> * Tree::getHyperparametersP(){
     assert(alpha>0);
     assert(beta>0);
     assert(rho_plus>0);
     assert(rho_minus>0);
 
-    return make_tuple(alpha,beta,rho_plus,rho_minus);
+    return &p;
 }
 
 void Tree::setHyperparameters(tuple<double,double,int,int> p){
@@ -640,7 +644,7 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
     // Update stock path
     while (stockPathP != nullptr) {
         stockPathP->updateNodeLogPrior();
-        stockPathP->updateAllPairsLogLike();
+        //stockPathP->updateAllPairsLogLike();
         stockPathP = stockPathP->getParent();
     }
 }

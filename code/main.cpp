@@ -20,17 +20,17 @@ void testNetwork(string,int,int,int);
 int main() {
 
     string data_file_name = "data/karate_edgelist.txt";
-    //data_file_name = "data/celegans_edgelist.txt";
+    data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
-    data_file_name = "data/facebook100_edgelist.txt";
+    //data_file_name = "data/facebook100_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
 
     /**
      * Testing a network
      */
-    int num_iterations = 100;
-    int burnin = 100;
-    int thinning = 10;
+    int num_iterations = 50;
+    int burnin = 10;
+    int thinning = 5;
 
     testNetwork(data_file_name,num_iterations,burnin,thinning);
 

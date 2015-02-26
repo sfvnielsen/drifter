@@ -36,6 +36,7 @@ private:
     double beta;
     int rho_plus;
     int rho_minus;
+    std::tuple<double,double,int,int> p;
 
 public:
     // Constructors
@@ -63,7 +64,7 @@ public:
     Node * addNode();
     Node * getNode(int);
     void removeNode(Node *);
-    std::tuple<double,double,int,int> getHyperparameters();
+    std::tuple<double,double,int,int> * getHyperparametersP();
     void setHyperparameters(std::tuple<double,double,int,int>);
 
     // Regrafting
