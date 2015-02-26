@@ -31,8 +31,8 @@ N = 4;
 A = [0 1 0 1;1 0 1 1;0 1 0 1;1 1 1 0];
 
 % hypers
-rho_plus = 1; rho_minus = 1;
-alpha = 1/2; beta = 1/2;
+rho_plus = 2; rho_minus = 1;
+alpha = 1/8; beta = 1/4;
 
 n = 1;
 LTrue = nan(1,26);
@@ -73,6 +73,10 @@ P_TEST = sum(exp(LTrue)/sum(exp(LTrue)))
 
 
 % write to test files
-file_name_base = '../test_files/likelihood_test_n4_';
+file_name_base = '../test_files_alpha0/likelihood_test_n4_';
 hypers = [alpha,beta,rho_plus,rho_minus];
 writeTestScenarios(T,I,N,A,hypers,LTrue,file_name_base);
+
+f = fopen('../ValidateSampler/true_loglikelihood.txt','w');
+fprintf(f,'%d ',LTrue);
+fclose(f);

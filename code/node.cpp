@@ -341,9 +341,9 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
     }
 
     // Prior contribution for each node
-    if (abs(alpha-0) < 1e-10) { //TODO: Add special case when alpha = 0!
-        throw runtime_error("Prior contribution not implemented for alpha = 0");
-    }
+    //if (abs(alpha-0) < 1e-10) { //TODO: Add special case when alpha = 0!
+    //    throw runtime_error("Prior contribution not implemented for alpha = 0");
+    //}
     int num_children = (int) (this->getChildren()).size();
     int num_leaves_total = (int) (this->getLeaves())->size();
     list<int> num_leaves_each_child;
@@ -356,21 +356,32 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
         num_leaves_each_child.push_back(num_leaves);
     }
 
-    // - First term in prior contribution - each child
-    for (list<int>::iterator it = num_leaves_each_child.begin();
-         it!= num_leaves_each_child.end(); ++it){
-        log_prior += lgamma_ratio(*it,-alpha);
-    }
-    // - Second term in prior contibution
-    log_prior += log(alpha+beta) + log(alpha)*(num_children-2)
+    // Special case if alpha is zero
+    if (alpha == 0.0){
+        // - First term in prior contribution - each child
+        for (list<int>::iterator it = num_leaves_each_child.begin();
+             it!= num_leaves_each_child.end(); ++it){
+                    log_prior += lgamma(*it);
+        }
+        // - Second term in prior contibution
+        log_prior += log(beta)*(num_children-1)
+                    -log_diff(lgamma_ratio(num_leaves_total,beta),
+                          lgamma(num_leaves_total));
+
+    }else{
+        // - First term in prior contribution - each child
+        for (list<int>::iterator it = num_leaves_each_child.begin();
+             it!= num_leaves_each_child.end(); ++it){
+                    log_prior += lgamma_ratio(*it,-alpha);
+        }
+        // - Second term in prior contibution
+        log_prior += log(alpha+beta) + log(alpha)*(num_children-2)
                 -log_diff(lgamma_ratio(num_leaves_total,beta),
                 lgamma_ratio(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
+    }
 
-//    assert(!isinf(log_like) ); //isinf() not working for some compilers
-//    assert(!isinf(log_prior) );
-
-    //Caches loglikelihood_cont, which is the non-normalised posterior
+    //Caches loglikelihood_cont, which is the non-normalized posterior
     loglikelihood_cont = log_like+log_prior;
     return log_like+log_prior;
 };
