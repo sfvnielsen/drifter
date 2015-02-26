@@ -28,7 +28,7 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 1000;
+    int num_iterations = 10000;
     int burnin = 1000;
     int thinning = 10;
 
@@ -61,8 +61,8 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     start = chrono::system_clock::now();
 
     // Run the sampler
-//    sampler.run(num_of_iterations, burnin, thinning);
-    sampler.run(num_of_iterations, 0,1);
+    sampler.run(num_of_iterations, burnin, thinning);
+
 //    Tree test = sampler.chain.back();
 /*    test.regraft(1,2,3,4);
     for (int i = 0; i < 100; i++) {

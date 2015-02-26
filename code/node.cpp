@@ -274,8 +274,6 @@ void Node::updateLeaves(){
     if(!isInternalNode()){ //Leaf node
         leaves.push_back(nodeId);
         assert(!leaves.empty());
-//leaves = vector<int> {nodeId};
-       // sort(leaves.begin(),leaves.end()); //SMARTER
     }else{
         for (auto it = children.begin(); it != children.end(); it++) {
             Node * childP = *it;
@@ -284,10 +282,8 @@ void Node::updateLeaves(){
             //For each child copy the child list to this node.
             // NOTE: Using splices removes the elements from the list.
             vector<int> childLeaves = *(childP->getLeaves());
-//            cout << nodeId << ", Leaf size: " << childLeaves.size() << endl;
             assert(childLeaves.size()>0);
-            //leaves.splice(leaves.end(), childLeaves); //TODO_REMOVE
-            //Combines a sorted list! //DONE_VECTOR
+            //Combines a sorted list!
             addLeaves(childLeaves);
         }
     }
@@ -295,30 +291,24 @@ void Node::updateLeaves(){
     assert(leaves.size()>0);
 }
 
-
+/**
+ * Adds the elements in add_leaves to leaves of the node. Both must be sorted.
+ */
 void Node::addLeaves(std::vector<int> add_leaves){
-  //  cout << "Adding leaves" <<endl<< treeP->getRoot()->toString() << endl << endl;
     vector<int> old_leaves = leaves;
     leaves=vector<int>((int) leaves.size()+ (int) add_leaves.size());
     merge(old_leaves.begin(), old_leaves.end(), add_leaves.begin(), add_leaves.end(), leaves.begin());
-//    cout << "Done adding leaves" <<endl<< treeP->getRoot()->toString() << endl << endl;
 }
 
+/**
+ * Removes leaves in rem_leaves from the leaves of the Node. Both rem_leaves and
+ *  leaves must be sorted. O(|rem_leaves|+|leaves|)
+ */
 void Node::removeLeaves(std::vector<int> rem_leaves){
-/*    cout << "Removing leaves" <<endl<< treeP->getRoot()->toString() << endl << endl;
-    cout << "Node: " << nodeId << ", rem_leaves: ";
-    for (auto it = rem_leaves.begin(); it!=rem_leaves.end(); it++) {
-        cout << *it;
-    }
-    cout << endl;*/
     vector<int> old_leaves = leaves;
     leaves=vector<int>((int) leaves.size()- (int) rem_leaves.size());
+    //Copies elements that are in old_leaves but not in rem_leaves
     set_difference(old_leaves.begin(), old_leaves.end(), rem_leaves.begin(), rem_leaves.end(), leaves.begin());
-/*    cout << "Done removing leaves"<<endl << treeP->getRoot()->toString() << endl ;
-    for (auto it = leaves.begin(); it!=leaves.end(); it++) {
-        cout << *it;
-    }
-    cout << endl<< endl;*/
 }
 
 
@@ -341,8 +331,6 @@ int Node::updateNumInternalNodes() {
 
    return num_internal_nodes;
 }
-
-
 
 /**
  * Evaluate nodes contribution to log (likelihood times prior)
