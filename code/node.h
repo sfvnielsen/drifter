@@ -47,6 +47,8 @@ public:
     // evaluating likelihood
     double evaluateNodeLogLike(double,double,int,int);
     double evaluateSubtreeLogLike(double,double,int,int);
+    double evaluateNodeLogPrior(double,double,int,int);
+    double evaluatePairLogLike(Node *, Node *, double,double,int,int);
     std::list<std::pair<int,int>> getCountsAll();
     std::pair<int,int> getCountsPair(Node *, Node *);
 
@@ -62,7 +64,6 @@ public:
     void updateScion2Root(Node *, bool);
     void updateStock2Root(Node *, bool);
 
-    double loglikelihood_cont=0;
     double getLogLikeContribution();
     void setLogLikeContribution(double);
 
@@ -71,6 +72,8 @@ private:
 	int num_internal_nodes; //Is need for stock sampling
     std::list<Node *> children;
     int nodeId;
+
+    double loglikelihood_cont;
 
     Tree * treeP;
     std::list<int> leaves;
