@@ -31,6 +31,7 @@ Node::Node(Tree * tP): treeP(tP){
     // Trivial constructor.
     parentP = nullptr;
     loglikelihood_cont = 0.0;
+    log_prior = 0.0;
 
 }
 
@@ -44,6 +45,7 @@ Node::Node(Tree * tP, int L): treeP(tP) {
     num_internal_nodes = 0;
     nodeId = L;
     loglikelihood_cont = 0.0;
+    log_prior = 0.0;
 }
 
 /**
@@ -56,6 +58,8 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
     leaves = old_node.leaves;
     num_internal_nodes = old_node.num_internal_nodes;
     loglikelihood_cont = old_node.loglikelihood_cont;
+    loglikePair_cont = old_node.loglikePair_cont;
+    log_prior = old_node.log_prior;
 
     //Recurses through the children of the current node
     for (auto it = old_node.children.begin(); it != old_node.children.end(); it++) {
@@ -342,7 +346,7 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
         throw runtime_error("Prior contribution not implemented for alpha = 0");
     }
 
-    double log_prior = evaluateNodeLogPrior(alpha,beta,rho_plus,rho_minus);
+    log_prior = evaluateNodeLogPrior(alpha,beta,rho_plus,rho_minus);
 
 //    assert(!isinf(log_like) ); //isinf() not working for some compilers
 //    assert(!isinf(log_prior) );
@@ -476,6 +480,22 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
     pair<int, int> result (nLinks,nPossible);
     return result;
 }
+
+/**
+ * Get cached log likelihood contribution
+ */
+double Node::getNodeLogLike(){
+
+    // the node pairs likelihood contribution
+    double log_like = 0.0;
+    for(auto it=loglikePair_cont.begin(); it!=loglikePair_cont.end(); ++it){
+        log_like += *it;
+    }
+
+    return log_like + log_prior;
+}
+
+
 
 /**
  * Log-Beta function

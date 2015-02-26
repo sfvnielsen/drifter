@@ -52,6 +52,10 @@ public:
     std::list<std::pair<int,int>> getCountsAll();
     std::pair<int,int> getCountsPair(Node *, Node *);
 
+    // getting and updating cached likelihood contributions
+    double getNodeLogLike();
+    void updateNodeLogPrior(double,double,int,int);
+    void updatePairLogLike(double,double,int,int);
 
     // equality
     bool isEqualSubtree(Node *);
@@ -74,6 +78,8 @@ private:
     int nodeId;
 
     double loglikelihood_cont;
+    double log_prior;
+    std::vector<double> loglikePair_cont;
 
     Tree * treeP;
     std::list<int> leaves;
