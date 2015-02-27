@@ -181,23 +181,7 @@ bool Node::removeChild(Node * child) {
     bool collapsed = false;
     children.remove(child);
 
-    //IFF: The current node only have two children, it is collapsed as every
-    //     internal node must have at least 2 children)
-    if(1==(int) children.size()){
-        //If the node is the tree root, the single child should be the new root
-        if(this == (treeP->getRoot()) ){
-            children.front()->setParent(nullptr);
-            treeP->setRootP(children.front());
-            treeP->removeNode(this);
-            collapsed = true;
-        }else{
-        //Collaps this node, and adds its child to the grandparent
-            parentP->addChild(children.front());
-            parentP->removeChild(this);
-            treeP->removeNode(this);
-            collapsed = true;
-        }
-    }
+
     if(!collapsed){
         auto it = loglikePair_cont.begin();
         vector<double> new_loglikPair;
@@ -487,8 +471,8 @@ double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
     int rho_plus = get<2>(*pP);
     int rho_minus = get<3>(*pP);
 
-    assert(alpha>0);
-    assert(beta>0);
+//    assert(alpha>0);
+//    assert(beta>0);
     assert(rho_plus>0);
     assert(rho_minus>0);
 

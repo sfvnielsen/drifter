@@ -678,6 +678,16 @@ double Tree::evaluateLogLikeTimesPrior(){
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
         sum += it->getNodeLogLike();
     }
+
+    // TODO DEBUG check comment out when done.
+    initalizeLikelihoodCache();
+    double sumT = 0.0;
+    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+        sumT += it->getNodeLogLike();
+    }
+
+    assert(sum==sumT);
+
     return sum;
 }
 
