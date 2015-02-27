@@ -263,7 +263,7 @@ Node *  multinomialSampling(list<Node *> node_list,vector<double> p_vals)  {
 }
 
 /**
- * Update leaves list at each node in tree, by asking the nodes children for
+ * Update leaves at each node in tree, by asking the nodes children for
  *  their leaves and combining them as the leaves list for the current node.
  *
  * Recurses through all nodes below.
