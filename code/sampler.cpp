@@ -26,27 +26,26 @@ Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus)
 
     // Setting the initial values in the chain.
     chain.push_back(T);
-    lastLogLik = T.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+    lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
 }
 
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
-Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int rho_plus, int rho_minus):
-                                                  alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int rho_plus, int rho_minus): alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
     // Constructing the adjacency list
     adjacencyList = Adj_list(data_graph);
 
     // Initialize the flat tree
-    Tree T = Tree(&adjacencyList);
+    Tree T = Tree(&adjacencyList,alpha, beta, rho_plus, rho_minus);
 
     // Initialize the binary tree
     //Tree T = Tree(&adjacencyList,"Binary");
 
     // Setting the initial values in the chain.
     chain.push_back(T);
-    lastLogLik = T.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+    lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
 }
 
@@ -71,10 +70,10 @@ void Sampler::run(int L){
 
         // Create a proposal
         Tree proposal = chain.back();
-        double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus);
+        double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
-        double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+        double propLogLik = proposal.evaluateLogLikeTimesPrior();
 
         // Calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
@@ -118,10 +117,10 @@ void Sampler::run(int L, int thinning ){
 
         // Create a proposal
         Tree proposal = lastTree;
-        double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus); //Try a move
+        double move_ratio = proposal.regraft(); //Try a move
 
         // Get Likelihoods times priors
-        double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+        double propLogLik = proposal.evaluateLogLikeTimesPrior();
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;
@@ -174,10 +173,10 @@ void Sampler::run(int L, int burn_in, int thinning){
     for (int i=0; i<burn_in; i++){
 
         // Create a proposal
-        double move_ratio = proposal.regraft(alpha, beta, rho_plus, rho_minus);
+        double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
-        double propLogLik = proposal.evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus);
+        double propLogLik = proposal.evaluateLogLikeTimesPrior();
 
         // calculate the acceptance ratio
         double a = exp(propLogLik-lastLogLik)*move_ratio;

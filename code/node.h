@@ -50,10 +50,10 @@ public:
     void removeLeaves(std::vector<int>);
 
     // evaluating likelihood
-    double evaluateNodeLogLike(double,double,int,int);
-    double evaluateLogPrior(double,double,int,int);
+    double evaluateNodeLogLike();
+    double evaluateLogPrior();
     
-    double evaluateSubtreeLogLike(double,double,int,int);
+    double evaluateSubtreeLogLike();
     std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
     std::pair<int,int> getCountsPair(Node *, Node *);
     

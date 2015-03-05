@@ -61,7 +61,7 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
         // add new node
         Node * new_child = treeP->addNode();
         // add as child
-        this->addChild(new_child);
+        addChild(new_child);
         // recurse
         new_child->copyFrom(treeP, **it);
     }
@@ -205,8 +205,8 @@ Node * Node::getRandomDescendant() {
 
     }
     //The weights summes to the weight of the subtree rooted at the current node
-    int sum_weight = (int)((this->getLeaves())->size())+
-                            2*this->getNumInternalNodes();
+    int sum_weight = (int)((getLeaves())->size())+
+                            2*getNumInternalNodes();
     //The weights are normalised to a probability and store in vector p_vals
     vector<double> p_vals;
     for (auto it = subtree_weight.begin(); it!= subtree_weight.end(); ++it) {
@@ -341,8 +341,11 @@ int Node::updateNumInternalNodes() {
  *
  * The the log(likelihood times prior) is then calculated with these pairs.
  */
-double Node::evaluateNodeLogLike(double alpha, double beta,
-                                 int rho_plus, int rho_minus) {
+double Node::evaluateNodeLogLike() {
+    
+    int rho_plus = treeP->rho_plus;
+    int rho_minus = treeP->rho_minus;
+    
     //Evaluation on leaves are always zero (0.0)
     if (! isInternalNode()) {
         loglikelihood_cont = 0.0;
@@ -352,7 +355,7 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
     double log_like = 0.0;
 
     //Count parameter pairs, get number of links and possible links
-    list<pair<int,int>> allCountPairs = this->getCountsAll();
+    list<pair<int,int>> allCountPairs = getCountsAll();
     int num_links, num_pos_links;
 
     // LogLikelihood contribution for each node
@@ -365,20 +368,24 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                         logbeta(rho_plus,rho_minus);
     }
 
-    double log_prior = evaluateLogPrior(alpha, beta, rho_plus, rho_minus);
+    double log_prior = evaluateLogPrior();
     //Caches loglikelihood_cont, which is the non-normalized posterior
     loglikelihood_cont = log_like+log_prior;
     return log_like+log_prior;
 };
 
-double Node::evaluateLogPrior(double alpha ,double beta,int rho_plus,int rho_minus){
+double Node::evaluateLogPrior(){
+    
+    double alpha = treeP->alpha;
+    double beta = treeP->beta;
+
     // Prior contribution for each node
     double log_prior = 0.0;
     
-    int num_children = (int) (this->getChildren()).size();
-    int num_leaves_total = (int) (this->getLeaves())->size();
+    int num_children = (int) (getChildren()).size();
+    int num_leaves_total = (int) (getLeaves())->size();
     vector<int> num_leaves_each_child;
-    list<Node *> list_of_children = this->getChildren();
+    list<Node *> list_of_children = getChildren();
     
     // Get number of leaves for each child
     for (auto it = list_of_children.begin();
@@ -422,18 +429,17 @@ double Node::evaluateLogPrior(double alpha ,double beta,int rho_plus,int rho_min
  *
  * NOTE: Only used for initialisation, as the values are cached at each node.
  */
-double Node::evaluateSubtreeLogLike(double alpha, double beta, int rho_plus
-                              , int rho_minus){
+double Node::evaluateSubtreeLogLike(){
     double log_like = 0.0;
-    if (this->isInternalNode()) {
+    if (isInternalNode()) {
         // First add this nodes contribution
-        log_like += this->evaluateNodeLogLike(alpha,beta,rho_plus,rho_minus);
-        list<Node *> list_of_children = this->getChildren();
+        log_like += evaluateNodeLogLike();
+        list<Node *> list_of_children = getChildren();
         // Iterate through list of children
         for (auto it = list_of_children.begin();
              it!= list_of_children.end(); ++it) {
             // Evaluate each childs subtree-contribution
-            log_like += (*it)->evaluateSubtreeLogLike(alpha,beta,rho_plus,rho_minus);
+            log_like += (*it)->evaluateSubtreeLogLike();
         }
     } else {
         log_like = 0.0;
@@ -453,7 +459,7 @@ list<pair<int, int>> Node::getCountsAll() {
         list<Node *>::iterator nxt = fst;
         // Loop through each child after it in the list
         for (auto snd = ++nxt ; snd != children.end(); snd++) {
-            result.push_back(this->getCountsPair(*fst, *snd));
+            result.push_back(getCountsPair(*fst, *snd));
         }
     }
     return result;
@@ -586,7 +592,7 @@ bool Node::isInternalNode() {
  */
 string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
-    vector<int> leaves = *(this->getLeaves());
+    vector<int> leaves = *(getLeaves());
     string s = "Node: " +  to_string(getNodeId()) +"; Num_internal: ("+to_string(getNumInternalNodes())+ "); Leaves: (";
     if(!leaves.empty()) {
         for (auto it = leaves.begin(); it != leaves.end(); it++) {
