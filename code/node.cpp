@@ -343,9 +343,6 @@ int Node::updateNumInternalNodes() {
  */
 double Node::evaluateNodeLogLike() {
     
-    int rho_plus = treeP->rho_plus;
-    int rho_minus = treeP->rho_minus;
-    
     //Evaluation on leaves are always zero (0.0)
     if (! isInternalNode()) {
         loglikelihood_cont = 0.0;
@@ -354,20 +351,15 @@ double Node::evaluateNodeLogLike() {
 
     double log_like = 0.0;
 
-    //Count parameter pairs, get number of links and possible links
-    list<pair<int,int>> allCountPairs = getCountsAll();
-    int num_links, num_pos_links;
-
-    // LogLikelihood contribution for each node
-    for (list<pair<int,int>>::iterator it = allCountPairs.begin();
-         it!=allCountPairs.end(); ++it) {
-            num_links = it->first;
-            num_pos_links = it->second;
-            log_like += logbeta(num_links+rho_plus,
-                        num_pos_links-num_links+rho_minus)-
-                        logbeta(rho_plus,rho_minus);
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        list<Node *>::iterator nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            log_like += evaluatePairLogLike(*fst, *snd);
+        }
     }
-
+    
     double log_prior = evaluateLogPrior();
     //Caches loglikelihood_cont, which is the non-normalized posterior
     loglikelihood_cont = log_like+log_prior;
@@ -420,6 +412,24 @@ double Node::evaluateLogPrior(){
     }
 
     return log_prior;
+}
+
+double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
+    int num_links, num_pos_links;
+    double log_like;
+    
+    int rho_plus = treeP->rho_plus;
+    int rho_minus = treeP->rho_minus;
+    
+    pair<int, int> counts = getCountsPair(childAP,childBP);
+    
+    num_links = counts.first;
+    num_pos_links = counts.second;
+    log_like =  logbeta(num_links+rho_plus,
+                        num_pos_links-num_links+rho_minus)
+    -logbeta(rho_plus,rho_minus);
+    
+    return log_like;
 }
 
 
@@ -494,6 +504,52 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
     pair<int, int> result (nLinks,nPossible);
     return result;
+}
+
+/**
+ * Get cached log likelihood contribution
+ */
+double Node::getLogLike(){
+    
+    // the node pairs likelihood contribution
+    double log_like = 0.0;
+    for(auto it=pairLogLikeCont.begin(); it!=pairLogLikeCont.end(); ++it){
+        log_like += *it;
+    }
+    
+    return log_like;
+}
+
+/**
+ * Get cached log prior
+ */
+double Node::getLogPrior(){
+    return logPrior;
+}
+
+/**
+ * Update cached node prior
+ */
+void Node::updateNodeLogPrior(){
+    logPrior = evaluateLogPrior();
+}
+
+/**
+ * Update all cached pairs likelihood.
+ */
+void Node::updateAllPairsLogLike(){
+    // clear out all values
+    pairLogLikeCont.clear();
+    
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            double L = evaluatePairLogLike(*fst, *snd);
+            pairLogLikeCont.push_back(L);
+        }
+    }
 }
 
 /**

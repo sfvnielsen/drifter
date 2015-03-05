@@ -52,11 +52,16 @@ public:
     // evaluating likelihood
     double evaluateNodeLogLike();
     double evaluateLogPrior();
-    
+    double evaluatePairLogLike(Node *, Node *);
     double evaluateSubtreeLogLike();
     std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
     std::pair<int,int> getCountsPair(Node *, Node *);
     
+    // getting and updating cached likelihood caches
+    double getLogLike();
+    double getLogPrior();
+    void updateNodeLogPrior();
+    void updateAllPairsLogLike();
 
     // equality
     bool isEqualSubtree(Node *);
@@ -78,6 +83,9 @@ private:
     int num_internal_nodes; //Is need for stock sampling
     std::list<Node *> children; //TODO vector
     int nodeId;
+    
+    std::vector<double> pairLogLikeCont;
+    double logPrior;
 
     Tree * treeP;
     std::vector<int> leaves; //TODO vector

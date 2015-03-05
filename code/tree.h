@@ -64,12 +64,12 @@ public:
     int rho_minus;
 
     // Regrafting
-	double naive_regraft();
+    double naive_regraft();
     double regraft();
     void regraft(int,int); // Only used for debug
-	Node * getRandomScion();
-	Node * getRandomStock();
-	Node * cutSubtree(Node * );
+    Node * getRandomScion();
+    Node * getRandomStock();
+    Node * cutSubtree(Node * );
     void insertSubtree(Node *, Node *, bool);
     void updateScionAndStock(Node *, Node *, Node *);
 
