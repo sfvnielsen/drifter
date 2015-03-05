@@ -501,10 +501,15 @@ Node * Tree::cutSubtree(Node * scionP){
     // Remove scion from parents child list (and collapse if needed)
     Node * parentP = scionP->getParent();
     Node * grandParentP = parentP->getParent();
+    
+    /////CUT START
     bool collapsed = parentP->removeChild(scionP);
 
     // Set parent to null
     scionP->setParent(nullptr);
+    
+    /////CUT END
+    
     // Save what leaves and number of internal nodes scion had
     vector<int> leaves_to_rem = *(scionP->getLeaves() );
     int internal_nodes_rem = scionP->getNumInternalNodes()+ (int) collapsed;

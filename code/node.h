@@ -38,7 +38,10 @@ public:
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);
     void addChild(Node *);
+    void addChildCached(Node *);
     bool removeChild(Node *);
+    bool removeChildCached(Node *);
+    void replaceChild(Node *, Node *);
 
     // Node random sampling
     Node * getRandomDescendant();

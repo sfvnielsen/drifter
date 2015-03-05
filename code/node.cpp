@@ -175,6 +175,97 @@ bool Node::removeChild(Node * child) {
     return collapsed;
 }
 
+bool Node::removeChildCached(Node * childP) {
+
+    int N = (int) children.size()-1; //A node is removed
+    vector<double> new_pairLogLike(N*(N-1)/2,0);
+    
+    auto it = pairLogLikeCont.begin();
+    auto it_new = new_pairLogLike.begin();
+    
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            if( !(*fst == childP || *snd == childP) ){
+                (*it_new) = (*it);
+                ++it_new;
+            }
+            ++it;
+        }
+    }
+    
+    pairLogLikeCont = new_pairLogLike;
+    children.remove(childP);
+    
+    return false;
+}
+
+void Node::addChildCached(Node * childP) {
+    
+    children.push_back(childP); //A node is added
+    int N = (int) children.size();
+    vector<double> new_pairLogLike(N*(N-1)/2,0);
+    
+    auto it = pairLogLikeCont.begin();
+    auto it_new = new_pairLogLike.begin();
+    
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            if(*snd == childP){ // der skal tilføjes noget
+                (*it_new) = evaluatePairLogLike(*fst, childP);
+            } else {
+                (*it_new) = (*it);
+                ++it;
+            }
+            ++it_new;
+            
+        }
+    }
+    pairLogLikeCont = new_pairLogLike;
+    
+}
+
+//Kald på parent af nodeToReplace
+void Node::replaceChild(Node * nodeToReplace, Node * new_node){
+    //Erstat
+    if (this != nullptr) {
+        auto it = pairLogLikeCont.begin();
+        //Updatere loglike contribution
+        for (auto fst = children.begin(); fst != children.end(); fst++) {
+            // iterator for the next child
+            auto nxt = fst;
+            // Loop through each child after it in the list
+            for (auto snd = ++nxt ; snd != children.end(); snd++) {
+                if(*snd == nodeToReplace){ // der skal tilføjes noget
+                    (*it) = evaluatePairLogLike(*fst, new_node);
+                } else if (*fst == nodeToReplace) {
+                    (*it) = evaluatePairLogLike(*snd, new_node);
+                } else {
+                    //No change in parameters/loglike
+                }
+                ++it;
+                
+            }
+        }
+        //Erstat nodeToReplace med new_node i children listen
+        for (auto it = children.begin(); it!=children.end(); ++it) {
+            if (*it == nodeToReplace) {
+                (*it) = new_node;
+                break;
+            }
+        }
+    } else {
+        //???
+    }
+    
+    
+}
+
 /**
 * Recursively samples a random node from subtree rooted at this node, if called
 *  on the root a random node from the entire tree is sampled.
