@@ -382,13 +382,26 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
         num_leaves_each_child.push_back(num_leaves);
     }
 
-    // - First term in prior contribution - each child
-    for (auto it = num_leaves_each_child.begin();
-         it!= num_leaves_each_child.end(); ++it){
-        log_prior += lgamma_ratio(*it,-alpha);
-    }
-    // - Second term in prior contibution
-    log_prior += log(alpha+beta) + log(alpha)*(num_children-2)
+    // Special case if alpha is zero
+    if (alpha == 0.0){
+        // - First term in prior contribution - each child
+        for (auto it = num_leaves_each_child.begin();
+             it!= num_leaves_each_child.end(); ++it){
+                    log_prior += lgamma(*it);
+        }
+        // - Second term in prior contibution
+        log_prior += log(beta)*(num_children-1)
+                    -log_diff(lgamma_ratio(num_leaves_total,beta),
+                          lgamma(num_leaves_total));
+
+    }else{
+        // - First term in prior contribution - each child
+        for (auto it = num_leaves_each_child.begin();
+             it!= num_leaves_each_child.end(); ++it){
+                    log_prior += lgamma_ratio(*it,-alpha);
+        }
+        // - Second term in prior contibution
+        log_prior += log(alpha+beta) + log(alpha)*(num_children-2)
                 -log_diff(lgamma_ratio(num_leaves_total,beta),
                 lgamma_ratio(num_leaves_total,-alpha))
                 + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);

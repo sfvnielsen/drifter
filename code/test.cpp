@@ -22,7 +22,7 @@ using namespace std;
 void testMultinomialSampling();
 void testUniformsampling();
 void testCoinFlip();
-int testLikelihood();
+int testLikelihood(double,double,int,int);
 Tree debuggingTree();
 void testSamplerDistribution(string,int,int,double,double,int,int);
 list<pair<Tree, double>> unique_4_tree;
@@ -31,9 +31,9 @@ int main()
 {
     cout << "!!!Hello Test-World!!!" << endl;
 
-    double alpha = 1.0/8;
-    double beta = 1.0/4;
-    int rho_plus = 2;
+    double alpha = .5;//1.0/8;
+    double beta = .5;//1.0/4;
+    int rho_plus = 1;
     int rho_minus = 1;
     srand((unsigned int) time(NULL));
 
@@ -78,7 +78,7 @@ int main()
 void testSamplerDistribution(string folder,int num_samples, int num_burn,double alpha, double beta
                              , int rho_plus,int rho_minus){
 
-	testLikelihood();
+	testLikelihood(alpha,beta,rho_plus,rho_minus);
     cout << "---- Likelihood tests completed ----" << endl;
 //Same network as used for testing that the likelihood is correct.
     pair<int,int> g1 (0,1);
@@ -196,12 +196,12 @@ void testUniformsampling(){
     cout << endl;
 }
 
-int testLikelihood(){
+int testLikelihood(double alpha, double beta, int rho_plus, int rho_minus){
 
 //     Tolerance on likelihood result
     double epsilon = 1e-6;
 
-    string dir_str =  "test/test_files_alpha0/";
+    string dir_str =  "test/test_files/";
     string mat_out_dir = "test/mat_test/";
     // For each test file in test_files directory
     DIR *dir;
