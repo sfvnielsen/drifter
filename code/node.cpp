@@ -350,7 +350,6 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
     }
 
     double log_like = 0.0;
-    double log_prior = 0.0;
 
     //Count parameter pairs, get number of links and possible links
     list<pair<int,int>> allCountPairs = this->getCountsAll();
@@ -366,51 +365,55 @@ double Node::evaluateNodeLogLike(double alpha, double beta,
                         logbeta(rho_plus,rho_minus);
     }
 
+    double log_prior = evaluateLogPrior(alpha, beta, rho_plus, rho_minus);
+    //Caches loglikelihood_cont, which is the non-normalized posterior
+    loglikelihood_cont = log_like+log_prior;
+    return log_like+log_prior;
+};
+
+double Node::evaluateLogPrior(double alpha ,double beta,int rho_plus,int rho_minus){
     // Prior contribution for each node
-    //if (abs(alpha-0) < 1e-10) { //TODO: Add special case when alpha = 0!
-    //    throw runtime_error("Prior contribution not implemented for alpha = 0");
-    //}
+    double log_prior = 0.0;
+    
     int num_children = (int) (this->getChildren()).size();
     int num_leaves_total = (int) (this->getLeaves())->size();
     vector<int> num_leaves_each_child;
     list<Node *> list_of_children = this->getChildren();
-
+    
     // Get number of leaves for each child
     for (auto it = list_of_children.begin();
-             it!= list_of_children.end(); ++it) {
+         it!= list_of_children.end(); ++it) {
         int num_leaves = (int) (*it)->getLeaves()->size();
         num_leaves_each_child.push_back(num_leaves);
     }
-
+    
     // Special case if alpha is zero
     if (alpha == 0.0){
         // - First term in prior contribution - each child
         for (auto it = num_leaves_each_child.begin();
              it!= num_leaves_each_child.end(); ++it){
-                    log_prior += lgamma(*it);
+            log_prior += lgamma(*it);
         }
         // - Second term in prior contibution
         log_prior += log(beta)*(num_children-1)
-                    -log_diff(lgamma_ratio(num_leaves_total,beta),
-                          lgamma(num_leaves_total));
-
+        -log_diff(lgamma_ratio(num_leaves_total,beta),
+                  lgamma(num_leaves_total));
+        
     }else{
         // - First term in prior contribution - each child
         for (auto it = num_leaves_each_child.begin();
              it!= num_leaves_each_child.end(); ++it){
-                    log_prior += lgamma_ratio(*it,-alpha);
+            log_prior += lgamma_ratio(*it,-alpha);
         }
         // - Second term in prior contibution
         log_prior += log(alpha+beta) + log(alpha)*(num_children-2)
-                -log_diff(lgamma_ratio(num_leaves_total,beta),
-                lgamma_ratio(num_leaves_total,-alpha))
-                + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
+        -log_diff(lgamma_ratio(num_leaves_total,beta),
+                  lgamma_ratio(num_leaves_total,-alpha))
+        + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
     }
 
-    //Caches loglikelihood_cont, which is the non-normalized posterior
-    loglikelihood_cont = log_like+log_prior;
-    return log_like+log_prior;
-};
+    return log_prior;
+}
 
 
 /**

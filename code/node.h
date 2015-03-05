@@ -51,10 +51,12 @@ public:
 
     // evaluating likelihood
     double evaluateNodeLogLike(double,double,int,int);
+    double evaluateLogPrior(double,double,int,int);
+    
     double evaluateSubtreeLogLike(double,double,int,int);
     std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
     std::pair<int,int> getCountsPair(Node *, Node *);
-
+    
 
     // equality
     bool isEqualSubtree(Node *);
