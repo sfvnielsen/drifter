@@ -24,14 +24,17 @@ void testUniformsampling();
 void testCoinFlip();
 int testLikelihood();
 Tree debuggingTree();
-void testSamplerDistribution(string,int,int);
+void testSamplerDistribution(string,int,int,double,double,int,int);
 list<pair<Tree, double>> unique_4_tree;
 
 int main()
 {
     cout << "!!!Hello Test-World!!!" << endl;
 
-
+    double alpha = 1.0/8;
+    double beta = 1.0/4;
+    int rho_plus = 2;
+    int rho_minus = 1;
     srand((unsigned int) time(NULL));
 
     pair<int,int> g1 (0,1);
@@ -45,23 +48,23 @@ int main()
 
     Tree eTree = Tree(&adj);
 
-    cout << "Does copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1)
-    << " == " << Tree(eTree).evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl;
+    cout << "Does copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(alpha, beta,rho_plus, rho_minus)
+    << " == " << Tree(eTree).evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus) << endl;
 
 
     Tree tempTest = Tree(eTree);
-    tempTest.regraft(0.5, 0.5, 1, 1);
+    tempTest.regraft(alpha, beta, rho_plus , rho_minus);
 
-    cout << "Does regraft + copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1)
-    << " == " << tempTest.evaluateLogLikeTimesPrior(0.5, 0.5, 1, 1) << endl << endl;
+    cout << "Does regraft + copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(alpha, beta, rho_plus , rho_minus)
+    << " == " << tempTest.evaluateLogLikeTimesPrior(alpha, beta, rho_plus , rho_minus) << endl << endl;
 
 
 
 
     cout << "Debugging sampler" << endl;
-    testSamplerDistribution("test/ValidateSampler",200000,50000);
+    testSamplerDistribution("test/ValidateSampler",200000,50000,alpha, beta, rho_plus , rho_minus);
 //    testSamplerDistribution("test/ValidateSampler",1500000,500000);
-    testCoinFlip();
+//    testCoinFlip();
 
     cout << "------- END -------" << endl;
     return 0;
@@ -72,7 +75,8 @@ int main()
  * This is very compute and memory intensive for even small problems, where
  * all the possible multi-furcating gibbs trees are know.
  */
-void testSamplerDistribution(string folder,int num_samples, int num_burn){
+void testSamplerDistribution(string folder,int num_samples, int num_burn,double alpha, double beta
+                             , int rho_plus,int rho_minus){
 
 	testLikelihood();
     cout << "---- Likelihood tests completed ----" << endl;
@@ -85,7 +89,7 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn){
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
 
     //Initialisation
-    Sampler sampler = Sampler(data_edge_list,0.5,0.5,1,1);;
+    Sampler sampler = Sampler(data_edge_list,alpha,beta,rho_plus,rho_minus);;
 
     //Running sampler, num_samples
 //    sampler.run(num_samples);
@@ -197,7 +201,7 @@ int testLikelihood(){
 //     Tolerance on likelihood result
     double epsilon = 1e-6;
 
-    string dir_str =  "test/test_files/";
+    string dir_str =  "test/test_files_alpha0/";
     string mat_out_dir = "test/mat_test/";
     // For each test file in test_files directory
     DIR *dir;
