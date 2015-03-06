@@ -56,7 +56,7 @@ public:
     Node * addNode();
     Node * getNode(int);
     void removeNode(Node *);
-    
+
     // Hyperparameters
     double alpha;
     double beta;
@@ -75,7 +75,8 @@ public:
 
     // Evaluating likelihood
     double evaluateLogLikeTimesPrior();
-    bool isLoglikeInitialised = false;
+    bool isLoglikeInitialised;
+    void initializeLogLike();
 
     // Print
     std::string toString();

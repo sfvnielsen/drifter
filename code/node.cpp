@@ -17,6 +17,7 @@
 #include <cmath> //lgamma and other math functions
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -31,6 +32,7 @@ Node::Node(){}
 Node::Node(Tree * tP): treeP(tP){
     // Trivial constructor.
     parentP = nullptr;
+    logPrior = 0.0;
 }
 
 /**
@@ -42,6 +44,7 @@ Node::Node(Tree * tP, int L): treeP(tP) {
     parentP = nullptr;
     num_internal_nodes = 0;
     nodeId = L;
+    logPrior = 0.0;
 
 }
 
@@ -54,7 +57,8 @@ void Node::copyFrom(Tree * tP, Node const & old_node){
     nodeId = old_node.nodeId;
     leaves = old_node.leaves;
     num_internal_nodes = old_node.num_internal_nodes;
-    loglikelihood_cont = old_node.loglikelihood_cont;
+    pairLogLikeCont = old_node.pairLogLikeCont;
+    logPrior = old_node.logPrior;
 
     //Recurses through the children of the current node
     for (auto it = old_node.children.begin(); it != old_node.children.end(); it++) {
@@ -154,7 +158,7 @@ void Node::addChild(Node * new_childP) {
 bool Node::removeChild(Node * child) {
     bool collapsed = false;
     children.remove(child);
-    
+
     //IFF: The current node only have two children, it is collapsed as every
     //     internal node must have atleast 2 children)
     if(1==(int) children.size()){
@@ -179,10 +183,10 @@ bool Node::removeChildCached(Node * childP) {
 
     int N = (int) children.size()-1; //A node is removed
     vector<double> new_pairLogLike(N*(N-1)/2,0);
-    
+
     auto it = pairLogLikeCont.begin();
     auto it_new = new_pairLogLike.begin();
-    
+
     for (auto fst = children.begin(); fst != children.end(); fst++) {
         // iterator for the next child
         auto nxt = fst;
@@ -195,22 +199,22 @@ bool Node::removeChildCached(Node * childP) {
             ++it;
         }
     }
-    
+
     pairLogLikeCont = new_pairLogLike;
     children.remove(childP);
-    
+
     return false;
 }
 
 void Node::addChildCached(Node * childP) {
-    
+
     children.push_back(childP); //A node is added
     int N = (int) children.size();
     vector<double> new_pairLogLike(N*(N-1)/2,0);
-    
+
     auto it = pairLogLikeCont.begin();
     auto it_new = new_pairLogLike.begin();
-    
+
     for (auto fst = children.begin(); fst != children.end(); fst++) {
         // iterator for the next child
         auto nxt = fst;
@@ -223,11 +227,11 @@ void Node::addChildCached(Node * childP) {
                 ++it;
             }
             ++it_new;
-            
+
         }
     }
     pairLogLikeCont = new_pairLogLike;
-    
+
 }
 
 //Kald på parent af nodeToReplace
@@ -249,7 +253,7 @@ void Node::replaceChild(Node * nodeToReplace, Node * new_node){
                     //No change in parameters/loglike
                 }
                 ++it;
-                
+
             }
         }
         //Erstat nodeToReplace med new_node i children listen
@@ -262,8 +266,8 @@ void Node::replaceChild(Node * nodeToReplace, Node * new_node){
     } else {
         //???
     }
-    
-    
+
+
 }
 
 /**
@@ -433,10 +437,9 @@ int Node::updateNumInternalNodes() {
  * The the log(likelihood times prior) is then calculated with these pairs.
  */
 double Node::evaluateNodeLogLike() {
-    
+
     //Evaluation on leaves are always zero (0.0)
     if (! isInternalNode()) {
-        loglikelihood_cont = 0.0;
         return 0.0;
     }
 
@@ -450,33 +453,35 @@ double Node::evaluateNodeLogLike() {
             log_like += evaluatePairLogLike(*fst, *snd);
         }
     }
-    
+
     double log_prior = evaluateLogPrior();
-    //Caches loglikelihood_cont, which is the non-normalized posterior
-    loglikelihood_cont = log_like+log_prior;
     return log_like+log_prior;
 };
 
 double Node::evaluateLogPrior(){
-    
+
+    if (!isInternalNode()) {
+        return 0.0;
+    }
+
     double alpha = treeP->alpha;
     double beta = treeP->beta;
 
     // Prior contribution for each node
     double log_prior = 0.0;
-    
+
     int num_children = (int) (getChildren()).size();
     int num_leaves_total = (int) (getLeaves())->size();
     vector<int> num_leaves_each_child;
     list<Node *> list_of_children = getChildren();
-    
+
     // Get number of leaves for each child
     for (auto it = list_of_children.begin();
          it!= list_of_children.end(); ++it) {
         int num_leaves = (int) (*it)->getLeaves()->size();
         num_leaves_each_child.push_back(num_leaves);
     }
-    
+
     // Special case if alpha is zero
     if (alpha == 0.0){
         // - First term in prior contribution - each child
@@ -488,7 +493,7 @@ double Node::evaluateLogPrior(){
         log_prior += log(beta)*(num_children-1)
         -log_diff(lgamma_ratio(num_leaves_total,beta),
                   lgamma(num_leaves_total));
-        
+
     }else{
         // - First term in prior contribution - each child
         for (auto it = num_leaves_each_child.begin();
@@ -502,24 +507,25 @@ double Node::evaluateLogPrior(){
         + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
     }
 
+    assert(isfinite(log_prior));
     return log_prior;
 }
 
 double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
     int num_links, num_pos_links;
     double log_like;
-    
+
     int rho_plus = treeP->rho_plus;
     int rho_minus = treeP->rho_minus;
-    
+
     pair<int, int> counts = getCountsPair(childAP,childBP);
-    
+
     num_links = counts.first;
     num_pos_links = counts.second;
     log_like =  logbeta(num_links+rho_plus,
                         num_pos_links-num_links+rho_minus)
     -logbeta(rho_plus,rho_minus);
-    
+
     return log_like;
 }
 
@@ -601,13 +607,14 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
  * Get cached log likelihood contribution
  */
 double Node::getLogLike(){
-    
     // the node pairs likelihood contribution
     double log_like = 0.0;
     for(auto it=pairLogLikeCont.begin(); it!=pairLogLikeCont.end(); ++it){
         log_like += *it;
     }
-    
+    assert(isfinite(log_like));
+
+    // TODO: use accumulate, "return accumulate(pairLogLikeCont.begin(),pairLogLikeCont.end(),0);"
     return log_like;
 }
 
@@ -615,6 +622,7 @@ double Node::getLogLike(){
  * Get cached log prior
  */
 double Node::getLogPrior(){
+    assert(isfinite(logPrior));
     return logPrior;
 }
 
@@ -623,6 +631,7 @@ double Node::getLogPrior(){
  */
 void Node::updateNodeLogPrior(){
     logPrior = evaluateLogPrior();
+    assert(isfinite(logPrior));
 }
 
 /**
@@ -631,7 +640,7 @@ void Node::updateNodeLogPrior(){
 void Node::updateAllPairsLogLike(){
     // clear out all values
     pairLogLikeCont.clear();
-    
+
     for (auto fst = children.begin(); fst != children.end(); fst++) {
         // iterator for the next child
         auto nxt = fst;
@@ -760,8 +769,12 @@ string Node::toString() {
 }
 
 double Node::getLogLikeContribution(){
-    return loglikelihood_cont;
+    double logLik_cont = 0.0;
+    logLik_cont += getLogPrior();
+    logLik_cont += getLogLike();
+
+    assert(isfinite(logLik_cont));
+
+    return logLik_cont;
 }
-void Node::setLogLikeContribution(double new_contribution){
-    loglikelihood_cont = new_contribution;
-}
+

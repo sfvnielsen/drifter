@@ -59,7 +59,7 @@ public:
     double evaluateSubtreeLogLike();
     std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
     std::pair<int,int> getCountsPair(Node *, Node *);
-    
+
     // getting and updating cached likelihood caches
     double getLogLike();
     double getLogPrior();
@@ -77,16 +77,14 @@ public:
     void updateScion2Root(Node *, bool);
     void updateStock2Root(Node *, bool);
 
-    double loglikelihood_cont=0;
     double getLogLikeContribution();
-    void setLogLikeContribution(double);
 
 private:
     Node * parentP;
     int num_internal_nodes; //Is need for stock sampling
     std::list<Node *> children; //TODO vector
     int nodeId;
-    
+
     std::vector<double> pairLogLikeCont;
     double logPrior;
 

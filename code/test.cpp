@@ -247,7 +247,6 @@ int testLikelihood(double alpha, double beta, int rho_plus, int rho_minus){
             //Format into tree-class structure (approriate constructors)
             Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list, alpha, beta, rho_plus, rho_minus);
 
-
             // Test of matlab format method
             string mat_out_file = mat_out_dir + test_file_name;
             test_tree.writeMatlabFormat(mat_out_file);
