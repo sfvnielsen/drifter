@@ -156,36 +156,43 @@ void Node::addChild(Node * new_childP) {
  *  valid tree structure by collapsing the node if it only has 1 child left
  */
 bool Node::removeChild(Node * child) {
-    bool collapsed = false;
-    children.remove(child);
 
+    assert(isInternalNode());
+    assert(children.size()>=2);
     //IFF: The current node only have two children, it is collapsed as every
     //     internal node must have atleast 2 children)
-    if(1==(int) children.size()){
+    if(2==(int) children.size()){
         //If the node is the tree root, the single child should be the new root
         if(this == (treeP->getRoot()) ){
+            children.remove(child);
             children.front()->setParent(nullptr);
             treeP->setRootP(children.front());
             treeP->removeNode(this);
-            collapsed = true;
+            return true;
         }else{
         //Collaps this node, and adds its child to the grandparent
+            children.remove(child);
             parentP->addChild(children.front());
             parentP->removeChild(this);
+            parentP->updateAllPairsLogLike();
             treeP->removeNode(this);
-            collapsed = true;
+            return true;
         }
+    }else{
+        removeChildsCache(child);
+        children.remove(child);
+        return false;
     }
-    return collapsed;
 }
 
-bool Node::removeChildCached(Node * childP) {
+bool Node::removeChildsCache(Node * childP) {
 
     int N = (int) children.size()-1; //A node is removed
-    vector<double> new_pairLogLike(N*(N-1)/2,0);
+
+    vector<double> new_pairLogLike;
+    new_pairLogLike.reserve(N*(N-1)/2);
 
     auto it = pairLogLikeCont.begin();
-    auto it_new = new_pairLogLike.begin();
 
     for (auto fst = children.begin(); fst != children.end(); fst++) {
         // iterator for the next child
@@ -193,15 +200,12 @@ bool Node::removeChildCached(Node * childP) {
         // Loop through each child after it in the list
         for (auto snd = ++nxt ; snd != children.end(); snd++) {
             if( !(*fst == childP || *snd == childP) ){
-                (*it_new) = (*it);
-                ++it_new;
+                new_pairLogLike.push_back(*it);
             }
             ++it;
         }
     }
-
     pairLogLikeCont = new_pairLogLike;
-    children.remove(childP);
 
     return false;
 }
@@ -237,6 +241,7 @@ void Node::addChildCached(Node * childP) {
 //Kald på parent af nodeToReplace
 void Node::replaceChild(Node * nodeToReplace, Node * new_node){
     //Erstat
+    assert(this!=nullptr);
     if (this != nullptr) {
         auto it = pairLogLikeCont.begin();
         //Updatere loglike contribution
@@ -648,6 +653,44 @@ void Node::updateAllPairsLogLike(){
         for (auto snd = ++nxt ; snd != children.end(); snd++) {
             double L = evaluatePairLogLike(*fst, *snd);
             pairLogLikeCont.push_back(L);
+        }
+    }
+}
+/**
+ * Update cached pairs related to a child.
+ */
+void Node::updateChildPairsLogLike(Node * childP) {
+    int N = (int) children.size();
+    int Ncache = (int) pairLogLikeCont.size();
+
+    assert(Ncache == (N*(N-1))/2);
+
+    auto it = pairLogLikeCont.begin();
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            if( (*fst == childP || *snd == childP) ) {
+                double L = evaluatePairLogLike(*fst, *snd);
+                assert((*it) != L);
+                (*it) = L;
+            }
+        }
+    }
+}
+
+void Node::checkLogLikeCacheCorrect(){
+    auto it = pairLogLikeCont.begin();
+
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            double L = evaluatePairLogLike(*fst, *snd);
+            assert(*it==L);
+            ++it;
         }
     }
 }

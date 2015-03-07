@@ -40,7 +40,7 @@ public:
     void addChild(Node *);
     void addChildCached(Node *);
     bool removeChild(Node *);
-    bool removeChildCached(Node *);
+    bool removeChildsCache(Node *);
     void replaceChild(Node *, Node *);
 
     // Node random sampling
@@ -65,6 +65,8 @@ public:
     double getLogPrior();
     void updateNodeLogPrior();
     void updateAllPairsLogLike();
+    void updateChildPairsLogLike(Node *);
+    void checkLogLikeCacheCorrect();
 
     // equality
     bool isEqualSubtree(Node *);
@@ -89,7 +91,7 @@ private:
     double logPrior;
 
     Tree * treeP;
-    std::vector<int> leaves; //TODO vector
+    std::vector<int> leaves;
 };
 
 double logbeta(double,double);

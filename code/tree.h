@@ -20,7 +20,7 @@ class Tree {
 
 private:
     Node * rootP;
-    std::list<Node> nodes;  //TODO vector
+    std::list<Node> nodes;  // Don't make vector. This will invalidate pointers when reallocating.
     int nextInternalNodeId;
 
     Adj_list * adjacencyListP;

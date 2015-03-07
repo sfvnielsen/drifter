@@ -32,6 +32,7 @@ Tree::Tree(Adj_list * AP, double alpha_n, double beta_n, int rho_plus_n, int rho
     // recurses through tree and updates cached values
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
+    initializeLogLike();
 }
 
 /**
@@ -53,6 +54,7 @@ Tree::Tree(Adj_list * AP, string initType, double alpha_n, double beta_n, int rh
     //Assure correct node fields by recursion through tree
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
+    initializeLogLike();
 
 }
 
@@ -125,6 +127,8 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
         }
     }
     rootP->updateLeaves();
+
+    initializeLogLike();
 }
 
 /**
@@ -411,8 +415,6 @@ double Tree::regraft(){
         // Cut subtree rooted at scion (and update accordingly)
         Node *  scionParentP = cutSubtree(scionP);
 
-
-
         // Sample stock (insertion)
         Node * stockP = getRandomStock();
 
@@ -526,6 +528,7 @@ Node * Tree::cutSubtree(Node * scionP){
         }else{
             //Scions parent were collapsed,
             // so the update should start from its grand parent
+            //grandParentP->updateAllPairsLogLike();
             parent_to_return = grandParentP;
             currentP = grandParentP;
         }
@@ -593,40 +596,53 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         leaves_to_add = *(scionP->getLeaves() );
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
         currentP->addLeaves(leaves_to_add);
-
         currentP = currentP->getParent();
     }
 }
 
 /**
- * Updates log-like contribution of each node along two paths
+ * Updates log-like contribution related to the moved links.
+ * at each node along two paths
  * - From Scion -> Root
  * - From Stock -> Root
  */
 
 
 void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP){
-
     // Relation between scion and stock after insert
     assert(scionP->getParent()==stockP || scionP->getParent()==stockP->getParent());
-    Node * scionPathP = scionP->getParent();
-    Node * stockPathP = oldScionParentP;
+    Node * stockPathP = scionP->getParent();
+    Node * scionPathP = oldScionParentP;
+
+    Node * childP;
+
+    // Initial naive update of scion (in place of smart remove)
+//    scionPathP->updateAllPairsLogLike();
+    scionPathP->updateNodeLogPrior();
+    childP = scionPathP;
+    scionPathP = scionPathP->getParent();
 
     // Update scion path
     while (scionPathP != nullptr) {
         scionPathP->updateAllPairsLogLike();
         scionPathP->updateNodeLogPrior();
+        childP = scionPathP;
         scionPathP = scionPathP->getParent();
     }
+
+    // Initial naive update of stock (in place of smart add)
+    stockPathP->updateAllPairsLogLike();
+    stockPathP->updateNodeLogPrior();
+    childP = stockPathP;
+    stockPathP = stockPathP->getParent();
 
     // Update stock path
     while (stockPathP != nullptr) {
         stockPathP->updateAllPairsLogLike();
         stockPathP->updateNodeLogPrior();
+        childP = stockPathP;
         stockPathP = stockPathP->getParent();
     }
-
-
 }
 
 
