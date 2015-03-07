@@ -40,12 +40,13 @@ public:
     void addChild(Node *);
     void addChildCached(Node *);
     bool removeChild(Node *);
-    bool removeChildsCache(Node *);
+    bool removeChildCached(Node *);
     void replaceChild(Node *, Node *);
 
     // Node random sampling
     Node * getRandomDescendant();
     int updateNumInternalNodes();
+    bool isNumInternalNodesCorrect();
 
     void updateLeaves();
     void combineLeavesSet(std::vector<int>,std::vector<int>);
@@ -66,7 +67,7 @@ public:
     void updateNodeLogPrior();
     void updateAllPairsLogLike();
     void updateChildPairsLogLike(Node *);
-    void checkLogLikeCacheCorrect();
+    bool isLogLikeCacheCorrect();
 
     // equality
     bool isEqualSubtree(Node *);

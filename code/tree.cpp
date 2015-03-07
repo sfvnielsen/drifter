@@ -555,6 +555,8 @@ Node * Tree::cutSubtree(Node * scionP){
 */
 void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
+    initializeLogLike();
+
     vector<int> leaves_to_add;
     // Cannot be added as a child to a leaf, only as sibling
     if (! stockP->isInternalNode()){
@@ -570,8 +572,8 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         Node * stock_parent = stockP->getParent();
         if(stock_parent != nullptr){ // if stock is not root
             new_parent->setParent(stock_parent);
-            stock_parent->addChild(new_parent);
-            stock_parent->removeChild(stockP);
+            stock_parent->addChildCached(new_parent);
+            stock_parent->removeChildCached(stockP);
         } else {// if stock is root
             setRootP(new_parent);
         }
