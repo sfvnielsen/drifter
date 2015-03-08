@@ -333,10 +333,12 @@ Node * Node::getRandomDescendant() {
     p_vals.push_back((double)2/sum_weight); // Root probability added
     node_list.push_back(this);
 
+    #ifndef NDEBUG
     // assert that p_vals sums to 1
     double p_val_sum = 0;
     p_val_sum = accumulate(p_vals.begin(),p_vals.end(),p_val_sum);
     assert(abs(p_val_sum-1.0)<1e-12);
+    #endif // NDEBUG
 
     // Sample from this distribution
     Node * sampled_node = multinomialSampling(node_list,p_vals);
