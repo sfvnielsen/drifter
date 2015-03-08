@@ -412,10 +412,13 @@ double Tree::regraft(){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
 
-        evaluateLogLikeTimesPrior();
+        assert(isLoglikeCorrect());
+        //evaluateLogLikeTimesPrior();
 
         // Cut subtree rooted at scion (and update accordingly)
         Node *  scionParentP = cutSubtree(scionP);
+
+        assert(isLoglikeCorrect());
 
         // Sample stock (insertion)
         Node * stockP = getRandomStock();
@@ -426,9 +429,12 @@ double Tree::regraft(){
         std::bernoulli_distribution dis(0.5);
         bool unbiased_coinflip = dis(gen);
 
+
         // Insert cut subtree as child or sibling to stock
         // Update accordingly (inside insertSubtree)
         insertSubtree(stockP, scionP, unbiased_coinflip);
+
+        assert(isLoglikeCorrect());
 
         // Update node-loglike on paths to root
         updateScionAndStock(scionP, scionParentP, stockP);
@@ -558,7 +564,7 @@ Node * Tree::cutSubtree(Node * scionP){
 */
 void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
-    initializeLogLike();
+    assert(isLoglikeCorrect());
 
     vector<int> leaves_to_add;
     // Cannot be added as a child to a leaf, only as sibling
@@ -604,6 +610,9 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         currentP->addLeaves(leaves_to_add);
         currentP = currentP->getParent();
     }
+
+    assert(isLoglikeCorrect());
+
 }
 
 /**
@@ -691,6 +700,18 @@ void Tree::initializeLogLike(){
         (*it).updateNodeLogPrior();
         (*it).updateAllPairsLogLike();
     }
+}
+
+/**
+*  Checks the Likelihood caches of all nodes
+*/
+bool Tree::isLoglikeCorrect(){
+    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+        if(!(*it).isLogLikeCacheCorrect()){
+            return false;
+        }
+    }
+    return true;
 }
 
 

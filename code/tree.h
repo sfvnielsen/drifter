@@ -77,6 +77,7 @@ public:
     double evaluateLogLikeTimesPrior();
     bool isLoglikeInitialised;
     void initializeLogLike();
+    bool isLoglikeCorrect();
 
     // Print
     std::string toString();
