@@ -134,7 +134,7 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn,double 
 
     }
 
-    for (auto i = 0; i < num_occ.size(); i++) {
+    for (auto i = 0; i < (int)num_occ.size(); i++) {
         out_file2 << num_occ[i] << " ";
     }
 

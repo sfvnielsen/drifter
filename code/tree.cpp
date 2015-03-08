@@ -674,13 +674,14 @@ double Tree::evaluateLogLikeTimesPrior(){
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
         sum += it->getLogLikeContribution();
     }
-
+    #ifndef NDEBUG
     initializeLogLike();
 
     double sumT = 0.0;
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
         sumT += it->getLogLikeContribution();
     }
+    #endif
 
     assert(sum==sumT);
     assert(isfinite(sum));

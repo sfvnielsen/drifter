@@ -686,10 +686,11 @@ void Node::updateAllPairsLogLike(){
  * Update cached pairs related to a child.
  */
 void Node::updateChildPairsLogLike(Node * childP) {
-    int N = (int) children.size();
-    int Ncache = (int) pairLogLikeCont.size();
 
-    assert(Ncache == (N*(N-1))/2);
+    #ifndef NDEBUG
+        int N = (int) children.size();
+    #endif
+    assert((int) pairLogLikeCont.size() == (N*(N-1))/2);
 
     auto it = pairLogLikeCont.begin();
     for (auto fst = children.begin(); fst != children.end(); fst++) {
