@@ -619,8 +619,6 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
  * - From Scion -> Root
  * - From Stock -> Root
  */
-
-
 void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stockP){
     // Relation between scion and stock after insert
     assert(scionP->getParent()==stockP || scionP->getParent()==stockP->getParent());
@@ -637,7 +635,7 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
 
     // Update scion path
     while (scionPathP != nullptr) {
-        scionPathP->updateAllPairsLogLike();
+        scionPathP->updateChildPairsLogLike(childP);
         scionPathP->updateNodeLogPrior();
         childP = scionPathP;
         scionPathP = scionPathP->getParent();
@@ -651,7 +649,7 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
 
     // Update stock path
     while (stockPathP != nullptr) {
-        stockPathP->updateAllPairsLogLike();
+        stockPathP->updateChildPairsLogLike(childP);
         stockPathP->updateNodeLogPrior();
         childP = stockPathP;
         stockPathP = stockPathP->getParent();

@@ -699,11 +699,12 @@ void Node::updateChildPairsLogLike(Node * childP) {
         for (auto snd = ++nxt ; snd != children.end(); snd++) {
             if( (*fst == childP || *snd == childP) ) {
                 double L = evaluatePairLogLike(*fst, *snd);
-                assert((*it) != L);
                 (*it) = L;
             }
+            ++it;
         }
     }
+    assert(isLogLikeCacheCorrect());
 }
 
 bool Node::isLogLikeCacheCorrect(){
