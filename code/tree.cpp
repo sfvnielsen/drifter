@@ -412,6 +412,8 @@ double Tree::regraft(){
         int n_nodes = (int)nodes.size();
         double p_scion = 1.0/(n_nodes);
 
+        evaluateLogLikeTimesPrior();
+
         // Cut subtree rooted at scion (and update accordingly)
         Node *  scionParentP = cutSubtree(scionP);
 
@@ -507,6 +509,7 @@ Node * Tree::cutSubtree(Node * scionP){
     Node * grandParentP = parentP->getParent();
 
     /////CUT START
+
     bool collapsed = parentP->removeChild(scionP);
 
     // Set parent to null
@@ -572,8 +575,9 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         Node * stock_parent = stockP->getParent();
         if(stock_parent != nullptr){ // if stock is not root
             new_parent->setParent(stock_parent);
-            stock_parent->addChildCached(new_parent);
-            stock_parent->removeChildCached(stockP);
+            stock_parent->addChild(new_parent);
+            stock_parent->removeChild(stockP);
+            //stock_parent->replaceChild(stockP,new_parent);
         } else {// if stock is root
             setRootP(new_parent);
         }

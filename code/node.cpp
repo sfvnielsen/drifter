@@ -176,10 +176,10 @@ bool Node::removeChild(Node * child) {
             assert((int)children.size()==1);
             Node * remainingChild = children.front();
 
-            parentP->removeChildCached(this);
+//            parentP->removeChildCached(this);
+//            parentP->addChildCached(remainingChild);
+            parentP->replaceChild(this,remainingChild);
 
-            parentP->addChildCached(remainingChild);
-            //parentP->updateAllPairsLogLike();
             treeP->removeNode(this);
             return true;
         }
@@ -192,8 +192,8 @@ bool Node::removeChild(Node * child) {
 bool Node::removeChildCached(Node * childP) {
     assert(isLogLikeCacheCorrect());
 
-    int N = (int) children.size(); //A node is removed
-    --N;
+    int N = (int) children.size();
+    --N;//A node is removed
 
     vector<double> new_pairLogLike;
     new_pairLogLike.reserve(N*(N-1)/2);
@@ -257,39 +257,34 @@ void Node::addChildCached(Node * childP) {
 }
 
 //Kald på parent af nodeToReplace
-void Node::replaceChild(Node * nodeToReplace, Node * new_node){
+void Node::replaceChild(Node * nodeToReplace, Node * new_node) {
     assert(isLogLikeCacheCorrect());
     //Erstat
-    assert(this!=nullptr);
-    if (this != nullptr) {
-        auto it = pairLogLikeCont.begin();
-        //Updatere loglike contribution
-        for (auto fst = children.begin(); fst != children.end(); fst++) {
-            // iterator for the next child
-            auto nxt = fst;
-            // Loop through each child after it in the list
-            for (auto snd = ++nxt ; snd != children.end(); snd++) {
-                if(*snd == nodeToReplace){ // der skal tilføjes noget
-                    (*it) = evaluatePairLogLike(*fst, new_node);
-                } else if (*fst == nodeToReplace) {
-                    (*it) = evaluatePairLogLike(*snd, new_node);
-                } else {
-                    //No change in parameters/loglike
-                }
-                ++it;
-
+    assert(this != nullptr);
+    auto it = pairLogLikeCont.begin();
+    //Updatere loglike contribution
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            if(*snd == nodeToReplace) { // der skal tilføjes noget
+                (*it) = evaluatePairLogLike(*fst, new_node);
+            } else if (*fst == nodeToReplace) {
+                (*it) = evaluatePairLogLike(new_node, *snd);
+            } else {
+                //No change in parameters/loglike
             }
+            ++it;
         }
-        //Erstat nodeToReplace med new_node i children listen
-        for (auto it = children.begin(); it!=children.end(); ++it) {
-            if (*it == nodeToReplace) {
-                (*it) = new_node;
-                break;
-            }
-        }
-    } else {
-        //???
     }
+    //Erstat nodeToReplace med new_node i children listen
+    auto itNode = find(children.begin(), children.end(), nodeToReplace);
+    assert(itNode != children.end());
+    *itNode = new_node;
+    new_node->setParent(this);
+
+    updateAllPairsLogLike();
 
     assert(isLogLikeCacheCorrect());
 }
