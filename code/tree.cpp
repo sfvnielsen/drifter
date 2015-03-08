@@ -418,8 +418,6 @@ double Tree::regraft(){
         // Cut subtree rooted at scion (and update accordingly)
         Node *  scionParentP = cutSubtree(scionP);
 
-        assert(isLoglikeCorrect());
-
         // Sample stock (insertion)
         Node * stockP = getRandomStock();
 
@@ -434,10 +432,11 @@ double Tree::regraft(){
         // Update accordingly (inside insertSubtree)
         insertSubtree(stockP, scionP, unbiased_coinflip);
 
-        assert(isLoglikeCorrect());
 
         // Update node-loglike on paths to root
         updateScionAndStock(scionP, scionParentP, stockP);
+
+        assert(isLoglikeCorrect());
 
         // Move probabilities
         n_nodes = (int) nodes.size();
@@ -564,26 +563,27 @@ Node * Tree::cutSubtree(Node * scionP){
 */
 void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
 
-    assert(isLoglikeCorrect());
-
     vector<int> leaves_to_add;
     // Cannot be added as a child to a leaf, only as sibling
     if (! stockP->isInternalNode()){
         asChild = false;
     }
+
     //Update from stock to root, add leaves and num. internal nodes
     if(asChild){
-        stockP->addChild(scionP);
+        stockP->addChildCached(scionP);
     }else{ //As sibling
         // Create a new node
         Node * new_parent = addNode();
+        leaves_to_add = *(stockP->getLeaves() );
+        new_parent->addLeaves(leaves_to_add);
+
         // Constuct and add a new parent
         Node * stock_parent = stockP->getParent();
         if(stock_parent != nullptr){ // if stock is not root
-            new_parent->setParent(stock_parent);
-            stock_parent->addChild(new_parent);
-            stock_parent->removeChild(stockP);
-            //stock_parent->replaceChild(stockP,new_parent);
+            //stock_parent->addChild(new_parent);
+            //stock_parent->removeChild(stockP);
+            stock_parent->replaceChild(stockP,new_parent);
         } else {// if stock is root
             setRootP(new_parent);
         }
@@ -592,16 +592,16 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         new_parent->addChild(stockP);
         new_parent->addChild(scionP);
 
-        //Update the num. internal and leaves
-        new_parent->setNumInternalNodes(stockP->getNumInternalNodes());
-        leaves_to_add = *(stockP->getLeaves() );
-        new_parent->addLeaves(leaves_to_add);
+        // For this newly created node we can just build the cache naively.
+        new_parent->updateAllPairsLogLike();
 
+        //Update the num. internal
+        new_parent->setNumInternalNodes(stockP->getNumInternalNodes());
     }
 
     // Start from current node and update up to root
     leaves_to_add = *(scionP->getLeaves() );
-    int internal_nodes_add = scionP->getNumInternalNodes()+ (int) !asChild;
+    int internal_nodes_add = scionP->getNumInternalNodes() + (int) !asChild;
 
     Node * currentP = scionP->getParent();
     while (currentP != nullptr) {
@@ -610,8 +610,6 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         currentP->addLeaves(leaves_to_add);
         currentP = currentP->getParent();
     }
-
-    assert(isLoglikeCorrect());
 
 }
 
@@ -646,7 +644,7 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
     }
 
     // Initial naive update of stock (in place of smart add)
-    stockPathP->updateAllPairsLogLike();
+    //stockPathP->updateAllPairsLogLike();
     stockPathP->updateNodeLogPrior();
     childP = stockPathP;
     stockPathP = stockPathP->getParent();

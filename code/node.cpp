@@ -156,7 +156,7 @@ void Node::addChild(Node * new_childP) {
  *  valid tree structure by collapsing the node if it only has 1 child left
  */
 bool Node::removeChild(Node * child) {
-    assert(isLogLikeCacheCorrect());
+    //assert(isLogLikeCacheCorrect());
     assert(isInternalNode());
     assert(children.size()>=2);
     //IFF: The current node only have two children, it is collapsed as every
@@ -187,10 +187,12 @@ bool Node::removeChild(Node * child) {
         removeChildCached(child);
         return false;
     }
+
+    //assert(isLogLikeCacheCorrect());
 }
 
 bool Node::removeChildCached(Node * childP) {
-    assert(isLogLikeCacheCorrect());
+    //assert(isLogLikeCacheCorrect());
 
     int N = (int) children.size();
     --N;//A node is removed
@@ -205,8 +207,9 @@ bool Node::removeChildCached(Node * childP) {
         auto nxt = fst;
         // Loop through each child after it in the list
         for (auto snd = ++nxt ; snd != children.end(); snd++) {
-            if( !(*fst == childP || *snd == childP) ){
+            if((*fst) != childP && (*snd) != childP){
                 new_pairLogLike.push_back(*it);
+                // Works: new_pairLogLike.push_back(evaluatePairLogLike(*fst,*snd));
             }
             ++it;
         }
@@ -214,14 +217,16 @@ bool Node::removeChildCached(Node * childP) {
     pairLogLikeCont = new_pairLogLike;
     children.remove(childP);
 
+    //updateAllPairsLogLike();
+
     assert((int) children.size() == N);
-    assert(isLogLikeCacheCorrect());
+    //assert(isLogLikeCacheCorrect());
     return false;
 }
 
 void Node::addChildCached(Node * childP) {
 
-    assert(isLogLikeCacheCorrect());
+    //assert(isLogLikeCacheCorrect());
 
     children.push_back(childP);
     childP->setParent(this);
@@ -252,13 +257,12 @@ void Node::addChildCached(Node * childP) {
     }
     pairLogLikeCont = new_pairLogLike;
 
-    //updateAllPairsLogLike();
-    assert(isLogLikeCacheCorrect());
+    //assert(isLogLikeCacheCorrect());
 }
 
 //Kald på parent af nodeToReplace
 void Node::replaceChild(Node * nodeToReplace, Node * new_node) {
-    assert(isLogLikeCacheCorrect());
+    //assert(isLogLikeCacheCorrect());
     //Erstat
     assert(this != nullptr);
     auto it = pairLogLikeCont.begin();
@@ -284,9 +288,7 @@ void Node::replaceChild(Node * nodeToReplace, Node * new_node) {
     *itNode = new_node;
     new_node->setParent(this);
 
-    updateAllPairsLogLike();
-
-    assert(isLogLikeCacheCorrect());
+    //assert(isLogLikeCacheCorrect());
 }
 
 /**
@@ -705,9 +707,17 @@ void Node::updateChildPairsLogLike(Node * childP) {
 }
 
 bool Node::isLogLikeCacheCorrect(){
-    double L = getLogLike();
-    updateAllPairsLogLike();
-    return L == getLogLike();
+    double log_like = 0.0;
+
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        list<Node *>::iterator nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            log_like += evaluatePairLogLike(*fst, *snd);
+        }
+    }
+    return log_like == getLogLike();
 }
 
 /**
