@@ -194,27 +194,44 @@ bool Node::removeChild(Node * child) {
 bool Node::removeChildCached(Node * childP) {
     //assert(isLogLikeCacheCorrect());
 
-    int N = (int) children.size();
-    --N;//A node is removed
+    int n = (int) children.size();
+    int N = n-1;//A node is removed
 
     vector<double> new_pairLogLike;
     new_pairLogLike.reserve(N*(N-1)/2);
 
     auto it = pairLogLikeCont.begin();
+    auto it_new = new_pairLogLike.begin();
 
-    for (auto fst = children.begin(); fst != children.end(); fst++) {
-        // iterator for the next child
-        auto nxt = fst;
-        // Loop through each child after it in the list
-        for (auto snd = ++nxt ; snd != children.end(); snd++) {
-            if((*fst) != childP && (*snd) != childP){
-                new_pairLogLike.push_back(*it);
-                // Works: new_pairLogLike.push_back(evaluatePairLogLike(*fst,*snd));
-            }
-            ++it;
-        }
+    int k = find(children.begin(), children.end(), childP) - children.begin();
+    assert(k<(int)children.size());
+
+    it_new = move(it,it+(k-1),it_new);
+    it += k+1;
+    for(int j=1; j<k; j++){
+        it_new = move(it,it+(n-j),it_new);
+        it += n-j+2;
     }
-    pairLogLikeCont = new_pairLogLike;
+    // skip n-k
+    it += n-k
+    move(it,pairLogLikeCont.end(),it_new);
+
+//    for (auto fst = children.begin(); fst != children.end(); fst++) {
+//        // iterator for the next child
+//        auto nxt = fst;
+//        // Loop through each child after it in the list
+//        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+//            if((*fst) != childP && (*snd) != childP){
+//                new_pairLogLike.push_back(*it);
+//                // Works: new_pairLogLike.push_back(evaluatePairLogLike(*fst,*snd));
+//            }
+//            ++it;
+//        }
+//    }
+
+
+    pairLogLikeCont = move(new_pairLogLike);
+
     children.remove(childP);
 
     //updateAllPairsLogLike();
