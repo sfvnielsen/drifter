@@ -73,6 +73,9 @@ public:
     // Print
     std::string toString();
     void writeMatlabFormat(std::string);
+    void writeGexf(std::string);
+    std::string toGexf();
+
 };
 
 

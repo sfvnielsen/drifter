@@ -64,6 +64,24 @@ string Adj_list::toString(){
     return s;
 }
 
+
+/**
+ * Make a string of all links
+ */
+string Adj_list::toGexf(){
+    int edgeId = 0;
+    string s = "<edges>\n";
+    for(int i = 0; i != (int) adjacency_matrix.size(); i++) {
+        for(int j = i; j != (int) adjacency_matrix.size(); j++) {
+            if(isConnected(i,j) ){
+                s += "<edge id=\"" + to_string(edgeId) + "\" source=\"" + to_string(i) + "\" target=\"" + to_string(j) + "\" />\n";
+                edgeId++;
+            }
+        }
+    }
+    s += "</edges>\n";
+    return s;
+}
 /**
  * Get the number of nodes.
  */

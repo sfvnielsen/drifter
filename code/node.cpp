@@ -11,6 +11,7 @@
 #include "tree.h"
 
 #include <iostream>
+#include <algorithm>
 #include <numeric>  // lets us use cumulative sum
 #include <cassert> // for assert statements
 #include <random> // C++11 random generator
@@ -154,7 +155,7 @@ void Node::addChild(Node * new_childP) {
 bool Node::removeChild(Node * child) {
     bool collapsed = false;
     children.remove(child);
-    
+
     //IFF: The current node only have two children, it is collapsed as every
     //     internal node must have atleast 2 children)
     if(1==(int) children.size()){
@@ -601,6 +602,23 @@ string Node::toString() {
         }
     }
     return s ;
+}
+
+
+string Node::toGexf(int indent){
+    string pad = string(indent*4, ' ');
+    string s = pad + "<node id=\"" + to_string(nodeId);
+    s += "\">";
+    if(!children.empty()){
+        s += "\n";
+        s += pad + "<nodes>\n";
+        for(auto childP = children.begin(); childP != children.end() ; childP++){
+            s += (*childP)->toGexf(indent + 1);
+        }
+        s += pad + "</nodes>\n";
+    }
+    s += pad + "</node>\n";
+    return s;
 }
 
 double Node::getLogLikeContribution(){

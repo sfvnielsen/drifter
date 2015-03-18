@@ -6,6 +6,8 @@
  */
 
 #include <iostream>
+#include <fstream>
+
 #include <time.h> // ----
 #include <chrono> // chrono::timepoint, chrono::system_clock
 
@@ -43,18 +45,18 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     // Loading the data.
     cout << "Running on: " << data_file_name << endl;
     IoFileHandler data_file(data_file_name,0);
-    
+
     pair<int,int> g1 (0,1);
     pair<int,int> g2 (1,2);
     pair<int,int> g3 (0,3);
     pair<int,int> g4 (1,3);
     pair<int,int> g5 (2,3);
     list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
-    
+
 
     // Constructing the sampler.
-//    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1);
-    Sampler sampler = Sampler(data_edge_list, 0.5, 0.5, 1, 1);
+    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1);
+//    Sampler sampler = Sampler(data_edge_list, 0.5, 0.5, 1, 1);
 
     // Start timing
     chrono::time_point<chrono::system_clock> start, end;
@@ -77,7 +79,12 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
     // Print the last tree.
-    //cout << sampler.getLast().toString() << endl;
+    cout << sampler.getLastTree().toGexf() << endl;
+
+    ofstream myfile;
+    myfile.open("out.gexf");
+    myfile << sampler.getLastTree().toGexf();
+    myfile.close();
 
     // Print out statistics for the run.
     std::cout << "finished computation at " << std::ctime(&end_time)
