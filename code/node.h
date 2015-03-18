@@ -76,6 +76,7 @@ public:
 
     // print
     std::string toString();
+    std::string toGexf(int);
 
     void updateScion2Root(Node *, bool);
     void updateStock2Root(Node *, bool);

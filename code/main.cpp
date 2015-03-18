@@ -6,6 +6,8 @@
  */
 
 #include <iostream>
+#include <fstream>
+
 #include <time.h> // ----
 #include <chrono> // chrono::timepoint, chrono::system_clock
 
@@ -78,7 +80,12 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     sampler.getLastTree().writeJSONFormat("flare.json");
 
     // Print the last tree.
-    //cout << sampler.getLast().toString() << endl;
+    cout << sampler.getLastTree().toGexf() << endl;
+
+    ofstream myfile;
+    myfile.open("out.gexf");
+    myfile << sampler.getLastTree().toGexf();
+    myfile.close();
 
     // Print out statistics for the run.
     std::cout << "finished computation at " << std::ctime(&end_time)

@@ -83,6 +83,8 @@ public:
     std::string toString();
     void writeMatlabFormat(std::string);
     void writeJSONFormat(std::string);
+    void writeGexf(std::string);
+    std::string toGexf();
 };
 
 

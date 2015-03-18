@@ -25,6 +25,7 @@ public:
     int getSize();
 
     std::string toString();
+    std::string toGexf();
 
 private:
     // Data structure
