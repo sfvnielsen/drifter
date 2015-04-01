@@ -685,7 +685,7 @@ void Node::updateAllPairsLogLike(){
     }
 }
 /**
- * Update cached pairs related to a child.
+ * Update cached pairs related to a child. 
  */
 void Node::updateChildPairsLogLike(Node * childP) {
 
@@ -707,7 +707,7 @@ void Node::updateChildPairsLogLike(Node * childP) {
             ++it;
         }
     }
-    assert(isLogLikeCacheCorrect());
+    
 }
 
 bool Node::isLogLikeCacheCorrect(){

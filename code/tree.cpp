@@ -628,7 +628,6 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
     Node * childP;
 
     // Initial naive update of scion (in place of smart remove)
-//    scionPathP->updateAllPairsLogLike();
     scionPathP->updateNodeLogPrior();
     childP = scionPathP;
     scionPathP = scionPathP->getParent();
@@ -654,6 +653,8 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
         childP = stockPathP;
         stockPathP = stockPathP->getParent();
     }
+    
+    assert(isLoglikeCorrect());
 }
 
 
