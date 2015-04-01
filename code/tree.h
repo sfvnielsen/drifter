@@ -20,7 +20,7 @@ class Tree {
 
 private:
     Node * rootP;
-    std::list<Node> nodes;  //TODO vector
+    std::list<Node> nodes;  // Don't make vector. This will invalidate pointers when reallocating.
     int nextInternalNodeId;
 
     Adj_list * adjacencyListP;
@@ -32,11 +32,12 @@ private:
 public:
     // Constructors
     Tree();
-    Tree(Adj_list * AP);
-    Tree(Adj_list * AP, std::string initType);
-    Tree(std::list<std::pair<int, int>>, std::string);
+    Tree(Adj_list * AP,double, double, int, int);
+    Tree(Adj_list * AP, std::string initType,double, double, int, int);
+    Tree(std::list<std::pair<int, int>>, std::string,double, double, int, int);
     Tree(std::list<std::pair<int, int>>
-         , std::vector<int>, Adj_list *);
+         , std::vector<int>, Adj_list *,double, double, int, int);
+
 
     //Rule of "5"
     //virtual ~Tree();                           // Default destructor
@@ -56,19 +57,27 @@ public:
     Node * getNode(int);
     void removeNode(Node *);
 
+    // Hyperparameters
+    double alpha;
+    double beta;
+    int rho_plus;
+    int rho_minus;
+
     // Regrafting
-	double regraft();
-    double regraft(double, double, int, int);
+    double naive_regraft();
+    double regraft();
     void regraft(int,int); // Only used for debug
-	Node * getRandomScion();
-	Node * getRandomStock();
-	Node * cutSubtree(Node * );
+    Node * getRandomScion();
+    Node * getRandomStock();
+    Node * cutSubtree(Node * );
     void insertSubtree(Node *, Node *, bool);
-    void updateScionAndStock(Node *, Node *, Node *, double, double, int, int);
+    void updateScionAndStock(Node *, Node *, Node *);
 
     // Evaluating likelihood
-    double evaluateLogLikeTimesPrior(double, double, int, int);
-    bool isLoglikeInitialised = false;
+    double evaluateLogLikeTimesPrior();
+    bool isLoglikeInitialised;
+    void initializeLogLike();
+    bool isLoglikeCorrect();
 
     // Print
     std::string toString();

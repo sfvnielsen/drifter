@@ -38,11 +38,15 @@ public:
     std::list<Node *> getChildren();
     void setChildren(std::list<Node *>);
     void addChild(Node *);
+    void addChildCached(Node *);
     bool removeChild(Node *);
+    bool removeChildCached(Node *);
+    void replaceChild(Node *, Node *);
 
     // Node random sampling
     Node * getRandomDescendant();
     int updateNumInternalNodes();
+    bool isNumInternalNodesCorrect();
 
     void updateLeaves();
     void combineLeavesSet(std::vector<int>,std::vector<int>);
@@ -50,11 +54,20 @@ public:
     void removeLeaves(std::vector<int>);
 
     // evaluating likelihood
-    double evaluateNodeLogLike(double,double,int,int);
-    double evaluateSubtreeLogLike(double,double,int,int);
+    double evaluateNodeLogLike();
+    double evaluateLogPrior();
+    double evaluatePairLogLike(Node *, Node *);
+    double evaluateSubtreeLogLike();
     std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
     std::pair<int,int> getCountsPair(Node *, Node *);
 
+    // getting and updating cached likelihood caches
+    double getLogLike();
+    double getLogPrior();
+    void updateNodeLogPrior();
+    void updateAllPairsLogLike();
+    void updateChildPairsLogLike(Node *);
+    bool isLogLikeCacheCorrect();
 
     // equality
     bool isEqualSubtree(Node *);
@@ -67,7 +80,6 @@ public:
     void updateScion2Root(Node *, bool);
     void updateStock2Root(Node *, bool);
 
-    double loglikelihood_cont=0;
     double getLogLikeContribution();
     void setLogLikeContribution(double);
     std::string toJSON();
@@ -78,8 +90,11 @@ private:
     std::list<Node *> children; //TODO vector
     int nodeId;
 
+    std::vector<double> pairLogLikeCont;
+    double logPrior;
+
     Tree * treeP;
-    std::vector<int> leaves; //TODO vector
+    std::vector<int> leaves;
 };
 
 double logbeta(double,double);

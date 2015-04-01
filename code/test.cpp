@@ -46,17 +46,17 @@ int main()
 
     Adj_list adj = Adj_list(data_edge_list);
 
-    Tree eTree = Tree(&adj);
+    Tree eTree = Tree(&adj,alpha, beta, rho_plus, rho_minus);
 
-    cout << "Does copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(alpha, beta,rho_plus, rho_minus)
-    << " == " << Tree(eTree).evaluateLogLikeTimesPrior(alpha, beta, rho_plus, rho_minus) << endl;
+    cout << "Does copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior()
+    << " == " << Tree(eTree).evaluateLogLikeTimesPrior() << endl;
 
 
     Tree tempTest = Tree(eTree);
-    tempTest.regraft(alpha, beta, rho_plus , rho_minus);
+    tempTest.regraft();
 
-    cout << "Does regraft + copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior(alpha, beta, rho_plus , rho_minus)
-    << " == " << tempTest.evaluateLogLikeTimesPrior(alpha, beta, rho_plus , rho_minus) << endl << endl;
+    cout << "Does regraft + copy operator work??  " << endl << "True loglike: " << eTree.evaluateLogLikeTimesPrior()
+    << " == " << tempTest.evaluateLogLikeTimesPrior() << endl << endl;
 
 
 
@@ -134,7 +134,7 @@ void testSamplerDistribution(string folder,int num_samples, int num_burn,double 
 
     }
 
-    for (auto i = 0; i < num_occ.size(); i++) {
+    for (auto i = 0; i < (int)num_occ.size(); i++) {
         out_file2 << num_occ[i] << " ";
     }
 
@@ -245,8 +245,7 @@ int testLikelihood(double alpha, double beta, int rho_plus, int rho_minus){
             int number_data_nodes = adjacency_list.getSize();
 
             //Format into tree-class structure (approriate constructors)
-            Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list);
-
+            Tree test_tree = Tree(tree_edge_list, leaf_data_relation, &adjacency_list, alpha, beta, rho_plus, rho_minus);
 
             // Test of matlab format method
             string mat_out_file = mat_out_dir + test_file_name;
@@ -254,8 +253,8 @@ int testLikelihood(double alpha, double beta, int rho_plus, int rho_minus){
             // Perform tests - evaluate likelihood of tree
             cout << "Local-Likelihood test..." << endl << flush ;
 
-            test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
-            double llike_test = test_tree.evaluateLogLikeTimesPrior(alpha,beta,rho_plus,rho_minus);
+            test_tree.evaluateLogLikeTimesPrior();
+            double llike_test = test_tree.evaluateLogLikeTimesPrior();
             cout << "llike_test: " << llike_test << " == " << llike_true << " True" <<endl;
 
             if (abs(llike_test-llike_true)<epsilon)
