@@ -609,3 +609,18 @@ double Node::getLogLikeContribution(){
 void Node::setLogLikeContribution(double new_contribution){
     loglikelihood_cont = new_contribution;
 }
+
+string Node::toJSON(){
+    if (!children.empty()) {
+        string s ="{\"name\": \" " + to_string(nodeId) +",\"size\": \""+to_string(num_internal_nodes)+"\""+"\" ,\n\"children\": [\n ";
+        for (auto it = children.begin(); (*it) != children.back(); ++it) {
+            s = s+"\t"+(*it)->toJSON()+",\n";
+        }
+        return s+children.back()->toJSON()+"]\n}";
+
+    } else {
+        return "{\"name\": \"" + to_string(nodeId) +"\", \"size\": "+to_string(1)+"}";
+    }
+
+    
+}

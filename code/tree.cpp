@@ -702,3 +702,10 @@ void Tree::writeMatlabFormat(string filename) {
         out_file << *it << " ";
     }
 }
+
+void Tree::writeJSONFormat(string filename) {
+    
+    ofstream out_file(filename.c_str()); // output file
+    
+    out_file << rootP->toJSON();
+}

@@ -70,6 +70,7 @@ public:
     double loglikelihood_cont=0;
     double getLogLikeContribution();
     void setLogLikeContribution(double);
+    std::string toJSON();
 
 private:
     Node * parentP;

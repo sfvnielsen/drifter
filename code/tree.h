@@ -73,6 +73,7 @@ public:
     // Print
     std::string toString();
     void writeMatlabFormat(std::string);
+    void writeJSONFormat(std::string);
 };
 
 
