@@ -36,11 +36,13 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
     int N = (int) leaves.size();
 
     //Construct adjacency_matrix
-    adjacency_matrix = vector<vector<bool>>(N,vector<bool>(N,false));
+    adjacency_matrix = vector<vector<pair<bool,bool>>>(N,vector<pair<bool,bool>>(N,pair<bool,bool>(false,false)));
     for (list<pair<int,int>>::iterator it = edge_list.begin();
          it != edge_list.end(); it++){
-            adjacency_matrix[it->first][it->second] = true;
-            adjacency_matrix[it->second][it->first] = true;
+            adjacency_matrix[it->first][it->second].first = true;
+            adjacency_matrix[it->first][it->second].second = true;
+            adjacency_matrix[it->second][it->first].first = true;
+            adjacency_matrix[it->second][it->first].second = true;
     }
 }
 
@@ -48,7 +50,7 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
  * Query the connection between two nodes.
  */
 bool Adj_list::isConnected(int current, int target){
-        return adjacency_matrix[current][target];
+        return adjacency_matrix[current][target].first;
 }
 
 /**
