@@ -102,7 +102,7 @@ void Node::setNodeId(int new_id){
 /**
  * Returns a list of pointers to the leaf nodes of the current node
  */
-vector<int> * Node::getLeaves() {
+vector<int> * Node::getLeavesP() {
     assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
     return &leaves;
 }
@@ -318,13 +318,13 @@ Node * Node::getRandomDescendant() {
     // Each child is a subtree and it weight is calculated and stored for each subtree (child)
     for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
         subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
-                                 (int)(((*it)->getLeaves())->size()) );
+                                 (int)(((*it)->getLeavesP())->size()) );
         //Checks for consistency in isInternal
         assert((*it)->getNumInternalNodes() == 0 || (*it)->isInternalNode());
         assert((*it)->getNumInternalNodes()> 0 || !(*it)->isInternalNode());
     }
     //The weights summes to the weight of the subtree rooted at the current node
-    int sum_weight = (int)((getLeaves())->size())+
+    int sum_weight = (int)((getLeavesP())->size())+
                             2*getNumInternalNodes();
     //The weights are normalised to a probability and store in vector p_vals
     vector<double> p_vals;
@@ -402,7 +402,7 @@ void Node::updateLeaves(){
 
             //For each child copy the child list to this node.
             // NOTE: Using splices removes the elements from the list.
-            vector<int> childLeaves = *(childP->getLeaves());
+            vector<int> childLeaves = *(childP->getLeavesP());
             assert(childLeaves.size()>0);
             //Combines a sorted list!
             addLeaves(childLeaves);
@@ -506,14 +506,14 @@ double Node::evaluateLogPrior(){
     double log_prior = 0.0;
 
     int num_children = (int) (getChildren()).size();
-    int num_leaves_total = (int) (getLeaves())->size();
+    int num_leaves_total = (int) (getLeavesP())->size();
     vector<int> num_leaves_each_child;
     list<Node *> list_of_children = getChildren();
 
     // Get number of leaves for each child
     for (auto it = list_of_children.begin();
          it!= list_of_children.end(); ++it) {
-        int num_leaves = (int) (*it)->getLeaves()->size();
+        int num_leaves = (int) (*it)->getLeavesP()->size();
         num_leaves_each_child.push_back(num_leaves);
     }
 
@@ -547,7 +547,7 @@ double Node::evaluateLogPrior(){
 }
 
 double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
-    int num_links, num_pos_links;
+    int num_links, num_non_links;
     double log_like;
 
     int rho_plus = treeP->rho_plus;
@@ -556,9 +556,9 @@ double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
     pair<int, int> counts = getCountsPair(childAP,childBP);
 
     num_links = counts.first;
-    num_pos_links = counts.second;
+    num_non_links = counts.second;
     log_like =  logbeta(num_links+rho_plus,
-                        num_pos_links-num_links+rho_minus)
+                        num_non_links+rho_minus)
     -logbeta(rho_plus,rho_minus);
 
     return log_like;
@@ -591,51 +591,16 @@ double Node::evaluateSubtreeLogLike(){
 }
 
 /**
- * Get counts of links and non-links between all pairs of children
- */
-list<pair<int, int>> Node::getCountsAll() {
-    list<pair<int, int>> result;
-    // Loop through each child
-    for (auto fst = children.begin(); fst != children.end(); fst++) {
-        // iterator for the next child
-        list<Node *>::iterator nxt = fst;
-        // Loop through each child after it in the list
-        for (auto snd = ++nxt ; snd != children.end(); snd++) {
-            result.push_back(getCountsPair(*fst, *snd));
-        }
-    }
-    return result;
-}
-
-/**
  * Get counts of links and non-links between the pair of children
  */
 pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
 
-    vector<int> * LA = childAP->getLeaves();
-    vector<int> * LB = childBP->getLeaves();
-
-    // Number of possible links
-    int nA = (int) LA->size();
-    int nB = (int) LB->size();
-
-    int nPossible = nA*nB;
-
-    int nLinks = 0;
+    vector<int> * LAP = childAP->getLeavesP();
+    vector<int> * LBP = childBP->getLeavesP();
 
     Adj_list * adjacency_list = treeP->getAdjacencyListP();
 
-    // Loop through all all combinations of leaves and check if they are connected
-    for (auto fst = LA->begin(); fst != LA->end(); fst++) {
-        for (auto snd = LB->begin(); snd != LB->end(); snd++) {
-            if(adjacency_list->isConnected(*fst,*snd)){
-                nLinks += 1;
-            }
-        }
-    }
-
-    pair<int, int> result (nLinks,nPossible);
-    return result;
+    return adjacency_list->getCounts(LAP, LBP);
 }
 
 /**
@@ -768,8 +733,8 @@ bool Node::operator==( const Node &rhs ) const {
  */
 bool Node::isEqualSubtree(Node * copy_node){
 
-    vector<int> leavesOriginal  = *getLeaves(),
-    leavesCopy = * copy_node->getLeaves();
+    vector<int> leavesOriginal  = *getLeavesP(),
+    leavesCopy = * copy_node->getLeavesP();
 
     //If the number of leaves are diffent, they are never a match
     if (leavesCopy.size() != leavesOriginal.size()) {
@@ -822,7 +787,7 @@ bool Node::isInternalNode() {
  */
 string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
-    vector<int> leaves = *(getLeaves());
+    vector<int> leaves = *(getLeavesP());
     string s = "Node: " +  to_string(getNodeId()) +"; Num_internal: ("+to_string(getNumInternalNodes())+ "); Leaves: (";
     if(!leaves.empty()) {
         for (auto it = leaves.begin(); it != leaves.end(); it++) {

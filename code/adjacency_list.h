@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <iterator>
 
 class Adj_list {
 
@@ -23,6 +24,7 @@ public:
     // Querying the adjacency
     bool isConnected(int, int);
     int getSize();
+    std::pair<int,int> getCounts(std::vector<int> *, std::vector<int> *);
 
     std::string toString();
     std::string toGexf();

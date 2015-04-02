@@ -29,7 +29,7 @@ public:
     int getNodeId();
     void setNodeId(int);
 
-    std::vector<int> * getLeaves();
+    std::vector<int> * getLeavesP();
     void setLeaves(std::vector<int>);
     int getNumInternalNodes();
     void setNumInternalNodes(int);
@@ -58,7 +58,6 @@ public:
     double evaluateLogPrior();
     double evaluatePairLogLike(Node *, Node *);
     double evaluateSubtreeLogLike();
-    std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
     std::pair<int,int> getCountsPair(Node *, Node *);
 
     // getting and updating cached likelihood caches
