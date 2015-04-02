@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <random>
 using namespace std;
 
 /**
@@ -35,14 +36,22 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
     leaves.unique();
     int N = (int) leaves.size();
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::bernoulli_distribution d(0.9); // one tenth of possible links unobserved
+
+
+
     //Construct adjacency_matrix
-    adjacency_matrix = vector<vector<pair<bool,bool>>>(N,vector<pair<bool,bool>>(N,pair<bool,bool>(false,false)));
+    adjacency_matrix = vector<vector<link>>(N,vector<link>(N,link()));
     for (list<pair<int,int>>::iterator it = edge_list.begin();
          it != edge_list.end(); it++){
-            adjacency_matrix[it->first][it->second].first = true;
-            adjacency_matrix[it->first][it->second].second = true;
-            adjacency_matrix[it->second][it->first].first = true;
-            adjacency_matrix[it->second][it->first].second = true;
+            // first is data and second is observedness
+            bool observed = d(gen);
+            adjacency_matrix[it->first][it->second].link = true;
+            adjacency_matrix[it->first][it->second].observed = observed;
+            adjacency_matrix[it->second][it->first].link = true;
+            adjacency_matrix[it->second][it->first].observed = observed;
     }
 }
 
@@ -50,7 +59,7 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
  * Query the connection between two nodes.
  */
 bool Adj_list::isConnected(int current, int target){
-        return adjacency_matrix[current][target].first;
+        return adjacency_matrix[current][target].link;
 }
 
 /**

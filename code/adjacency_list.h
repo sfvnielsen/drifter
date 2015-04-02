@@ -31,7 +31,12 @@ public:
 
 private:
     // Data structure
-    std::vector<std::vector<std::pair<bool,bool>> > adjacency_matrix;
+    struct link {
+        bool link;
+        bool observed;
+    };
+
+    std::vector<std::vector<link> > adjacency_matrix;
 };
 
 
