@@ -52,6 +52,28 @@ bool Adj_list::isConnected(int current, int target){
 }
 
 /**
+ * Query the connection between two sets of nodes.
+ */
+std::pair<int,int> Adj_list::getCounts(std::vector<int> * LAP, std::vector<int> * LBP){
+    int nLinks = 0; // Number of links between the groups.
+    int nnLinks = 0; // Number of nonLinks between the groups.
+
+    for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
+        for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
+            if(isConnected(*fst,*snd)){
+                nLinks += 1;
+            }else{
+                nnLinks += 1;
+            }
+        }
+    }
+
+    pair<int, int> result (nLinks,nnLinks);
+    return result;
+}
+
+
+/**
  * Make a string of all links
  */
 string Adj_list::toString(){
