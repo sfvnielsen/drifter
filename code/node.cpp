@@ -157,7 +157,6 @@ void Node::addChild(Node * new_childP) {
  *  valid tree structure by collapsing the node if it only has 1 child left
  */
 bool Node::removeChild(Node * child) {
-
     //assert(isLogLikeCacheCorrect());
     assert(isInternalNode());
     assert(children.size()>=2);

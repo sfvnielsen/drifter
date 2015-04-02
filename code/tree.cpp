@@ -608,6 +608,7 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         leaves_to_add = *(scionP->getLeaves() );
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
         currentP->addLeaves(leaves_to_add);
+
         currentP = currentP->getParent();
     }
 
@@ -853,4 +854,3 @@ string Tree::toGexf(){
     s += "</gexf>";
     return s;
 }
-
