@@ -21,7 +21,7 @@ using namespace std;
  * Initialize with a tree already constructed.
  * The Adjacency matrix must be kept in memory outside the function.
  */
-Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus):
+Sampler::Sampler(Tree T, double alpha, double beta, double rho_plus, double rho_minus):
                           alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
 
     // Setting the initial values in the chain.
@@ -33,7 +33,7 @@ Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus)
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
-Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int rho_plus, int rho_minus): alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus): alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
     // Constructing the adjacency list
     adjacencyList = Adj_list(data_graph);
 
@@ -68,8 +68,12 @@ void Sampler::run(int L){
 
     for (int i=0; i<L; i++){
 
-        // Create a proposal
+        // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
+        if (((i+1) % step)==0) {
+            proposal = sampleHyperparameters();
+        }
+        // Regraft and return move ratio
         double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
@@ -114,9 +118,11 @@ void Sampler::run(int L, int thinning ){
     int step = max((int) L/100,10);
 
     for (int i=0; i<L; i++){
-
-        // Create a proposal
-        Tree proposal = lastTree;
+        // Take back of chain and sample hyperparameters each 1% of the run
+        Tree proposal = chain.back();
+        if (((i+1) % step)==0) {
+            proposal = sampleHyperparameters();
+        }
         double move_ratio = proposal.regraft(); //Try a move
 
         // Get Likelihoods times priors
@@ -171,8 +177,12 @@ void Sampler::run(int L, int burn_in, int thinning){
     int bstep = max((int) burn_in/100,10);
 
     for (int i=0; i<burn_in; i++){
+        // Sample hyperparameters each 1% of the run
+        if (((i+1) % bstep)==0) {
+            Tree proposal = sampleHyperparameters();
+        }
 
-        // Create a proposal
+        // Propose new tree
         double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
@@ -207,6 +217,49 @@ void Sampler::run(int L, int burn_in, int thinning){
     chain.push_back(oldTree);
 
     run(L,thinning);
+}
+
+
+/**
+* Sample hyperparameters
+*/
+
+Tree Sampler::sampleHyperparameters() {
+    // Number of sampling steps for each hyperparameter
+    int n_resamples = 10;
+
+    // Initialize the random generator
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> u_dis(0, 1);
+    normal_distribution<> n_dis(0, 1);
+
+    // Get latest tree
+    Tree currentTree = chain.back();
+    double previousLogLik = lastLogLik;
+
+    // Sample alpha
+    double old_alpha = currentTree.alpha;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+
+        double new_alpha = exp(log(currentTree.alpha)+0.1*n_dis(gen));
+        currentTree.alpha = new_alpha;
+        currentTree.initializeLogPrior();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_alpha = new_alpha;
+        }else{
+            currentTree.alpha = old_alpha;
+        }
+    }
+    return currentTree;
 }
 
 /**

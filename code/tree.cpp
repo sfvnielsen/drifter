@@ -21,7 +21,7 @@ using namespace std;
  * Construct flat tree from number of leaves
  * - i.e. Root has only leaves as children
  */
-Tree::Tree(Adj_list * AP, double alpha_n, double beta_n, int rho_plus_n, int rho_minus_n): nextInternalNodeId(0) {
+Tree::Tree(Adj_list * AP, double alpha_n, double beta_n, double rho_plus_n, double rho_minus_n): nextInternalNodeId(0) {
     alpha = alpha_n;
     beta = beta_n;
     rho_plus = rho_plus_n;
@@ -33,13 +33,14 @@ Tree::Tree(Adj_list * AP, double alpha_n, double beta_n, int rho_plus_n, int rho
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
     initializeLogLike();
+    initializeLogPrior();
 }
 
 /**
  * Tree constructor choice
  * - choose between flat and binary tree
  */
-Tree::Tree(Adj_list * AP, string initType, double alpha_n, double beta_n, int rho_plus_n, int rho_minus_n): nextInternalNodeId(0) {
+Tree::Tree(Adj_list * AP, string initType, double alpha_n, double beta_n, double rho_plus_n, double rho_minus_n): nextInternalNodeId(0) {
     alpha = alpha_n;
     beta = beta_n;
     rho_plus = rho_plus_n;
@@ -55,6 +56,7 @@ Tree::Tree(Adj_list * AP, string initType, double alpha_n, double beta_n, int rh
     rootP->updateNumInternalNodes();
     rootP->updateLeaves();
     initializeLogLike();
+    initializeLogPrior();
 
 }
 
@@ -64,7 +66,7 @@ Tree::Tree(Adj_list * AP, string initType, double alpha_n, double beta_n, int rh
 * NB!: Only used to pass likelihood test in debugging phase
 */
 Tree::Tree(list<pair<int,int>> tree_struct_graph,
-           vector<int> data_leaf_relation, Adj_list * adj_list, double alpha_n, double beta_n, int rho_plus_n, int rho_minus_n): nextInternalNodeId(0) {
+           vector<int> data_leaf_relation, Adj_list * adj_list, double alpha_n, double beta_n, double rho_plus_n, double rho_minus_n): nextInternalNodeId(0) {
     alpha = alpha_n;
     beta = beta_n;
     rho_plus = rho_plus_n;
@@ -129,6 +131,7 @@ Tree::Tree(list<pair<int,int>> tree_struct_graph,
     rootP->updateLeaves();
 
     initializeLogLike();
+    initializeLogPrior();
 }
 
 /**
@@ -670,6 +673,7 @@ double Tree::evaluateLogLikeTimesPrior(){
     if (!isLoglikeInitialised) {
         isLoglikeInitialised = true;
         initializeLogLike();
+        initializeLogPrior();
     }
 
     double sum = 0.0;
@@ -678,6 +682,7 @@ double Tree::evaluateLogLikeTimesPrior(){
     }
     #ifndef NDEBUG
     initializeLogLike();
+    initializeLogPrior();
 
     double sumT = 0.0;
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
@@ -692,14 +697,24 @@ double Tree::evaluateLogLikeTimesPrior(){
 }
 
 /**
-*  Updates the Likelihood and Prior caches of all nodes
+*  Updates the Likelihood caches of all nodes
 */
 void Tree::initializeLogLike(){
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
-        (*it).updateNodeLogPrior();
         (*it).updateAllPairsLogLike();
     }
 }
+
+/**
+*  Updates the Prior caches of all nodes
+*/
+void Tree::initializeLogPrior(){
+    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+        (*it).updateNodeLogPrior();
+    }
+}
+
+
 
 /**
 *  Checks the Likelihood caches of all nodes

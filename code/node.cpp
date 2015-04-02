@@ -550,8 +550,8 @@ double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
     int num_links, num_pos_links;
     double log_like;
 
-    int rho_plus = treeP->rho_plus;
-    int rho_minus = treeP->rho_minus;
+    double rho_plus = treeP->rho_plus;
+    double rho_minus = treeP->rho_minus;
 
     pair<int, int> counts = getCountsPair(childAP,childBP);
 
