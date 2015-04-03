@@ -120,11 +120,7 @@ void Sampler::run(int L, int thinning ){
     for (int i=0; i<L; i++){
         // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
-<<<<<<< HEAD
         if ((i % step)==0) {
-=======
-        if (((i+1) % step)==0) {
->>>>>>> a77bb34... Several changes - changed all rho's to doubles - added hyperparameter sampling of alpha as a start - split initializeLogLike into like and prior initialization... NB! current implementation doesnt work
             proposal = sampleHyperparameters();
         }
         double move_ratio = proposal.regraft(); //Try a move
@@ -182,11 +178,8 @@ void Sampler::run(int L, int burn_in, int thinning){
 
     for (int i=0; i<burn_in; i++){
         // Sample hyperparameters each 1% of the run
-<<<<<<< HEAD
+
         if ((i % bstep)==0) {
-=======
-        if (((i+1) % bstep)==0) {
->>>>>>> a77bb34... Several changes - changed all rho's to doubles - added hyperparameter sampling of alpha as a start - split initializeLogLike into like and prior initialization... NB! current implementation doesnt work
             Tree proposal = sampleHyperparameters();
         }
 
@@ -250,16 +243,10 @@ Tree Sampler::sampleHyperparameters() {
     double old_alpha = currentTree.alpha;
     for (int n = 0; n != n_resamples; ++n) {
         // Propose new parameter by random walk
-<<<<<<< HEAD
         double new_alpha = exp(log(currentTree.alpha)+0.1*n_dis(gen));
         currentTree.alpha = new_alpha;
 
         // Recalculate log-likelihood
-=======
-
-        double new_alpha = exp(log(currentTree.alpha)+0.1*n_dis(gen));
-        currentTree.alpha = new_alpha;
->>>>>>> a77bb34... Several changes - changed all rho's to doubles - added hyperparameter sampling of alpha as a start - split initializeLogLike into like and prior initialization... NB! current implementation doesnt work
         currentTree.initializeLogPrior();
         double propLogLik = currentTree.evaluateLogLikeTimesPrior();
 
@@ -274,7 +261,6 @@ Tree Sampler::sampleHyperparameters() {
             currentTree.alpha = old_alpha;
         }
     }
-<<<<<<< HEAD
     // if last sample is rejected recalculate caches
     currentTree.initializeLogPrior();
 
@@ -354,8 +340,6 @@ Tree Sampler::sampleHyperparameters() {
     }
     // if last sample is rejected recalculate caches
     currentTree.initializeLogLike();
-=======
->>>>>>> a77bb34... Several changes - changed all rho's to doubles - added hyperparameter sampling of alpha as a start - split initializeLogLike into like and prior initialization... NB! current implementation doesnt work
     return currentTree;
 }
 
