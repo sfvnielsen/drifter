@@ -120,7 +120,7 @@ void Sampler::run(int L, int thinning ){
     for (int i=0; i<L; i++){
         // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
-        if (((i+1) % step)==0) {
+        if ((i % step)==0) {
             proposal = sampleHyperparameters();
         }
         double move_ratio = proposal.regraft(); //Try a move
@@ -178,7 +178,7 @@ void Sampler::run(int L, int burn_in, int thinning){
 
     for (int i=0; i<burn_in; i++){
         // Sample hyperparameters each 1% of the run
-        if (((i+1) % bstep)==0) {
+        if ((i % bstep)==0) {
             Tree proposal = sampleHyperparameters();
         }
 
@@ -242,9 +242,10 @@ Tree Sampler::sampleHyperparameters() {
     double old_alpha = currentTree.alpha;
     for (int n = 0; n != n_resamples; ++n) {
         // Propose new parameter by random walk
-
         double new_alpha = exp(log(currentTree.alpha)+0.1*n_dis(gen));
         currentTree.alpha = new_alpha;
+
+        // Recalculate log-likelihood
         currentTree.initializeLogPrior();
         double propLogLik = currentTree.evaluateLogLikeTimesPrior();
 
@@ -259,6 +260,85 @@ Tree Sampler::sampleHyperparameters() {
             currentTree.alpha = old_alpha;
         }
     }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogPrior();
+
+    // Sample beta
+    double old_beta = currentTree.beta;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_beta = exp(log(currentTree.beta)+0.1*n_dis(gen));
+        currentTree.beta = new_beta;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogPrior();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_beta = new_beta;
+        }else{
+            currentTree.beta = old_beta;
+
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogPrior();
+
+    // Sample rho_plus
+    double old_rho_plus = currentTree.rho_plus;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_rho_plus = exp(log(currentTree.rho_plus)+0.1*n_dis(gen));
+        currentTree.rho_plus = new_rho_plus;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogLike();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_rho_plus = new_rho_plus;
+        }else{
+            currentTree.rho_plus = old_rho_plus;
+
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogLike();
+
+    // Sample rho_minus
+    double old_rho_minus = currentTree.rho_minus;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_rho_minus = exp(log(currentTree.rho_minus)+0.1*n_dis(gen));
+        currentTree.rho_minus = new_rho_minus;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogLike();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_rho_minus = new_rho_minus;
+        }else{
+            currentTree.rho_minus = old_rho_minus;
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogLike();
     return currentTree;
 }
 
