@@ -79,7 +79,8 @@ Sampler runNetwork(string data_file_name, int num_of_iterations, int num_burnin,
     std::cout << "finished computation at " << std::ctime(&end_time)
               << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
               << "mean elapsed time per regraft: " << elapsed_seconds.count() / ((double) num_of_iterations) << " sec." << endl
-              << "Iterations per second: " << ((double) num_of_iterations+num_burnin) / (double)elapsed_seconds.count() << " ips" << endl;
+              << "Iterations per second: " << ((double) num_of_iterations+num_burnin) / (double)elapsed_seconds.count() << " ips" << endl
+              << "Prediction accuracy of the last tree was: " << sampler.getLastTree().predAccuracy()*100 << " % correct" << endl;
     return sampler;
 }
 
