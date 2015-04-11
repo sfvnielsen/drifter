@@ -79,6 +79,8 @@ public:
     void initializeLogLike();
     bool isLoglikeCorrect();
 
+    double predAccuracy();
+
     // Print
     std::string toString();
     void writeMatlabFormat(std::string);

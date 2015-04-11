@@ -713,6 +713,21 @@ bool Tree::isLoglikeCorrect(){
     return true;
 }
 
+double Tree::predAccuracy(){
+    int correct = 0;
+    int wrong = 0;
+
+    pair<int,int> results;
+
+    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+        results = it->predictionResults();
+        correct += results.first;
+        wrong += results.second;
+    }
+
+    return (double) correct/(correct+wrong);
+}
+
 
 /** Printing */
 string Tree::toString(){
