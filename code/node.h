@@ -58,7 +58,8 @@ public:
     double evaluateLogPrior();
     double evaluatePairLogLike(Node *, Node *);
     double evaluateSubtreeLogLike();
-    std::pair<int,int> getCountsPair(Node *, Node *);
+    std::pair<int,int> getObservedCountsPair(Node *, Node *);
+    std::pair<int,int> getUnobservedCountsPair(Node *, Node *);
 
     // getting and updating cached likelihood caches
     double getLogLike();
@@ -72,6 +73,8 @@ public:
     bool isEqualSubtree(Node *);
     bool operator == ( const Node &rhs ) const;
     bool isInternalNode();
+
+    std::pair<int,int> predictionResults();
 
     // print
     std::string toString();

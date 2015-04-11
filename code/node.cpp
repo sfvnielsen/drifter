@@ -553,7 +553,7 @@ double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
     int rho_plus = treeP->rho_plus;
     int rho_minus = treeP->rho_minus;
 
-    pair<int, int> counts = getCountsPair(childAP,childBP);
+    pair<int, int> counts = getObservedCountsPair(childAP,childBP);
 
     num_links = counts.first;
     num_non_links = counts.second;
@@ -593,7 +593,7 @@ double Node::evaluateSubtreeLogLike(){
 /**
  * Get counts of links and non-links between the pair of children
  */
-pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
+pair<int, int> Node::getObservedCountsPair(Node * childAP, Node * childBP) {
 
     vector<int> * LAP = childAP->getLeavesP();
     vector<int> * LBP = childBP->getLeavesP();
@@ -601,6 +601,19 @@ pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
     Adj_list * adjacency_list = treeP->getAdjacencyListP();
 
     return adjacency_list->getCounts(LAP, LBP);
+}
+
+/**
+ * Get counts of links and non-links between the pair of children
+ */
+pair<int, int> Node::getUnobservedCountsPair(Node * childAP, Node * childBP) {
+
+    vector<int> * LAP = childAP->getLeavesP();
+    vector<int> * LBP = childBP->getLeavesP();
+
+    Adj_list * adjacency_list = treeP->getAdjacencyListP();
+
+    return adjacency_list->getUnknownCounts(LAP, LBP);
 }
 
 /**
@@ -780,6 +793,39 @@ bool Node::isEqualSubtree(Node * copy_node){
  */
 bool Node::isInternalNode() {
     return !children.empty();
+}
+
+
+pair<int,int> Node::predictionResults(){
+    int correct = 0;
+    int wrong = 0;
+    pair<int, int> knownCounts;
+    pair<int, int> unknownCounts;
+
+    int rho_plus = treeP->rho_plus;
+    int rho_minus = treeP->rho_minus;
+
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            knownCounts = getObservedCountsPair(*fst,*snd);
+            unknownCounts = getUnobservedCountsPair(*fst,*snd);
+            bool prediction = 0.5 < (double) (rho_plus + knownCounts.first)/(rho_plus+knownCounts.first+rho_minus+knownCounts.second);
+
+            if(prediction){
+                correct += unknownCounts.first;
+                wrong += unknownCounts.second;
+            }else{
+                correct += unknownCounts.second;
+                wrong += unknownCounts.first;
+            }
+        }
+    }
+
+    pair<int,int> result (correct,wrong);
+    return result;
 }
 
 /**

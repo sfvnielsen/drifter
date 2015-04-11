@@ -63,6 +63,13 @@ bool Adj_list::isConnected(int current, int target){
 }
 
 /**
+ * Query the connection between two nodes.
+ */
+bool Adj_list::isObserved(int current, int target){
+        return adjacency_matrix[current][target].observed;
+}
+
+/**
  * Query the connection between two sets of nodes.
  */
 std::pair<int,int> Adj_list::getCounts(std::vector<int> * LAP, std::vector<int> * LBP){
@@ -71,7 +78,28 @@ std::pair<int,int> Adj_list::getCounts(std::vector<int> * LAP, std::vector<int> 
 
     for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
         for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
-            if(isConnected(*fst,*snd)){
+            if(isConnected(*fst,*snd) && isObserved(*fst,*snd)){
+                nLinks += 1;
+            }else{
+                nnLinks += 1;
+            }
+        }
+    }
+
+    pair<int, int> result (nLinks,nnLinks);
+    return result;
+}
+
+/**
+ * Query the connection between two sets of nodes.
+ */
+std::pair<int,int> Adj_list::getUnknownCounts(std::vector<int> * LAP, std::vector<int> * LBP){
+    int nLinks = 0; // Number of links between the groups.
+    int nnLinks = 0; // Number of nonLinks between the groups.
+
+    for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
+        for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
+            if(isConnected(*fst,*snd) && !isObserved(*fst,*snd)){
                 nLinks += 1;
             }else{
                 nnLinks += 1;

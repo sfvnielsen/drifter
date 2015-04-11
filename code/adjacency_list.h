@@ -23,8 +23,10 @@ public:
 
     // Querying the adjacency
     bool isConnected(int, int);
+    bool isObserved(int,int);
     int getSize();
     std::pair<int,int> getCounts(std::vector<int> *, std::vector<int> *);
+    std::pair<int,int> getUnknownCounts(std::vector<int> *, std::vector<int> *);
 
     std::string toString();
     std::string toGexf();
