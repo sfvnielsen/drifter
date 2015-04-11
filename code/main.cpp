@@ -22,7 +22,7 @@ void testNetwork(string,int,int,int);
 int main() {
 
     string data_file_name = "data/karate_edgelist.txt";
-    //data_file_name = "data/celegans_edgelist.txt";
+    data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
