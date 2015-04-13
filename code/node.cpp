@@ -11,6 +11,7 @@
 #include "tree.h"
 
 #include <iostream>
+#include <algorithm>
 #include <numeric>  // lets us use cumulative sum
 #include <cassert> // for assert statements
 #include <random> // C++11 random generator
@@ -159,6 +160,7 @@ bool Node::removeChild(Node * child) {
     //assert(isLogLikeCacheCorrect());
     assert(isInternalNode());
     assert(children.size()>=2);
+
     //IFF: The current node only have two children, it is collapsed as every
     //     internal node must have atleast 2 children)
     if(2==(int) children.size()){
@@ -685,7 +687,7 @@ void Node::updateAllPairsLogLike(){
     }
 }
 /**
- * Update cached pairs related to a child. 
+ * Update cached pairs related to a child.
  */
 void Node::updateChildPairsLogLike(Node * childP) {
 
@@ -707,7 +709,7 @@ void Node::updateChildPairsLogLike(Node * childP) {
             ++it;
         }
     }
-    
+
 }
 
 bool Node::isLogLikeCacheCorrect(){
@@ -840,6 +842,23 @@ string Node::toString() {
     return s ;
 }
 
+
+string Node::toGexf(int indent){
+    string pad = string(indent*4, ' ');
+    string s = pad + "<node id=\"" + to_string(nodeId);
+    s += "\">";
+    if(!children.empty()){
+        s += "\n";
+        s += pad + "<nodes>\n";
+        for(auto childP = children.begin(); childP != children.end() ; childP++){
+            s += (*childP)->toGexf(indent + 1);
+        }
+        s += pad + "</nodes>\n";
+    }
+    s += pad + "</node>\n";
+    return s;
+}
+
 double Node::getLogLikeContribution(){
     double logLik_cont = 0.0;
     logLik_cont += getLogPrior();
@@ -862,5 +881,5 @@ string Node::toJSON(){
         return "{\"name\": \"" + to_string(nodeId) +"\", \"size\": \""+to_string(1)+"\"}";
     }
 
-    
+
 }

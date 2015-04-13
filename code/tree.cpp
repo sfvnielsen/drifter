@@ -608,6 +608,7 @@ void Tree::insertSubtree(Node * stockP, Node * scionP, bool asChild){
         leaves_to_add = *(scionP->getLeaves() );
         currentP->setNumInternalNodes(currentP->getNumInternalNodes()+internal_nodes_add);
         currentP->addLeaves(leaves_to_add);
+
         currentP = currentP->getParent();
     }
 
@@ -653,7 +654,7 @@ void Tree::updateScionAndStock(Node * scionP, Node * oldScionParentP, Node* stoc
         childP = stockPathP;
         stockPathP = stockPathP->getParent();
     }
-    
+
     assert(isLoglikeCorrect());
 }
 
@@ -798,8 +799,58 @@ void Tree::writeMatlabFormat(string filename) {
 }
 
 void Tree::writeJSONFormat(string filename) {
-    
+
     ofstream out_file(filename.c_str()); // output file
-    
+
     out_file << rootP->toJSON();
+}
+
+/** Write out the tree as a gexf file
+    for ease use with Gephi
+*/
+void Tree::writeGexf(string filename) {
+
+    // Give all nodes a proper new id
+    list<Node *> lnodes; // recursion list
+    lnodes.push_back(rootP);
+
+    int current_id = 0;
+    vector<int> new_id(nodes.size(),-1);
+    while (!lnodes.empty()) {
+        Node * cnodeP = lnodes.front(); // take next node
+        auto it_nodes = nodes.begin();
+        int n_id = 0;
+
+        while (&(*it_nodes)!= cnodeP) { // find its id in nodes list
+            it_nodes++;
+            n_id++;
+        }
+        new_id[n_id] = current_id++; // set its new id
+
+        list<Node*> c_children = cnodeP->getChildren(); // add children to recursion-list
+        for (auto it_c = c_children.begin(); it_c!= c_children.end(); ++it_c) {
+            lnodes.push_back(*it_c);
+        }
+        lnodes.pop_front(); // remove current node
+    }
+
+    int n_id = 0;
+    for(auto it = nodes.begin(); it != nodes.end(); ++it){
+        (*it).setNodeId(new_id[n_id]);
+        n_id++;
+    }
+
+    ofstream out_file(filename.c_str()); // output file
+
+}
+
+string Tree::toGexf(){
+    string s =  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                "<gexf xmlns=\"http://www.gexf.net/1.2draft\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd\" version=\"1.2\">"
+                "<graph mode=\"static\" defaultedgetype=\"undirected\">\n";
+    s += rootP->toGexf(0); // 0 as the starting indent;
+    s += adjacencyListP->toGexf();
+    s += "</graph>\n";
+    s += "</gexf>";
+    return s;
 }
