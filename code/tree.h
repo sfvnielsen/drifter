@@ -80,6 +80,7 @@ public:
     bool isLoglikeCorrect();
 
     double predAccuracy();
+    std::string holdoutScores();
 
     // Print
     std::string toString();

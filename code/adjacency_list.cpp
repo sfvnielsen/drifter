@@ -11,6 +11,7 @@
 #include <vector>
 #include <list>
 #include <random>
+#include <cassert>
 using namespace std;
 
 /**
@@ -38,20 +39,23 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::bernoulli_distribution d(0.9); // one tenth of possible links unobserved
-
-
+    std::bernoulli_distribution d(0.95); // one tenth of possible links unobserved
 
     //Construct adjacency_matrix
     adjacency_matrix = vector<vector<link>>(N,vector<link>(N,link()));
-    for (list<pair<int,int>>::iterator it = edge_list.begin();
-         it != edge_list.end(); it++){
-            // first is data and second is observedness
+
+    for(int i = 0; i < N; i++){
+        for(int j = i+1; j < N; j++){
             bool observed = d(gen);
-            adjacency_matrix[it->first][it->second].link = true;
-            adjacency_matrix[it->first][it->second].observed = observed;
-            adjacency_matrix[it->second][it->first].link = true;
-            adjacency_matrix[it->second][it->first].observed = observed;
+            adjacency_matrix[i][j].observed = observed;
+            adjacency_matrix[j][i].observed = observed;
+        }
+    }
+
+    for (auto it = edge_list.begin();
+         it != edge_list.end(); it++){
+            adjacency_matrix[it->first][it->second].connected = true;
+            adjacency_matrix[it->second][it->first].connected = true;
     }
 }
 
@@ -59,7 +63,7 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
  * Query the connection between two nodes.
  */
 bool Adj_list::isConnected(int current, int target){
-        return adjacency_matrix[current][target].link;
+        return adjacency_matrix[current][target].connected;
 }
 
 /**
@@ -78,10 +82,12 @@ std::pair<int,int> Adj_list::getCounts(std::vector<int> * LAP, std::vector<int> 
 
     for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
         for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
-            if(isConnected(*fst,*snd) && isObserved(*fst,*snd)){
-                nLinks += 1;
-            }else{
-                nnLinks += 1;
+            if(isObserved(*fst,*snd)){
+                if(isConnected(*fst,*snd)){
+                    nLinks++;
+                }else{
+                    nnLinks++;
+                }
             }
         }
     }
@@ -99,10 +105,12 @@ std::pair<int,int> Adj_list::getUnknownCounts(std::vector<int> * LAP, std::vecto
 
     for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
         for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
-            if(isConnected(*fst,*snd) && !isObserved(*fst,*snd)){
-                nLinks += 1;
-            }else{
-                nnLinks += 1;
+            if(!isObserved(*fst,*snd)){
+                if(isConnected(*fst,*snd)){
+                    nLinks += 1;
+                }else{
+                    nnLinks += 1;
+                }
             }
         }
     }

@@ -34,8 +34,9 @@ public:
 private:
     // Data structure
     struct link {
-        bool link;
+        bool connected;
         bool observed;
+        link() : connected(false), observed(true) {}
     };
 
     std::vector<std::vector<link> > adjacency_matrix;

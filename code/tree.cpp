@@ -728,6 +728,15 @@ double Tree::predAccuracy(){
     return (double) correct/(correct+wrong);
 }
 
+string Tree::holdoutScores(){
+    string s = "";
+
+    for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+        s += it->holdoutScores();
+    }
+
+    return s;
+}
 
 /** Printing */
 string Tree::toString(){

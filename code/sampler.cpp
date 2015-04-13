@@ -223,6 +223,28 @@ Tree Sampler::getLastTree(){
     return chain.back();
 }
 
+
+/**
+* Get the "Best" tree in the Chain.
+*/
+Tree Sampler::getMapTree(){
+    double lBest = 0.0;
+    Tree tBest = chain.front();
+
+    auto lit = likelihoods.begin();
+
+    for(auto it = chain.begin(); it != chain.end(); it++){
+        if(*lit >= lBest){
+            lBest = *lit;
+            tBest = *it;
+        }
+        lit++;
+    }
+
+    return chain.back();
+}
+
+
 /**
 * Write results of sampling procedure.
 */
@@ -253,6 +275,12 @@ void Sampler::writeResults(std::string folder) {
     for (auto it = likelihoods.begin(); it != likelihoods.end(); ++it){
         out_file << *it << " ";
     }
+
+    // Write Holdout scores to file.
+    filename = folder + "/HoldoutScores.txt";
+    ofstream myfile(filename);
+    myfile << getMapTree().holdoutScores();
+    myfile.close();
 }
 
 /**
