@@ -20,9 +20,14 @@ using namespace std;
 Adj_list::Adj_list(){}
 
 /**
- * Constructing the adjacency matrix from an adjacency list passed as list of pairs of its.
+ * Constructing the adjacency matrix from an adjacency list passed as list of pairs.
  */
-Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
+Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list) : Adj_list(edge_list, 0.0) {}
+
+/**
+ * Constructing the adjacency matrix from an adjacency list passed as list of pairs.
+ */
+Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list, double holdoutFraction){
 
     list<int> leaves;
 
@@ -39,7 +44,7 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::bernoulli_distribution d(0.95); // one tenth of possible links unobserved
+    std::bernoulli_distribution d(1.0-holdoutFraction);
 
     //Construct adjacency_matrix
     adjacency_matrix = vector<vector<link>>(N,vector<link>(N,link()));

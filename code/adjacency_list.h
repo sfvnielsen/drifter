@@ -20,6 +20,8 @@ public:
     // Constructors
     Adj_list();
     Adj_list(std::list<std::pair<int,int>>);
+    Adj_list(std::list<std::pair<int,int>>, double);
+
 
     // Querying the adjacency
     bool isConnected(int, int);
