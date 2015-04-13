@@ -59,6 +59,8 @@ int main(int argc, char* argv[]) {
         string out_dir = (string) argv[4];
         cout << "Writing results to " << out_dir << "...";
         sampling_result.writeResults(out_dir);
+        cout << "Writing hypers to " << out_dir << "...";
+        sampling_result.writeHypers(out_dir);
     }
     cout << "done!" << endl;
     return 0;
@@ -69,7 +71,7 @@ int main(int argc, char* argv[]) {
 Sampler runNetwork(string data_file_name, int num_of_iterations, int num_burnin, int thinning) {
     cout << "Running on: " << data_file_name << endl;
     IoFileHandler data_file(data_file_name);
-    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1);
+    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1.0, 1.0);
     chrono::time_point<chrono::system_clock> start, end;
     start = chrono::system_clock::now();
     sampler.run(num_of_iterations, num_burnin, thinning);

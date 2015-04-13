@@ -32,11 +32,11 @@ private:
 public:
     // Constructors
     Tree();
-    Tree(Adj_list * AP,double, double, int, int);
-    Tree(Adj_list * AP, std::string initType,double, double, int, int);
-    Tree(std::list<std::pair<int, int>>, std::string,double, double, int, int);
+    Tree(Adj_list * AP,double, double, double, double);
+    Tree(Adj_list * AP, std::string initType,double, double, double, double);
+    Tree(std::list<std::pair<int, int>>, std::string,double, double, double, double);
     Tree(std::list<std::pair<int, int>>
-         , std::vector<int>, Adj_list *,double, double, int, int);
+         , std::vector<int>, Adj_list *,double, double, double, double);
 
 
     //Rule of "5"
@@ -60,8 +60,8 @@ public:
     // Hyperparameters
     double alpha;
     double beta;
-    int rho_plus;
-    int rho_minus;
+    double rho_plus;
+    double rho_minus;
 
     // Regrafting
     double naive_regraft();
@@ -77,6 +77,7 @@ public:
     double evaluateLogLikeTimesPrior();
     bool isLoglikeInitialised;
     void initializeLogLike();
+    void initializeLogPrior();
     bool isLoglikeCorrect();
 
     double predAccuracy();

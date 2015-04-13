@@ -21,19 +21,20 @@ using namespace std;
  * Initialize with a tree already constructed.
  * The Adjacency matrix must be kept in memory outside the function.
  */
-Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus):
+Sampler::Sampler(Tree T, double alpha, double beta, double rho_plus, double rho_minus):
                           alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
 
     // Setting the initial values in the chain.
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
+    sample_hypers = true;
 }
 
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
-Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int rho_plus, int rho_minus): alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus): alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
     // Constructing the adjacency list
     adjacencyList = Adj_list(data_graph);
 
@@ -47,6 +48,7 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int 
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
+    sample_hypers = true;
 }
 
 
@@ -68,8 +70,12 @@ void Sampler::run(int L){
 
     for (int i=0; i<L; i++){
 
-        // Create a proposal
+        // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
+        if (((i+1) % step)==0 && sample_hypers) {
+            proposal = sampleHyperparameters();
+        }
+        // Regraft and return move ratio
         double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
@@ -114,9 +120,11 @@ void Sampler::run(int L, int thinning ){
     int step = max((int) L/100,10);
 
     for (int i=0; i<L; i++){
-
-        // Create a proposal
-        Tree proposal = lastTree;
+        // Take back of chain and sample hyperparameters each 1% of the run
+        Tree proposal = chain.back();
+        if ((i % step)==0 && sample_hypers) {
+            proposal = sampleHyperparameters();
+        }
         double move_ratio = proposal.regraft(); //Try a move
 
         // Get Likelihoods times priors
@@ -171,8 +179,13 @@ void Sampler::run(int L, int burn_in, int thinning){
     int bstep = max((int) burn_in/100,10);
 
     for (int i=0; i<burn_in; i++){
+        // Sample hyperparameters each 1% of the run
 
-        // Create a proposal
+        if ((i % bstep)==0) {
+            Tree proposal = sampleHyperparameters();
+        }
+
+        // Propose new tree
         double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
@@ -207,6 +220,129 @@ void Sampler::run(int L, int burn_in, int thinning){
     chain.push_back(oldTree);
 
     run(L,thinning);
+}
+
+
+/**
+* Sample hyperparameters
+*/
+
+Tree Sampler::sampleHyperparameters() {
+    // Number of sampling steps for each hyperparameter
+    int n_resamples = 10;
+
+    // Initialize the random generator
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> u_dis(0, 1);
+    normal_distribution<> n_dis(0, 1);
+
+    // Get latest tree
+    Tree currentTree = chain.back();
+    double previousLogLik = lastLogLik;
+
+    // Sample alpha
+    double old_alpha = currentTree.alpha;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_alpha = exp(log(currentTree.alpha)+0.1*n_dis(gen));
+        currentTree.alpha = new_alpha;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogPrior();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_alpha = new_alpha;
+        }else{
+            currentTree.alpha = old_alpha;
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogPrior();
+
+    // Sample beta
+    double old_beta = currentTree.beta;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_beta = exp(log(currentTree.beta)+0.1*n_dis(gen));
+        currentTree.beta = new_beta;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogPrior();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_beta = new_beta;
+        }else{
+            currentTree.beta = old_beta;
+
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogPrior();
+
+    // Sample rho_plus
+    double old_rho_plus = currentTree.rho_plus;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_rho_plus = exp(log(currentTree.rho_plus)+0.1*n_dis(gen));
+        currentTree.rho_plus = new_rho_plus;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogLike();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_rho_plus = new_rho_plus;
+        }else{
+            currentTree.rho_plus = old_rho_plus;
+
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogLike();
+
+    // Sample rho_minus
+    double old_rho_minus = currentTree.rho_minus;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_rho_minus = exp(log(currentTree.rho_minus)+0.1*n_dis(gen));
+        currentTree.rho_minus = new_rho_minus;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogLike();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_rho_minus = new_rho_minus;
+        }else{
+            currentTree.rho_minus = old_rho_minus;
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogLike();
+    return currentTree;
 }
 
 /**
@@ -310,3 +446,49 @@ void Sampler::writeLogLikelihood(string folder){
         out_file << *it << " ";
     }
 }
+
+
+/**
+* Write hyper parameters to file
+*/
+void Sampler::writeHypers(string folder){
+    // If folder doesnt exist - create it
+    DIR *dir;
+    if ((dir = opendir (folder.c_str())) == NULL) {
+        throw runtime_error("Target directory for writing results not found");
+    }
+
+    // Write alpha
+    string filename = folder + "/hyper_alpha.txt";
+    ofstream out_file(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file << it->alpha << " ";
+    }
+
+    // Write beta
+    filename = folder + "/hyper_beta.txt";
+    ofstream out_file2(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file2 << it->beta << " ";
+    }
+
+    // Write rho_plus
+    filename = folder + "/hyper_rhop.txt";
+    ofstream out_file3(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file3 << it->rho_plus << " ";
+    }
+
+    // Write rho_minus
+    filename = folder + "/hyper_rhom.txt";
+    ofstream out_file4(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file4 << it->rho_minus << " ";
+    }
+}
+
+

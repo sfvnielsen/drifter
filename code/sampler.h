@@ -18,13 +18,14 @@ class Sampler
     public:
         // Constructors
         Sampler();
-        Sampler(Tree,double,double,int,int);
-        Sampler(std::list<std::pair<int,int>>,double,double,int,int);
+        Sampler(Tree,double,double,double,double);
+        Sampler(std::list<std::pair<int,int>>,double,double,double,double);
 
         // Various Run methods.
         void run(int);
         void run(int,int);
         void run(int,int,int);
+        Tree sampleHyperparameters();
 
         // Accessing the end of the chain.
         Tree getLastTree();
@@ -34,6 +35,7 @@ class Sampler
         // Writing the results to files.
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
+        void writeHypers(std::string);
 
         // Data storage, publicity need for test function.
         std::list<Tree> chain;  //TODO vector
@@ -47,8 +49,9 @@ class Sampler
         // Hyperparameters:
         double alpha;
         double beta;
-        int rho_plus;
-        int rho_minus;
+        double rho_plus;
+        double rho_minus;
+        bool sample_hypers;
 };
 
 #endif // SAMPLER_H

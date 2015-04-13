@@ -83,6 +83,13 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     //cout << sampler.getLastTree().toGexf() << endl;
     sampler.writeResults("out");
 
+    // Print out hyperparameters
+    cout << "Hyperparameters: " << endl;
+    cout << "Alpha: " << sampler.getLastTree().alpha << endl;
+    cout << "Beta: " << sampler.getLastTree().beta << endl;
+    cout << "Rho_plus: " << sampler.getLastTree().rho_plus << endl;
+    cout << "Rho_minus: " << sampler.getLastTree().rho_minus << endl;
+
     // Print out statistics for the run.
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
