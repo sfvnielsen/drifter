@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cassert>
 #include <stdexcept>
+#include <limits>
 
 
 using namespace std;
@@ -224,6 +225,29 @@ Tree Sampler::getLastTree(){
 }
 
 /**
+ * Identifies and returns a maximum a posteriori probability tree (MAP tree)
+ */
+Tree Sampler::getMAPTree(){
+    double min = -numeric_limits<double>::max();
+    
+    auto currentTree = chain.begin();
+    Tree * mapTree = nullptr;
+    
+    //for (int i = 0; i < (int) likelihoods.size(); ++i){
+    for (auto it = likelihoods.begin(); it != likelihoods.end(); ++it) {
+        if (min-*it < 0) {
+            min = *it;
+            mapTree = &(*currentTree);
+        }
+        ++currentTree;
+
+    }
+    
+    return *mapTree;
+}
+
+
+/**
 * Write results of sampling procedure.
 */
 void Sampler::writeResults(std::string folder) {
@@ -273,3 +297,5 @@ void Sampler::writeLogLikelihood(string folder){
         out_file << *it << " ";
     }
 }
+
+

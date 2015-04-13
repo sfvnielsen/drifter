@@ -22,7 +22,7 @@ void testNetwork(string,int,int,int);
 int main() {
 
     string data_file_name = "data/karate_edgelist.txt";
-    data_file_name = "data/celegans_edgelist.txt";
+    //data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
@@ -30,7 +30,7 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 10000;
+    int num_iterations = 100000;
     int burnin = 1000;
     int thinning = 100;
 
@@ -77,10 +77,11 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-    sampler.getLastTree().writeJSONFormat("flare.json");
+    sampler.getLastTree().writeJSONFormat("lastTree.json");
+    sampler.getMAPTree().writeJSONFormat("mapTree.json");
 
     // Print the last tree.
-    cout << sampler.getLastTree().toGexf() << endl;
+    //cout << sampler.getLastTree().toGexf() << endl;
 
     ofstream myfile;
     myfile.open("out.gexf");

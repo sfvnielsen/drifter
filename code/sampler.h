@@ -29,6 +29,7 @@ class Sampler
         // Accessing the end of the chain.
         Tree getLastTree();
         double getLastLogLikelihood();
+        Tree getMAPTree();
 
         // Writing the results to files.
         void writeResults(std::string);
