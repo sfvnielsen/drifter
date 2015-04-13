@@ -241,7 +241,7 @@ Tree Sampler::getMapTree(){
         lit++;
     }
 
-    return chain.back();
+    return tBest;
 }
 
 
@@ -277,10 +277,19 @@ void Sampler::writeResults(std::string folder) {
     }
 
     // Write Holdout scores to file.
-    filename = folder + "/HoldoutScores.txt";
-    ofstream myfile(filename);
-    myfile << getMapTree().holdoutScores();
-    myfile.close();
+    filename = folder + "/scoresEnsemble.txt";
+    ofstream scores(filename);
+
+    for(auto it = chain.begin(); it != chain.end(); it++){
+        scores << it->holdoutScores();
+    }
+    scores.close();
+
+    // Write Holdout scores to file.
+    filename = folder + "/scoresMAP.txt";
+    scores.open(filename);
+    scores << getMapTree().holdoutScores();
+    scores.close();
 }
 
 /**
