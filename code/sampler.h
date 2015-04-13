@@ -34,6 +34,7 @@ class Sampler
         // Writing the results to files.
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
+        void writeHypers(std::string);
 
         // Data storage, publicity need for test function.
         std::list<Tree> chain;  //TODO vector
@@ -49,6 +50,7 @@ class Sampler
         double beta;
         double rho_plus;
         double rho_minus;
+        bool sample_hypers;
 };
 
 #endif // SAMPLER_H

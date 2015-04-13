@@ -28,6 +28,7 @@ Sampler::Sampler(Tree T, double alpha, double beta, double rho_plus, double rho_
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
+    sample_hypers = true;
 }
 
 /**
@@ -47,6 +48,7 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, doub
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
+    sample_hypers = true;
 }
 
 
@@ -70,7 +72,7 @@ void Sampler::run(int L){
 
         // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
-        if (((i+1) % step)==0) {
+        if (((i+1) % step)==0 && sample_hypers) {
             proposal = sampleHyperparameters();
         }
         // Regraft and return move ratio
@@ -120,7 +122,7 @@ void Sampler::run(int L, int thinning ){
     for (int i=0; i<L; i++){
         // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
-        if ((i % step)==0) {
+        if ((i % step)==0 && sample_hypers) {
             proposal = sampleHyperparameters();
         }
         double move_ratio = proposal.regraft(); //Try a move
@@ -407,3 +409,49 @@ void Sampler::writeLogLikelihood(string folder){
         out_file << *it << " ";
     }
 }
+
+
+/**
+* Write hyper parameters to file
+*/
+void Sampler::writeHypers(string folder){
+    // If folder doesnt exist - create it
+    DIR *dir;
+    if ((dir = opendir (folder.c_str())) == NULL) {
+        throw runtime_error("Target directory for writing results not found");
+    }
+
+    // Write alpha
+    string filename = folder + "/hyper_alpha.txt";
+    ofstream out_file(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file << it->alpha << " ";
+    }
+
+    // Write beta
+    filename = folder + "/hyper_beta.txt";
+    ofstream out_file2(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file2 << it->beta << " ";
+    }
+
+    // Write rho_plus
+    filename = folder + "/hyper_rhop.txt";
+    ofstream out_file3(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file3 << it->rho_plus << " ";
+    }
+
+    // Write rho_minus
+    filename = folder + "/hyper_rhom.txt";
+    ofstream out_file4(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file4 << it->rho_minus << " ";
+    }
+}
+
+
