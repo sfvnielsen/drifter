@@ -28,12 +28,13 @@ class Sampler
 
         // Accessing the end of the chain.
         Tree getLastTree();
+        Tree getMapTree();
         double getLastLogLikelihood();
 
         // Writing the results to files.
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
-    
+
         // Data storage, publicity need for test function.
         std::list<Tree> chain;  //TODO vector
         std::list<double> likelihoods;  //TODO vector

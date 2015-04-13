@@ -19,6 +19,7 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
@@ -826,6 +827,39 @@ pair<int,int> Node::predictionResults(){
 
     pair<int,int> result (correct,wrong);
     return result;
+}
+
+string Node::holdoutScores(){
+    string s = "";
+    pair<int, int> knownCounts;
+    pair<int, int> unknownCounts;
+
+    int rho_plus = treeP->rho_plus;
+    int rho_minus = treeP->rho_minus;
+
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            knownCounts = getObservedCountsPair(*fst,*snd);
+            unknownCounts = getUnobservedCountsPair(*fst,*snd);
+
+            double score = (double) (rho_plus + knownCounts.first)/(rho_plus+knownCounts.first+rho_minus+knownCounts.second);
+
+            int nLink = unknownCounts.first;
+            int nnonLink = unknownCounts.second;
+
+            for(int i = 0; i<nLink; i++){
+                s += to_string(score) + " 1\n";
+            }
+
+            for(int j = 0; j<nnonLink; j++){
+                s += to_string(score) + " 0\n";
+            }
+        }
+    }
+    return s;
 }
 
 /**

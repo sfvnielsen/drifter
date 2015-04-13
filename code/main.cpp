@@ -22,7 +22,7 @@ void testNetwork(string,int,int,int);
 int main() {
 
     string data_file_name = "data/karate_edgelist.txt";
-    data_file_name = "data/celegans_edgelist.txt";
+    //data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
@@ -80,17 +80,13 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     sampler.getLastTree().writeJSONFormat("flare.json");
 
     // Print the last tree.
-    cout << sampler.getLastTree().toGexf() << endl;
-
-    ofstream myfile;
-    myfile.open("out.gexf");
-    myfile << sampler.getLastTree().toGexf();
-    myfile.close();
+    //cout << sampler.getLastTree().toGexf() << endl;
+    sampler.writeResults("out");
 
     // Print out statistics for the run.
     std::cout << "finished computation at " << std::ctime(&end_time)
     << "elapsed time: " << elapsed_seconds.count() << " sec.\n"
     << "mean elapsed time per regraft: " << elapsed_seconds.count()/((double) num_of_iterations) << " sec." << endl << endl
     << "Iterations per second: " << ((double) num_of_iterations+burnin)/(double)elapsed_seconds.count() << " ips" << endl
-    << "Prediction accuracy of the last tree was: " << sampler.getLastTree().predAccuracy()*100 << " % correct" << endl;
+    << "Prediction accuracy of the \"Best\" tree was: " << sampler.getMapTree().predAccuracy()*100 << " % correct" << endl;
 }

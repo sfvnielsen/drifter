@@ -75,6 +75,7 @@ public:
     bool isInternalNode();
 
     std::pair<int,int> predictionResults();
+    std::string holdoutScores();
 
     // print
     std::string toString();
