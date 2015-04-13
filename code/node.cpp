@@ -852,14 +852,14 @@ double Node::getLogLikeContribution(){
 
 string Node::toJSON(){
     if (!children.empty()) {
-        string s ="{\"name\": \" " + to_string(nodeId) +",\"size\": \""+to_string(num_internal_nodes)+"\""+"\" ,\n\"children\": [\n ";
+        string s ="{\"name\": \" " + to_string(nodeId) +"\",\"size\": \""+to_string(num_internal_nodes)+"\" ,\n\"children\": [\n ";
         for (auto it = children.begin(); (*it) != children.back(); ++it) {
             s = s+"\t"+(*it)->toJSON()+",\n";
         }
         return s+children.back()->toJSON()+"]\n}";
 
     } else {
-        return "{\"name\": \"" + to_string(nodeId) +"\", \"size\": "+to_string(1)+"}";
+        return "{\"name\": \"" + to_string(nodeId) +"\", \"size\": \""+to_string(1)+"\"}";
     }
 
     
