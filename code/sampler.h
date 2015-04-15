@@ -20,6 +20,8 @@ class Sampler
         Sampler();
         Sampler(Tree,double,double,double,double);
         Sampler(std::list<std::pair<int,int>>,double,double,double,double);
+        Sampler(std::list<std::pair<int,int>>,double,double,double,double,double,bool);
+
 
         // Various Run methods.
         void run(int);

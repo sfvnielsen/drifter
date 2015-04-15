@@ -17,7 +17,7 @@
 
 using namespace std;
 
-void testNetwork(string,int,int,int);
+void testNetwork(string,int,int,int,double);
 
 int main() {
 
@@ -33,15 +33,16 @@ int main() {
     int num_iterations = 10000;
     int burnin = 5000;
     int thinning = 100;
+    double holdoutFraction = 0.05;
 
-    testNetwork(data_file_name,num_iterations,burnin,thinning);
+    testNetwork(data_file_name,num_iterations,burnin,thinning,holdoutFraction);
 
 	return 0;
 }
 /**
  * Test a network specifed by an edge list when performing num_of_iterations
  */
-void testNetwork(string data_file_name, int num_of_iterations, int burnin, int thinning){
+void testNetwork(string data_file_name, int num_of_iterations, int burnin, int thinning, double holdoutFraction){
     // Loading the data.
     cout << "Running on: " << data_file_name << endl;
     IoFileHandler data_file(data_file_name,0);
@@ -55,7 +56,7 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
 
 
     // Constructing the sampler.
-    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1);
+    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1, holdoutFraction, true);
 //    Sampler sampler = Sampler(data_edge_list, 0.5, 0.5, 1, 1);
 
     // Start timing

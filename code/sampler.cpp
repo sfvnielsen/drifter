@@ -34,9 +34,16 @@ Sampler::Sampler(Tree T, double alpha, double beta, double rho_plus, double rho_
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
-Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus): alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus)
+            : Sampler(data_graph, alpha, beta, rho_plus, rho_minus, 0.0, false) {}
+
+/**
+* Initialize with the naive tree building in the adjacency matrix.
+*/
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus, double holdoutFraction, bool sample_hypers)
+            : alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus), sample_hypers(sample_hypers){
     // Constructing the adjacency list
-    adjacencyList = Adj_list(data_graph);
+    adjacencyList = Adj_list(data_graph,holdoutFraction);
 
     // Initialize the flat tree
     Tree T = Tree(&adjacencyList,alpha, beta, rho_plus, rho_minus);
@@ -48,7 +55,6 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, doub
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
-    sample_hypers = true;
 }
 
 
@@ -110,7 +116,7 @@ void Sampler::run(int L){
 void Sampler::run(int L, int thinning ){
     lastLogLik = likelihoods.back();
     Tree lastTree = chain.back();
-
+    Tree proposal = chain.back();
     // Initialize the random generator
     random_device rd;
     mt19937 gen(rd());
@@ -121,9 +127,9 @@ void Sampler::run(int L, int thinning ){
 
     for (int i=0; i<L; i++){
         // Take back of chain and sample hyperparameters each 1% of the run
-        Tree proposal = chain.back();
+        //Tree proposal = chain.back();
         if ((i % step)==0 && sample_hypers) {
-            proposal = sampleHyperparameters();
+           proposal = sampleHyperparameters();
         }
         double move_ratio = proposal.regraft(); //Try a move
 
@@ -181,7 +187,7 @@ void Sampler::run(int L, int burn_in, int thinning){
     for (int i=0; i<burn_in; i++){
         // Sample hyperparameters each 1% of the run
 
-        if ((i % bstep)==0) {
+        if ((i % bstep)==0 && sample_hypers) {
             Tree proposal = sampleHyperparameters();
         }
 
