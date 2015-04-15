@@ -12,6 +12,8 @@
 #include "tree.h"
 #include <random>
 #include <cstdlib>
+#include <utility> //Pair
+#include <list>
 
 class Sampler
 {
@@ -30,6 +32,8 @@ class Sampler
         Tree getLastTree();
         double getLastLogLikelihood();
         Tree getMAPTree();
+        std::vector<std::pair<Node *, double>>buildCredibilityTree(Tree);
+        
 
         // Writing the results to files.
         void writeResults(std::string);
@@ -40,6 +44,9 @@ class Sampler
         std::list<double> likelihoods;  //TODO vector
 
     private:
+        std::list<std::pair<Node *, std::pair<int,int> > > calcSubtreeCred(Node *,std::list<Node*>,int);
+    
+    
         // Data storage
         Adj_list adjacencyList;
         double lastLogLik;

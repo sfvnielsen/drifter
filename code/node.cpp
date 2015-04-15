@@ -777,6 +777,8 @@ bool Node::isEqualSubtree(Node * copy_node){
     } else {
         //Computes how many of the leaves between copy and original are equal
         int num_equal = 0;
+        
+        //TODO use algorithm package to compare two sorted lists
         for (auto it = leavesOriginal.begin(); it != leavesOriginal.end(); it++) {
             for (auto it2 = leavesCopy.begin(); it2 != leavesCopy.end(); it2++) {
                 if (*it == *it2) {
@@ -784,6 +786,7 @@ bool Node::isEqualSubtree(Node * copy_node){
                 }
             }
         }
+        
 
         // iff the following check passes, are the leaves identical
         if (num_equal == (int) leavesOriginal.size()) {
@@ -808,6 +811,80 @@ bool Node::isEqualSubtree(Node * copy_node){
         }
     }
     return false;
+}
+
+/**
+ * Compares if any of this node's children has an identical split to the target.
+ * 
+ * Returns:
+ *  1. A pointer to the child or nullptr if the child is not found or it's a leaf
+ *  2. A bool indicating if there is an equal child.
+ */
+pair<Node *, bool> Node::hasEqualSplit(std::vector<int> targetLeaves){
+    
+    if (children.size() == 0 && targetLeaves.size() == 1 && leaves[0]==targetLeaves[0]) {
+        return pair<Node *, bool>(nullptr,true);
+    }
+    
+    //Compare the target split to each of this nodes spilt, which is equivivalent
+    // to comparing this nodes childrens (sorted) leaves list
+    for (auto it_child =children.begin(); it_child !=children.end(); ++it_child) {
+        vector<int> child_leaves = *(*it_child)->getLeaves();
+        
+        if (targetLeaves.size() == child_leaves.size()) {
+        
+            //Compares split, sorted leaves list allow linear time comparison
+            auto it_t = targetLeaves.begin();
+        
+            bool isEqual = true;
+            //If any two elements are not equal, then the splits are not equal
+            for (auto it = child_leaves.begin(); it!=child_leaves.end(); ++it) {
+                if (*it != *it_t) {
+                    isEqual = false;
+                    break;
+                }
+                ++it_t;
+
+            }
+            //If one child has an equal split, no other children can have one
+            if (isEqual) {
+                return pair<Node*, bool>(*it_child,true);
+            }
+        }
+    }
+    
+    return pair<Node*, bool>(nullptr,false);
+}
+
+
+/**
+ * Sort the children by the size of their leaves. Default is in accending order.
+ */
+void Node::sortChildren(){sortChildren(true);};
+
+/**
+ * Sort the children by the size of their leaves. In accending or descending order.
+ */
+void Node::sortChildren(bool ascending){
+    if (children.size()>1) {
+        
+        //Sorting using lambda functions
+        if (ascending) {
+            children.sort([](Node * a,Node * b)->bool{
+                return a->getLeaves()->size() < b->getLeaves()->size();
+            });
+        } else {
+            children.sort([](Node * a,Node * b)->bool{
+                return a->getLeaves()->size() > b->getLeaves()->size();
+            });
+
+        }
+        //Recurse
+        for (auto it = children.begin(); it != children.end(); ++it) {
+            (*it)->sortChildren(ascending);
+        }
+    }
+    
 }
 
 /**
@@ -867,6 +944,24 @@ double Node::getLogLikeContribution(){
     assert(isfinite(logLik_cont));
 
     return logLik_cont;
+}
+
+/****
+ * Statistics
+ */
+int Node::getDepth(){
+    if (isInternalNode()) {
+        int max = 0;
+        for (auto it = children.begin(); it != children.end(); ++it) {
+            int current = (*it)->getDepth();
+            if (current > max) {
+                max = current;
+            }
+        }
+        return max+1;
+    }
+    
+    return 1;
 }
 
 string Node::toJSON(){

@@ -30,9 +30,9 @@ int main() {
     /**
      * Testing a network
      */
-    int num_iterations = 100000;
+    int num_iterations = 10000;
     int burnin = 1000;
-    int thinning = 100;
+    int thinning = 500;
 
     testNetwork(data_file_name,num_iterations,burnin,thinning);
 
@@ -65,20 +65,21 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     // Run the sampler
     sampler.run(num_of_iterations, burnin, thinning);
 
-//    Tree test = sampler.chain.back();
-/*    test.regraft(1,2,3,4);
-    for (int i = 0; i < 100; i++) {
-        cout << test.toString() << endl << endl;
-        test.regraft();
-        cout << test.toString() << endl << endl;
-
-    }*/
     // End timing
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+    
+    Tree mapTree = sampler.getMAPTree();
+    cout << "Depth of MAP tree: " << mapTree.getDepth() << endl;
+    cout << mapTree.toString() << endl << endl;
+
     sampler.getLastTree().writeJSONFormat("lastTree.json");
-    sampler.getMAPTree().writeJSONFormat("mapTree.json");
+    mapTree.writeJSONFormat("mapTree.json");
+
+    
+    sampler.buildCredibilityTree(mapTree);
+    
 
     // Print the last tree.
     //cout << sampler.getLastTree().toGexf() << endl;

@@ -243,7 +243,78 @@ Tree Sampler::getMAPTree(){
 
     }
     
+    mapTree->getRoot()->sortChildren();
+    
     return *mapTree;
+}
+
+list<pair<Node *, pair<int, int>>> Sampler::calcSubtreeCred(Node * target_node,list<Node *> valid_trees,int total){
+    
+    
+    list<pair<Node*, pair<int, int> > > result;
+    list<Node * > targets = target_node->getChildren();
+    
+    //For every child
+    for (auto target = targets.begin(); target !=targets.end(); ++target) {
+        int match = 0;//, total = (int) valid_trees.size();
+            list<Node *> valid_subtrees;
+
+            for (auto it = valid_trees.begin(); it != valid_trees.end(); ++it){
+                
+                    pair<Node *,bool> x = (*it)->hasEqualSplit(*(*target)->getLeaves());
+                    if (x.second){
+                        match++;
+                        //Do with x?? Its the root of the next subtree
+                        if (x.first != nullptr) {
+                            list<Node *> temp =(x.first)->getChildren();
+                            valid_subtrees.push_back(x.first);
+                        }
+                    }
+            }
+        
+            pair<Node*, pair<int, int> > x_res(*target,pair<int,int>(match,total));
+            result.push_back(x_res);
+
+        
+            //Gets subtree results
+            result.splice(result.end(), calcSubtreeCred(*target, valid_subtrees, match));
+        
+    }
+    return result;
+}
+
+
+/**
+ *
+ *
+ * TODO: One occurence of T should be removed from the chain, as otherwise T 
+ *        will be compared to itself, giving 1 "false" match on the entire tree.
+ *        However the effects goes to 0 as the sample size goes to infinity.
+ */
+vector<pair<Node *, double>> Sampler::buildCredibilityTree(Tree T){
+    vector<pair<Node *,double >> credibilities(T.getNumNodes());
+    
+    //Store a pointer to the root node of every tree from the posterior
+    list<Node *> valid_roots;
+    for (auto it = chain.begin(); it != chain.end(); ++it) {
+        valid_roots.push_back(it->getRoot());
+    }
+    
+    //Calculate the credibility tree, by calculating the subtree credibilities
+    //TODO: calcSubtree should return a vector!
+    list<pair<Node *, pair<int, int>>> result = calcSubtreeCred(T.getRoot(), valid_roots,(int) chain.size());
+    
+    //Format result for binary search and perserve matches, possible matches
+    auto it_vec = credibilities.begin();
+    double sampleSize = (double) chain.size();
+    for (auto it = result.begin(); it != result.end(); ++it) {
+        it_vec->first = it->first; //Node pointer, for identification
+        it_vec->second = it->second.first/sampleSize;
+        ++it_vec;
+    }
+
+    return credibilities;
+
 }
 
 

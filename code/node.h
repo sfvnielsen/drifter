@@ -72,6 +72,11 @@ public:
     // equality
     bool isEqualSubtree(Node *);
     bool operator == ( const Node &rhs ) const;
+    
+    
+    std::pair<Node *,bool> hasEqualSplit(std::vector<int>);
+    void sortChildren();
+    void sortChildren(bool);
     bool isInternalNode();
 
     // print
@@ -83,6 +88,11 @@ public:
 
     double getLogLikeContribution();
     void setLogLikeContribution(double);
+    
+    //Statistics
+    int getDepth();
+    
+    
     std::string toJSON();
 
 private:
@@ -106,5 +116,6 @@ double log_diff(double, double);
 //bool removeElement(someVector vec, someElement elem);
 
 Node * multinomialSampling(std::list<Node *>, std::vector<double>);  //TODO vector
+
 
 #endif /* NODE_H_ */
