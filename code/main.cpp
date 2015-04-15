@@ -73,7 +73,8 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     Tree mapTree = sampler.getMAPTree();
     cout << "Depth of MAP tree: " << mapTree.getDepth() << endl;
     cout << mapTree.toString() << endl << endl;
-
+    
+    sampler.getLastTree().getRoot()->sortChildren();
     sampler.getLastTree().writeJSONFormat("lastTree.json");
     mapTree.writeJSONFormat("mapTree.json");
 
