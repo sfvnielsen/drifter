@@ -1,7 +1,7 @@
-parmugit
+DRIFTER
 ======
 
-PARallelMUltifurcatingGIbbsTrees - Hierarchical structure in relational data
+Dynamic Regrafting for InFinite TrEestructured Relationalmodel - Hierarchical structure in relational data
 
 In this project, carried out at Technical University of Denmark, we implemented a hierarchical relational model in the style of [Schmidt et. al.][1], but with a Bernoulli-likelihood (and appropriate Beta-priors) for simple undirected relational data. 
 
