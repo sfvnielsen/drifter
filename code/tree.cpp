@@ -714,6 +714,24 @@ bool Tree::isLoglikeCorrect(){
 }
 
 
+/**
+ * Statistics
+ ********************************/
+
+int Tree::getDepth(){
+    return rootP->getDepth();
+}
+
+int Tree::getNumNodes(){
+    return (int) nodes.size();
+}
+
+int Tree::getNumInternalNodes(){
+    return rootP->getNumInternalNodes();
+}
+
+
+
 /** Printing */
 string Tree::toString(){
     cout << "I am root: " << rootP->getNodeId() << "; num_int: "<< rootP->getNumInternalNodes() << endl;

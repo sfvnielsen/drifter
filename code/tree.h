@@ -79,6 +79,11 @@ public:
     void initializeLogLike();
     bool isLoglikeCorrect();
 
+    //Statistics
+    int getDepth();
+    int getNumNodes();
+    int getNumInternalNodes();
+    
     // Print
     std::string toString();
     void writeMatlabFormat(std::string);
