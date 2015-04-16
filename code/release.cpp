@@ -73,6 +73,14 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     // running on network
+    if (sampleHyperparameters)
+        cout << "Sampling hyperparameters." << endl;
+
+    if (write_out){
+        string out_dir = (string) argv[4];
+        cout << "Writing results to: " << out_dir << endl;
+    }
+
     Sampler sampling_result = runNetwork(data_file_name, num_iterations, num_burnin, thinning, holdoutFraction, sampleHyperparameters);
     if (write_out) {
         string out_dir = (string) argv[4];
