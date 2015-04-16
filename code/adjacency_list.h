@@ -29,6 +29,7 @@ public:
     int getSize();
     std::pair<int,int> getCounts(std::vector<int> *, std::vector<int> *);
     std::pair<int,int> getUnknownCounts(std::vector<int> *, std::vector<int> *);
+    std::list<std::pair<std::pair<int,int>,bool>> getUnknownLinks(std::vector<int> *, std::vector<int> *);
 
     std::string toString();
     std::string toGexf();

@@ -14,6 +14,9 @@
 #include <cstdio>
 #include <cassert>
 #include <stdexcept>
+#include <string>
+#include <map>
+
 
 
 using namespace std;
@@ -387,6 +390,52 @@ Tree Sampler::getMapTree(){
 }
 
 
+string Sampler::toString(list<pair<pair<int,int>,pair<double,bool>>> L){
+    string s = "";
+    for (auto it = L.begin(); it!=L.end(); it++ ){
+        double score = it->second.first;
+        bool trueVal = it->second.second;
+        s += to_string(score) + " " + to_string(trueVal) + "\n";
+    }
+    return s;
+}
+
+list<pair<pair<int,int>,pair<double,bool>>> Sampler::meanScores(list<pair<pair<int,int>,pair<double,bool>>> L){
+    list<pair<pair<int,int>,pair<double,bool>>> L2;
+    list<pair<int,int>> links;
+
+    multimap<pair<int,int>,pair<double,bool>> M;
+
+    for (auto it = L.begin(); it!=L.end(); it++ ){
+        pair<int,int> linkId= it->first;
+
+
+        links.push_back(linkId);
+        M.insert(*it);
+    }
+
+    links.sort();
+    links.unique();
+    for(auto lIt = links.begin(); lIt!=links.end(); lIt++){
+
+    pair <multimap<pair<int,int>,pair<double,bool>>::iterator, multimap<pair<int,int>,pair<double,bool>>::iterator> ret;
+    ret = M.equal_range(*lIt);
+
+    double sum = 0.0;
+    int c = 0;
+    bool trueVal = ret.first->second.second;
+
+    for(auto it = ret.first; it != ret.second; ++it){
+        sum += it->second.first;
+        c++;
+    }
+
+    L2.push_back(make_pair(*lIt,make_pair(sum/(double) c, trueVal)));
+}
+    return L2;
+}
+
+
 /**
 * Write results of sampling procedure.
 */
@@ -422,17 +471,23 @@ void Sampler::writeResults(std::string folder) {
     filename = folder + "/scoresEnsemble.txt";
     ofstream scores(filename);
 
-    for(auto it = chain.begin(); it != chain.end(); it++){
-        scores << it->holdoutScores();
+    list<pair<pair<int,int>,pair<double,bool>>> L;
+
+    for (auto it = chain.begin(); it != chain.end(); ++it) {
+        L.splice(L.end(),it->holdoutScores());
     }
+    L = meanScores(L);
+    scores << toString(L);
     scores.close();
 
     // Write Holdout scores to file.
     filename = folder + "/scoresMAP.txt";
     scores.open(filename);
-    scores << getMapTree().holdoutScores();
+    scores << toString(getMapTree().holdoutScores());
     scores.close();
 }
+
+
 
 /**
 * Write the LogLikelihoods times priors (non-normalized posteriors) to a file.

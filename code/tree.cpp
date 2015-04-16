@@ -743,14 +743,14 @@ double Tree::predAccuracy(){
     return (double) correct/(correct+wrong);
 }
 
-string Tree::holdoutScores(){
-    string s = "";
+list<pair<pair<int,int>,pair<double,bool>>> Tree::holdoutScores(){
+    list<pair<pair<int,int>,pair<double,bool>>> L;
 
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
-        s += it->holdoutScores();
+        L.splice(L.end(),it->holdoutScores());
     }
 
-    return s;
+    return L;
 }
 
 /** Printing */

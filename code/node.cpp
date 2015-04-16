@@ -617,6 +617,17 @@ pair<int, int> Node::getUnobservedCountsPair(Node * childAP, Node * childBP) {
     return adjacency_list->getUnknownCounts(LAP, LBP);
 }
 
+std::list<std::pair<std::pair<int,int>,bool>> Node::getUnobservedLinksPair(Node * childAP, Node * childBP) {
+
+    vector<int> * LAP = childAP->getLeavesP();
+    vector<int> * LBP = childBP->getLeavesP();
+
+    Adj_list * adjacency_list = treeP->getAdjacencyListP();
+
+    return adjacency_list->getUnknownLinks(LAP, LBP);
+}
+
+
 /**
  * Get cached log likelihood contribution
  */
@@ -829,10 +840,10 @@ pair<int,int> Node::predictionResults(){
     return result;
 }
 
-string Node::holdoutScores(){
-    string s = "";
+list<pair<pair<int,int>,pair<double,bool>>> Node::holdoutScores(){
+    list<pair<pair<int,int>,pair<double,bool>>> L;
     pair<int, int> knownCounts;
-    pair<int, int> unknownCounts;
+    list<pair<pair<int,int>,bool>> unknownLinks;
 
     int rho_plus = treeP->rho_plus;
     int rho_minus = treeP->rho_minus;
@@ -843,23 +854,18 @@ string Node::holdoutScores(){
         // Loop through each child after it in the list
         for (auto snd = ++nxt ; snd != children.end(); snd++) {
             knownCounts = getObservedCountsPair(*fst,*snd);
-            unknownCounts = getUnobservedCountsPair(*fst,*snd);
+            unknownLinks = getUnobservedLinksPair(*fst,*snd);
 
             double score = (double) (rho_plus + knownCounts.first)/(rho_plus+knownCounts.first+rho_minus+knownCounts.second);
 
-            int nLink = unknownCounts.first;
-            int nnonLink = unknownCounts.second;
-
-            for(int i = 0; i<nLink; i++){
-                s += to_string(score) + " 1\n";
-            }
-
-            for(int j = 0; j<nnonLink; j++){
-                s += to_string(score) + " 0\n";
+            for(auto it = unknownLinks.begin(); it!= unknownLinks.end(); it++){
+                pair<int,int> linkId = it->first;
+                bool trueValue = it->second;
+                L.push_back(make_pair(linkId,make_pair(score,trueValue)));
             }
         }
     }
-    return s;
+    return L;
 }
 
 /**

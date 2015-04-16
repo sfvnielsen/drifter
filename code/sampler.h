@@ -34,6 +34,9 @@ class Sampler
         Tree getMapTree();
         double getLastLogLikelihood();
 
+        std::string toString(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
+        std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>> meanScores(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
+
         // Writing the results to files.
         void writeResults(std::string);
         void writeLogLikelihood(std::string);

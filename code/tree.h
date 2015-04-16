@@ -81,7 +81,7 @@ public:
     bool isLoglikeCorrect();
 
     double predAccuracy();
-    std::string holdoutScores();
+    std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>> holdoutScores();
 
     // Print
     std::string toString();

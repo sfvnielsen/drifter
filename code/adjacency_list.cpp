@@ -124,6 +124,21 @@ std::pair<int,int> Adj_list::getUnknownCounts(std::vector<int> * LAP, std::vecto
     return result;
 }
 
+std::list<std::pair<std::pair<int,int>,bool>> Adj_list::getUnknownLinks(std::vector<int> * LAP, std::vector<int> * LBP){
+    list<pair<pair<int,int>,bool>> L;
+
+    for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
+        for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
+            if(!isObserved(*fst,*snd)){
+                L.push_back(make_pair(make_pair(*fst,*snd),isConnected(*fst,*snd)));
+            }
+        }
+    }
+
+    return L;
+}
+
+
 
 /**
  * Make a string of all links

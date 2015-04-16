@@ -60,6 +60,7 @@ public:
     double evaluateSubtreeLogLike();
     std::pair<int,int> getObservedCountsPair(Node *, Node *);
     std::pair<int,int> getUnobservedCountsPair(Node *, Node *);
+    std::list<std::pair<std::pair<int,int>,bool>> getUnobservedLinksPair(Node *, Node *);
 
     // getting and updating cached likelihood caches
     double getLogLike();
@@ -75,7 +76,7 @@ public:
     bool isInternalNode();
 
     std::pair<int,int> predictionResults();
-    std::string holdoutScores();
+    std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>> holdoutScores();
 
     // print
     std::string toString();
