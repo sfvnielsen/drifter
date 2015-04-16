@@ -15,28 +15,37 @@
 #include <cassert>
 #include <stdexcept>
 #include <limits>
-
+#include <string>
+#include <map>
 
 using namespace std;
 /**
  * Initialize with a tree already constructed.
  * The Adjacency matrix must be kept in memory outside the function.
  */
-Sampler::Sampler(Tree T, double alpha, double beta, int rho_plus, int rho_minus):
+Sampler::Sampler(Tree T, double alpha, double beta, double rho_plus, double rho_minus):
                           alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
 
     // Setting the initial values in the chain.
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
+    sample_hypers = true;
 }
 
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
-Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, int rho_plus, int rho_minus): alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus){
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus)
+            : Sampler(data_graph, alpha, beta, rho_plus, rho_minus, 0.0, false) {}
+
+/**
+* Initialize with the naive tree building in the adjacency matrix.
+*/
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus, double holdoutFraction, bool sample_hypers)
+            : alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus), sample_hypers(sample_hypers){
     // Constructing the adjacency list
-    adjacencyList = Adj_list(data_graph);
+    adjacencyList = Adj_list(data_graph,holdoutFraction);
 
     // Initialize the flat tree
     Tree T = Tree(&adjacencyList,alpha, beta, rho_plus, rho_minus);
@@ -69,8 +78,12 @@ void Sampler::run(int L){
 
     for (int i=0; i<L; i++){
 
-        // Create a proposal
+        // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
+        if (((i+1) % step)==0 && sample_hypers) {
+            proposal = sampleHyperparameters();
+        }
+        // Regraft and return move ratio
         double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
@@ -105,7 +118,6 @@ void Sampler::run(int L){
 void Sampler::run(int L, int thinning ){
     lastLogLik = likelihoods.back();
     Tree lastTree = chain.back();
-
     // Initialize the random generator
     random_device rd;
     mt19937 gen(rd());
@@ -115,9 +127,11 @@ void Sampler::run(int L, int thinning ){
     int step = max((int) L/100,10);
 
     for (int i=0; i<L; i++){
-
-        // Create a proposal
-        Tree proposal = lastTree;
+        // Take back of chain and sample hyperparameters each 1% of the run
+        Tree proposal = chain.back();
+        if ((i % step)==0 && sample_hypers) {
+           proposal = sampleHyperparameters();
+        }
         double move_ratio = proposal.regraft(); //Try a move
 
         // Get Likelihoods times priors
@@ -172,8 +186,13 @@ void Sampler::run(int L, int burn_in, int thinning){
     int bstep = max((int) burn_in/100,10);
 
     for (int i=0; i<burn_in; i++){
+        // Sample hyperparameters each 1% of the run
 
-        // Create a proposal
+        if ((i % bstep)==0 && sample_hypers) {
+            Tree proposal = sampleHyperparameters();
+        }
+
+        // Propose new tree
         double move_ratio = proposal.regraft();
 
         // Get Likelihoods times priors
@@ -210,6 +229,129 @@ void Sampler::run(int L, int burn_in, int thinning){
     run(L,thinning);
 }
 
+
+/**
+* Sample hyperparameters
+*/
+
+Tree Sampler::sampleHyperparameters() {
+    // Number of sampling steps for each hyperparameter
+    int n_resamples = 10;
+
+    // Initialize the random generator
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> u_dis(0, 1);
+    normal_distribution<> n_dis(0, 1);
+
+    // Get latest tree
+    Tree currentTree = chain.back();
+    double previousLogLik = lastLogLik;
+
+    // Sample alpha
+    double old_alpha = currentTree.alpha;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_alpha = exp(log(currentTree.alpha)+0.1*n_dis(gen));
+        currentTree.alpha = new_alpha;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogPrior();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_alpha = new_alpha;
+        }else{
+            currentTree.alpha = old_alpha;
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogPrior();
+
+    // Sample beta
+    double old_beta = currentTree.beta;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_beta = exp(log(currentTree.beta)+0.1*n_dis(gen));
+        currentTree.beta = new_beta;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogPrior();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_beta = new_beta;
+        }else{
+            currentTree.beta = old_beta;
+
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogPrior();
+
+    // Sample rho_plus
+    double old_rho_plus = currentTree.rho_plus;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_rho_plus = exp(log(currentTree.rho_plus)+0.1*n_dis(gen));
+        currentTree.rho_plus = new_rho_plus;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogLike();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_rho_plus = new_rho_plus;
+        }else{
+            currentTree.rho_plus = old_rho_plus;
+
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogLike();
+
+    // Sample rho_minus
+    double old_rho_minus = currentTree.rho_minus;
+    for (int n = 0; n != n_resamples; ++n) {
+        // Propose new parameter by random walk
+        double new_rho_minus = exp(log(currentTree.rho_minus)+0.1*n_dis(gen));
+        currentTree.rho_minus = new_rho_minus;
+
+        // Recalculate log-likelihood
+        currentTree.initializeLogLike();
+        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-previousLogLik);
+
+        // Update parameter based acceptance ratio
+        if(a>u_dis(gen)){
+            previousLogLik = propLogLik;
+            old_rho_minus = new_rho_minus;
+        }else{
+            currentTree.rho_minus = old_rho_minus;
+        }
+    }
+    // if last sample is rejected recalculate caches
+    currentTree.initializeLogLike();
+    return currentTree;
+}
+
 /**
 * Get the last Log(Likelihood times prior) (non-normalized posterior)
 */
@@ -224,15 +366,83 @@ Tree Sampler::getLastTree(){
     return chain.back();
 }
 
+
+/**
+* Get the "Best" tree in the Chain.
+*/
+Tree Sampler::getMapTree(){
+    double lBest = 0.0;
+    Tree tBest = chain.front();
+
+    auto lit = likelihoods.begin();
+
+    for(auto it = chain.begin(); it != chain.end(); it++){
+        if(*lit >= lBest){
+            lBest = *lit;
+            tBest = *it;
+        }
+        lit++;
+    }
+
+    return tBest;
+}
+
+
+string Sampler::toString(list<pair<pair<int,int>,pair<double,bool>>> L){
+    string s = "";
+    for (auto it = L.begin(); it!=L.end(); it++ ){
+        double score = it->second.first;
+        bool trueVal = it->second.second;
+        s += to_string(score) + " " + to_string(trueVal) + "\n";
+    }
+    return s;
+}
+
+list<pair<pair<int,int>,pair<double,bool>>> Sampler::meanScores(list<pair<pair<int,int>,pair<double,bool>>> L){
+    list<pair<pair<int,int>,pair<double,bool>>> L2;
+    list<pair<int,int>> links;
+
+    multimap<pair<int,int>,pair<double,bool>> M;
+
+    for (auto it = L.begin(); it!=L.end(); it++ ){
+        pair<int,int> linkId= it->first;
+
+
+        links.push_back(linkId);
+        M.insert(*it);
+    }
+
+    links.sort();
+    links.unique();
+    for(auto lIt = links.begin(); lIt!=links.end(); lIt++){
+
+    pair <multimap<pair<int,int>,pair<double,bool>>::iterator, multimap<pair<int,int>,pair<double,bool>>::iterator> ret;
+    ret = M.equal_range(*lIt);
+
+    double sum = 0.0;
+    int c = 0;
+    bool trueVal = ret.first->second.second;
+
+    for(auto it = ret.first; it != ret.second; ++it){
+        sum += it->second.first;
+        c++;
+    }
+
+    L2.push_back(make_pair(*lIt,make_pair(sum/(double) c, trueVal)));
+}
+    return L2;
+}
+
+
 /**
  * Identifies and returns a maximum a posteriori probability tree (MAP tree)
  */
 Tree Sampler::getMAPTree(){
     double min = -numeric_limits<double>::max();
-    
+
     auto currentTree = chain.begin();
     Tree * mapTree = nullptr;
-    
+
     //for (int i = 0; i < (int) likelihoods.size(); ++i){
     for (auto it = likelihoods.begin(); it != likelihoods.end(); ++it) {
         if (min-*it < 0) {
@@ -242,26 +452,26 @@ Tree Sampler::getMAPTree(){
         ++currentTree;
 
     }
-    
+
     mapTree->getRoot()->sortChildren();
-    
+
     return *mapTree;
 }
 
 list<pair<Node *, pair<int, int>>> Sampler::calcSubtreeCred(Node * target_node,list<Node *> valid_trees,int total){
-    
-    
+
+
     list<pair<Node*, pair<int, int> > > result;
     list<Node * > targets = target_node->getChildren();
-    
+
     //For every child
     for (auto target = targets.begin(); target !=targets.end(); ++target) {
         int match = 0;//, total = (int) valid_trees.size();
             list<Node *> valid_subtrees;
 
             for (auto it = valid_trees.begin(); it != valid_trees.end(); ++it){
-                
-                    pair<Node *,bool> x = (*it)->hasEqualSplit(*(*target)->getLeaves());
+
+                    pair<Node *,bool> x = (*it)->hasEqualSplit(*(*target)->getLeavesP());
                     if (x.second){
                         match++;
                         //Do with x?? Its the root of the next subtree
@@ -271,14 +481,14 @@ list<pair<Node *, pair<int, int>>> Sampler::calcSubtreeCred(Node * target_node,l
                         }
                     }
             }
-        
+
             pair<Node*, pair<int, int> > x_res(*target,pair<int,int>(match,total));
             result.push_back(x_res);
 
-        
+
             //Gets subtree results
             result.splice(result.end(), calcSubtreeCred(*target, valid_subtrees, match));
-        
+
     }
     return result;
 }
@@ -287,23 +497,23 @@ list<pair<Node *, pair<int, int>>> Sampler::calcSubtreeCred(Node * target_node,l
 /**
  *
  *
- * TODO: One occurence of T should be removed from the chain, as otherwise T 
+ * TODO: One occurence of T should be removed from the chain, as otherwise T
  *        will be compared to itself, giving 1 "false" match on the entire tree.
  *        However the effects goes to 0 as the sample size goes to infinity.
  */
 vector<pair<Node *, double>> Sampler::buildCredibilityTree(Tree T){
     vector<pair<Node *,double >> credibilities(T.getNumNodes());
-    
+
     //Store a pointer to the root node of every tree from the posterior
     list<Node *> valid_roots;
     for (auto it = chain.begin(); it != chain.end(); ++it) {
         valid_roots.push_back(it->getRoot());
     }
-    
+
     //Calculate the credibility tree, by calculating the subtree credibilities
     //TODO: calcSubtree should return a vector!
     list<pair<Node *, pair<int, int>>> result = calcSubtreeCred(T.getRoot(), valid_roots,(int) chain.size());
-    
+
     //Format result for binary search and perserve matches, possible matches
     auto it_vec = credibilities.begin();
     double sampleSize = (double) chain.size();
@@ -348,7 +558,28 @@ void Sampler::writeResults(std::string folder) {
     for (auto it = likelihoods.begin(); it != likelihoods.end(); ++it){
         out_file << *it << " ";
     }
+
+    // Write Holdout scores to file.
+    filename = folder + "/scoresEnsemble.txt";
+    ofstream scores(filename);
+
+    list<pair<pair<int,int>,pair<double,bool>>> L;
+
+    for (auto it = chain.begin(); it != chain.end(); ++it) {
+        L.splice(L.end(),it->holdoutScores());
+    }
+    L = meanScores(L);
+    scores << toString(L);
+    scores.close();
+
+    // Write Holdout scores to file.
+    filename = folder + "/scoresMAP.txt";
+    scores.open(filename);
+    scores << toString(getMapTree().holdoutScores());
+    scores.close();
 }
+
+
 
 /**
 * Write the LogLikelihoods times priors (non-normalized posteriors) to a file.
@@ -369,4 +600,45 @@ void Sampler::writeLogLikelihood(string folder){
     }
 }
 
+/**
+* Write hyper parameters to file
+*/
+void Sampler::writeHypers(string folder){
+    // If folder doesnt exist - create it
+    DIR *dir;
+    if ((dir = opendir (folder.c_str())) == NULL) {
+        throw runtime_error("Target directory for writing results not found");
+    }
 
+    // Write alpha
+    string filename = folder + "/hyper_alpha.txt";
+    ofstream out_file(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file << it->alpha << " ";
+    }
+
+    // Write beta
+    filename = folder + "/hyper_beta.txt";
+    ofstream out_file2(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file2 << it->beta << " ";
+    }
+
+    // Write rho_plus
+    filename = folder + "/hyper_rhop.txt";
+    ofstream out_file3(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file3 << it->rho_plus << " ";
+    }
+
+    // Write rho_minus
+    filename = folder + "/hyper_rhom.txt";
+    ofstream out_file4(filename);
+
+    for (auto it = chain.begin(); it != chain.end(); ++it){
+        out_file4 << it->rho_minus << " ";
+    }
+}

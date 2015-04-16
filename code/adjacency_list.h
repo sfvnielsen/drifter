@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <iterator>
 
 class Adj_list {
 
@@ -19,17 +20,29 @@ public:
     // Constructors
     Adj_list();
     Adj_list(std::list<std::pair<int,int>>);
+    Adj_list(std::list<std::pair<int,int>>, double);
+
 
     // Querying the adjacency
     bool isConnected(int, int);
+    bool isObserved(int,int);
     int getSize();
+    std::pair<int,int> getCounts(std::vector<int> *, std::vector<int> *);
+    std::pair<int,int> getUnknownCounts(std::vector<int> *, std::vector<int> *);
+    std::list<std::pair<std::pair<int,int>,bool>> getUnknownLinks(std::vector<int> *, std::vector<int> *);
 
     std::string toString();
     std::string toGexf();
 
 private:
     // Data structure
-    std::vector<std::vector<bool> > adjacency_matrix;
+    struct link {
+        bool connected;
+        bool observed;
+        link() : connected(false), observed(true) {}
+    };
+
+    std::vector<std::vector<link> > adjacency_matrix;
 };
 
 

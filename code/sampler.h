@@ -20,25 +20,33 @@ class Sampler
     public:
         // Constructors
         Sampler();
-        Sampler(Tree,double,double,int,int);
-        Sampler(std::list<std::pair<int,int>>,double,double,int,int);
+        Sampler(Tree,double,double,double,double);
+        Sampler(std::list<std::pair<int,int>>,double,double,double,double);
+        Sampler(std::list<std::pair<int,int>>,double,double,double,double,double,bool);
+
 
         // Various Run methods.
         void run(int);
         void run(int,int);
         void run(int,int,int);
+        Tree sampleHyperparameters();
 
         // Accessing the end of the chain.
         Tree getLastTree();
+        Tree getMapTree();
         double getLastLogLikelihood();
         Tree getMAPTree();
         std::vector<std::pair<Node *, double>>buildCredibilityTree(Tree);
         
 
+        std::string toString(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
+        std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>> meanScores(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
+
         // Writing the results to files.
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
-    
+        void writeHypers(std::string);
+
         // Data storage, publicity need for test function.
         std::list<Tree> chain;  //TODO vector
         std::list<double> likelihoods;  //TODO vector
@@ -54,8 +62,9 @@ class Sampler
         // Hyperparameters:
         double alpha;
         double beta;
-        int rho_plus;
-        int rho_minus;
+        double rho_plus;
+        double rho_minus;
+        bool sample_hypers;
 };
 
 #endif // SAMPLER_H

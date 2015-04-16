@@ -19,6 +19,7 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
@@ -102,7 +103,7 @@ void Node::setNodeId(int new_id){
 /**
  * Returns a list of pointers to the leaf nodes of the current node
  */
-vector<int> * Node::getLeaves() {
+vector<int> * Node::getLeavesP() {
     assert(isInternalNode() == ((nodeId < 0) && children.size() >0));
     return &leaves;
 }
@@ -318,13 +319,13 @@ Node * Node::getRandomDescendant() {
     // Each child is a subtree and it weight is calculated and stored for each subtree (child)
     for (auto it = node_list.begin(); it!= node_list.end(); ++it ) {
         subtree_weight.push_back(2*((*it)->getNumInternalNodes())+
-                                 (int)(((*it)->getLeaves())->size()) );
+                                 (int)(((*it)->getLeavesP())->size()) );
         //Checks for consistency in isInternal
         assert((*it)->getNumInternalNodes() == 0 || (*it)->isInternalNode());
         assert((*it)->getNumInternalNodes()> 0 || !(*it)->isInternalNode());
     }
     //The weights summes to the weight of the subtree rooted at the current node
-    int sum_weight = (int)((getLeaves())->size())+
+    int sum_weight = (int)((getLeavesP())->size())+
                             2*getNumInternalNodes();
     //The weights are normalised to a probability and store in vector p_vals
     vector<double> p_vals;
@@ -402,7 +403,7 @@ void Node::updateLeaves(){
 
             //For each child copy the child list to this node.
             // NOTE: Using splices removes the elements from the list.
-            vector<int> childLeaves = *(childP->getLeaves());
+            vector<int> childLeaves = *(childP->getLeavesP());
             assert(childLeaves.size()>0);
             //Combines a sorted list!
             addLeaves(childLeaves);
@@ -506,14 +507,14 @@ double Node::evaluateLogPrior(){
     double log_prior = 0.0;
 
     int num_children = (int) (getChildren()).size();
-    int num_leaves_total = (int) (getLeaves())->size();
+    int num_leaves_total = (int) (getLeavesP())->size();
     vector<int> num_leaves_each_child;
     list<Node *> list_of_children = getChildren();
 
     // Get number of leaves for each child
     for (auto it = list_of_children.begin();
          it!= list_of_children.end(); ++it) {
-        int num_leaves = (int) (*it)->getLeaves()->size();
+        int num_leaves = (int) (*it)->getLeavesP()->size();
         num_leaves_each_child.push_back(num_leaves);
     }
 
@@ -547,18 +548,18 @@ double Node::evaluateLogPrior(){
 }
 
 double Node::evaluatePairLogLike(Node * childAP, Node * childBP){
-    int num_links, num_pos_links;
+    int num_links, num_non_links;
     double log_like;
 
-    int rho_plus = treeP->rho_plus;
-    int rho_minus = treeP->rho_minus;
+    double rho_plus = treeP->rho_plus;
+    double rho_minus = treeP->rho_minus;
 
-    pair<int, int> counts = getCountsPair(childAP,childBP);
+    pair<int, int> counts = getObservedCountsPair(childAP,childBP);
 
     num_links = counts.first;
-    num_pos_links = counts.second;
+    num_non_links = counts.second;
     log_like =  logbeta(num_links+rho_plus,
-                        num_pos_links-num_links+rho_minus)
+                        num_non_links+rho_minus)
     -logbeta(rho_plus,rho_minus);
 
     return log_like;
@@ -591,52 +592,41 @@ double Node::evaluateSubtreeLogLike(){
 }
 
 /**
- * Get counts of links and non-links between all pairs of children
+ * Get counts of links and non-links between the pair of children
  */
-list<pair<int, int>> Node::getCountsAll() {
-    list<pair<int, int>> result;
-    // Loop through each child
-    for (auto fst = children.begin(); fst != children.end(); fst++) {
-        // iterator for the next child
-        list<Node *>::iterator nxt = fst;
-        // Loop through each child after it in the list
-        for (auto snd = ++nxt ; snd != children.end(); snd++) {
-            result.push_back(getCountsPair(*fst, *snd));
-        }
-    }
-    return result;
+pair<int, int> Node::getObservedCountsPair(Node * childAP, Node * childBP) {
+
+    vector<int> * LAP = childAP->getLeavesP();
+    vector<int> * LBP = childBP->getLeavesP();
+
+    Adj_list * adjacency_list = treeP->getAdjacencyListP();
+
+    return adjacency_list->getCounts(LAP, LBP);
 }
 
 /**
  * Get counts of links and non-links between the pair of children
  */
-pair<int, int> Node::getCountsPair(Node * childAP, Node * childBP) {
+pair<int, int> Node::getUnobservedCountsPair(Node * childAP, Node * childBP) {
 
-    vector<int> * LA = childAP->getLeaves();
-    vector<int> * LB = childBP->getLeaves();
-
-    // Number of possible links
-    int nA = (int) LA->size();
-    int nB = (int) LB->size();
-
-    int nPossible = nA*nB;
-
-    int nLinks = 0;
+    vector<int> * LAP = childAP->getLeavesP();
+    vector<int> * LBP = childBP->getLeavesP();
 
     Adj_list * adjacency_list = treeP->getAdjacencyListP();
 
-    // Loop through all all combinations of leaves and check if they are connected
-    for (auto fst = LA->begin(); fst != LA->end(); fst++) {
-        for (auto snd = LB->begin(); snd != LB->end(); snd++) {
-            if(adjacency_list->isConnected(*fst,*snd)){
-                nLinks += 1;
-            }
-        }
-    }
-
-    pair<int, int> result (nLinks,nPossible);
-    return result;
+    return adjacency_list->getUnknownCounts(LAP, LBP);
 }
+
+std::list<std::pair<std::pair<int,int>,bool>> Node::getUnobservedLinksPair(Node * childAP, Node * childBP) {
+
+    vector<int> * LAP = childAP->getLeavesP();
+    vector<int> * LBP = childBP->getLeavesP();
+
+    Adj_list * adjacency_list = treeP->getAdjacencyListP();
+
+    return adjacency_list->getUnknownLinks(LAP, LBP);
+}
+
 
 /**
  * Get cached log likelihood contribution
@@ -768,8 +758,8 @@ bool Node::operator==( const Node &rhs ) const {
  */
 bool Node::isEqualSubtree(Node * copy_node){
 
-    vector<int> leavesOriginal  = *getLeaves(),
-    leavesCopy = * copy_node->getLeaves();
+    vector<int> leavesOriginal  = *getLeavesP(),
+    leavesCopy = * copy_node->getLeavesP();
 
     //If the number of leaves are diffent, they are never a match
     if (leavesCopy.size() != leavesOriginal.size()) {
@@ -777,7 +767,7 @@ bool Node::isEqualSubtree(Node * copy_node){
     } else {
         //Computes how many of the leaves between copy and original are equal
         int num_equal = 0;
-        
+
         //TODO use algorithm package to compare two sorted lists
         for (auto it = leavesOriginal.begin(); it != leavesOriginal.end(); it++) {
             for (auto it2 = leavesCopy.begin(); it2 != leavesCopy.end(); it2++) {
@@ -786,7 +776,7 @@ bool Node::isEqualSubtree(Node * copy_node){
                 }
             }
         }
-        
+
 
         // iff the following check passes, are the leaves identical
         if (num_equal == (int) leavesOriginal.size()) {
@@ -815,27 +805,27 @@ bool Node::isEqualSubtree(Node * copy_node){
 
 /**
  * Compares if any of this node's children has an identical split to the target.
- * 
+ *
  * Returns:
  *  1. A pointer to the child or nullptr if the child is not found or it's a leaf
  *  2. A bool indicating if there is an equal child.
  */
 pair<Node *, bool> Node::hasEqualSplit(std::vector<int> targetLeaves){
-    
+
     if (children.size() == 0 && targetLeaves.size() == 1 && leaves[0]==targetLeaves[0]) {
         return pair<Node *, bool>(nullptr,true);
     }
-    
+
     //Compare the target split to each of this nodes spilt, which is equivivalent
     // to comparing this nodes childrens (sorted) leaves list
     for (auto it_child =children.begin(); it_child !=children.end(); ++it_child) {
-        vector<int> child_leaves = *(*it_child)->getLeaves();
-        
+        vector<int> child_leaves = *(*it_child)->getLeavesP();
+
         if (targetLeaves.size() == child_leaves.size()) {
-        
+
             //Compares split, sorted leaves list allow linear time comparison
             auto it_t = targetLeaves.begin();
-        
+
             bool isEqual = true;
             //If any two elements are not equal, then the splits are not equal
             for (auto it = child_leaves.begin(); it!=child_leaves.end(); ++it) {
@@ -852,7 +842,7 @@ pair<Node *, bool> Node::hasEqualSplit(std::vector<int> targetLeaves){
             }
         }
     }
-    
+
     return pair<Node*, bool>(nullptr,false);
 }
 
@@ -867,15 +857,15 @@ void Node::sortChildren(){sortChildren(true);};
  */
 void Node::sortChildren(bool ascending){
     if (children.size()>1) {
-        
+
         //Sorting using lambda functions
         if (ascending) {
             children.sort([](Node * a,Node * b)->bool{
-                return a->getLeaves()->size() < b->getLeaves()->size();
+                return a->getLeavesP()->size() < b->getLeavesP()->size();
             });
         } else {
             children.sort([](Node * a,Node * b)->bool{
-                return a->getLeaves()->size() > b->getLeaves()->size();
+                return a->getLeavesP()->size() > b->getLeavesP()->size();
             });
 
         }
@@ -884,7 +874,7 @@ void Node::sortChildren(bool ascending){
             (*it)->sortChildren(ascending);
         }
     }
-    
+
 }
 
 /**
@@ -894,12 +884,73 @@ bool Node::isInternalNode() {
     return !children.empty();
 }
 
+
+pair<int,int> Node::predictionResults(){
+    int correct = 0;
+    int wrong = 0;
+    pair<int, int> knownCounts;
+    pair<int, int> unknownCounts;
+
+    int rho_plus = treeP->rho_plus;
+    int rho_minus = treeP->rho_minus;
+
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            knownCounts = getObservedCountsPair(*fst,*snd);
+            unknownCounts = getUnobservedCountsPair(*fst,*snd);
+            bool prediction = 0.5 < (double) (rho_plus + knownCounts.first)/(rho_plus+knownCounts.first+rho_minus+knownCounts.second);
+
+            if(prediction){
+                correct += unknownCounts.first;
+                wrong += unknownCounts.second;
+            }else{
+                correct += unknownCounts.second;
+                wrong += unknownCounts.first;
+            }
+        }
+    }
+
+    pair<int,int> result (correct,wrong);
+    return result;
+}
+
+list<pair<pair<int,int>,pair<double,bool>>> Node::holdoutScores(){
+    list<pair<pair<int,int>,pair<double,bool>>> L;
+    pair<int, int> knownCounts;
+    list<pair<pair<int,int>,bool>> unknownLinks;
+
+    int rho_plus = treeP->rho_plus;
+    int rho_minus = treeP->rho_minus;
+
+    for (auto fst = children.begin(); fst != children.end(); fst++) {
+        // iterator for the next child
+        auto nxt = fst;
+        // Loop through each child after it in the list
+        for (auto snd = ++nxt ; snd != children.end(); snd++) {
+            knownCounts = getObservedCountsPair(*fst,*snd);
+            unknownLinks = getUnobservedLinksPair(*fst,*snd);
+
+            double score = (double) (rho_plus + knownCounts.first)/(rho_plus+knownCounts.first+rho_minus+knownCounts.second);
+
+            for(auto it = unknownLinks.begin(); it!= unknownLinks.end(); it++){
+                pair<int,int> linkId = it->first;
+                bool trueValue = it->second;
+                L.push_back(make_pair(linkId,make_pair(score,trueValue)));
+            }
+        }
+    }
+    return L;
+}
+
 /**
  * Printing by recursing through the subtree root at this node
  */
 string Node::toString() {
     // Building a string representing the tree by printing all of the leaf-Sets
-    vector<int> leaves = *(getLeaves());
+    vector<int> leaves = *(getLeavesP());
     string s = "Node: " +  to_string(getNodeId()) +"; Num_internal: ("+to_string(getNumInternalNodes())+ "); Leaves: (";
     if(!leaves.empty()) {
         for (auto it = leaves.begin(); it != leaves.end(); it++) {
@@ -960,7 +1011,7 @@ int Node::getDepth(){
         }
         return max+1;
     }
-    
+
     return 1;
 }
 
