@@ -119,7 +119,6 @@ void Sampler::run(int L){
 void Sampler::run(int L, int thinning ){
     lastLogLik = likelihoods.back();
     Tree lastTree = chain.back();
-    Tree proposal = chain.back();
     // Initialize the random generator
     random_device rd;
     mt19937 gen(rd());
@@ -130,7 +129,7 @@ void Sampler::run(int L, int thinning ){
 
     for (int i=0; i<L; i++){
         // Take back of chain and sample hyperparameters each 1% of the run
-        //Tree proposal = chain.back();
+        Tree proposal = chain.back();
         if ((i % step)==0 && sample_hypers) {
            proposal = sampleHyperparameters();
         }
