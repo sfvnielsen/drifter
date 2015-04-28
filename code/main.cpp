@@ -22,9 +22,9 @@ void testNetwork(string,int,int,int);
 int main() {
 
     string data_file_name = "data/karate_edgelist.txt";
-    //data_file_name = "data/celegans_edgelist.txt";
-    //data_file_name = "data/football_edgelist.txt";
-    //data_file_name = "data/facebook100_edgelist.txt";
+//    data_file_name = "data/football_edgelist.txt";
+//    data_file_name = "data/celegans_edgelist.txt";
+//    data_file_name = "data/facebook100_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
 
     /**
@@ -76,10 +76,13 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     
     sampler.getLastTree().getRoot()->sortChildren();
     sampler.getLastTree().writeJSONFormat("lastTree.json");
-    mapTree.writeJSONFormat("mapTree.json");
+//    mapTree.writeJSONFormat("mapTree.json");
 
-    
-    sampler.buildCredibilityTree(mapTree);
+    vector<pair<int, double> > cred = sampler.buildCredibilityTree(mapTree);
+    mapTree.writeJSONFormat("mapTree.json",cred);
+    for (auto it = cred.begin(); it!=cred.end(); ++it) {
+        cout << "Node: "<<it->first << "    , \t" << it->second << endl;
+    }
     
 
     // Print the last tree.
