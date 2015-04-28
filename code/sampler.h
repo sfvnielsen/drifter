@@ -32,7 +32,7 @@ class Sampler
         Tree getLastTree();
         double getLastLogLikelihood();
         Tree getMAPTree();
-        std::vector<std::pair<Node *, double>>buildCredibilityTree(Tree);
+        std::vector<std::pair<int, double>>buildCredibilityTree(Tree);
         
 
         // Writing the results to files.

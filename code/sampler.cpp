@@ -291,8 +291,8 @@ list<pair<Node *, pair<int, int>>> Sampler::calcSubtreeCred(Node * target_node,l
  *        will be compared to itself, giving 1 "false" match on the entire tree.
  *        However the effects goes to 0 as the sample size goes to infinity.
  */
-vector<pair<Node *, double>> Sampler::buildCredibilityTree(Tree T){
-    vector<pair<Node *,double >> credibilities(T.getNumNodes());
+vector<pair<int, double>> Sampler::buildCredibilityTree(Tree T){
+    vector<pair<int,double >> credibilities(T.getNumNodes());
     
     //Store a pointer to the root node of every tree from the posterior
     list<Node *> valid_roots;
@@ -308,11 +308,10 @@ vector<pair<Node *, double>> Sampler::buildCredibilityTree(Tree T){
     auto it_vec = credibilities.begin();
     double sampleSize = (double) chain.size();
     for (auto it = result.begin(); it != result.end(); ++it) {
-        it_vec->first = it->first; //Node pointer, for identification
+        it_vec->first = it->first->getNodeId(); //Node pointer, for identification
         it_vec->second = it->second.first/sampleSize;
         ++it_vec;
-    }
-
+    }    
     return credibilities;
 
 }
