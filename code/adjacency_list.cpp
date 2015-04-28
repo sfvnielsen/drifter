@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <random>
+#include <cassert>
 using namespace std;
 
 /**
@@ -18,9 +20,14 @@ using namespace std;
 Adj_list::Adj_list(){}
 
 /**
- * Constructing the adjacency matrix from an adjacency list passed as list of pairs of its.
+ * Constructing the adjacency matrix from an adjacency list passed as list of pairs.
  */
-Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
+Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list) : Adj_list(edge_list, 0.0) {}
+
+/**
+ * Constructing the adjacency matrix from an adjacency list passed as list of pairs.
+ */
+Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list, double holdoutFraction){
 
     list<int> leaves;
 
@@ -35,12 +42,25 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
     leaves.unique();
     int N = (int) leaves.size();
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::bernoulli_distribution d(1.0-holdoutFraction);
+
     //Construct adjacency_matrix
-    adjacency_matrix = vector<vector<bool>>(N,vector<bool>(N,false));
-    for (list<pair<int,int>>::iterator it = edge_list.begin();
+    adjacency_matrix = vector<vector<link>>(N,vector<link>(N,link()));
+
+    for(int i = 0; i < N; i++){
+        for(int j = i+1; j < N; j++){
+            bool observed = d(gen);
+            adjacency_matrix[i][j].observed = observed;
+            adjacency_matrix[j][i].observed = observed;
+        }
+    }
+
+    for (auto it = edge_list.begin();
          it != edge_list.end(); it++){
-            adjacency_matrix[it->first][it->second] = true;
-            adjacency_matrix[it->second][it->first] = true;
+            adjacency_matrix[it->first][it->second].connected = true;
+            adjacency_matrix[it->second][it->first].connected = true;
     }
 }
 
@@ -48,8 +68,77 @@ Adj_list::Adj_list(std::list<std::pair<int,int>> edge_list){
  * Query the connection between two nodes.
  */
 bool Adj_list::isConnected(int current, int target){
-        return adjacency_matrix[current][target];
+        return adjacency_matrix[current][target].connected;
 }
+
+/**
+ * Query the connection between two nodes.
+ */
+bool Adj_list::isObserved(int current, int target){
+        return adjacency_matrix[current][target].observed;
+}
+
+/**
+ * Query the connection between two sets of nodes.
+ */
+std::pair<int,int> Adj_list::getCounts(std::vector<int> * LAP, std::vector<int> * LBP){
+    int nLinks = 0; // Number of links between the groups.
+    int nnLinks = 0; // Number of nonLinks between the groups.
+
+    for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
+        for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
+            if(isObserved(*fst,*snd)){
+                if(isConnected(*fst,*snd)){
+                    nLinks++;
+                }else{
+                    nnLinks++;
+                }
+            }
+        }
+    }
+
+    pair<int, int> result (nLinks,nnLinks);
+    return result;
+}
+
+/**
+ * Query the connection between two sets of nodes.
+ */
+std::pair<int,int> Adj_list::getUnknownCounts(std::vector<int> * LAP, std::vector<int> * LBP){
+    int nLinks = 0; // Number of links between the groups.
+    int nnLinks = 0; // Number of nonLinks between the groups.
+
+    for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
+        for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
+            if(!isObserved(*fst,*snd)){
+                if(isConnected(*fst,*snd)){
+                    nLinks += 1;
+                }else{
+                    nnLinks += 1;
+                }
+            }
+        }
+    }
+
+    pair<int, int> result (nLinks,nnLinks);
+    return result;
+}
+
+std::list<std::pair<std::pair<int,int>,bool>> Adj_list::getUnknownLinks(std::vector<int> * LAP, std::vector<int> * LBP){
+    list<pair<pair<int,int>,bool>> L;
+
+    for (auto fst = LAP->begin(); fst != LAP->end(); fst++) {
+        for (auto snd = LBP->begin(); snd != LBP->end(); snd++) {
+            if(!isObserved(*fst,*snd)){
+                L.push_back(make_pair(make_pair(*fst,*snd),isConnected(*fst,*snd)));
+            }
+        }
+    }
+
+    return L;
+}
+
+
 
 /**
  * Make a string of all links

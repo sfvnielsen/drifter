@@ -29,7 +29,7 @@ public:
     int getNodeId();
     void setNodeId(int);
 
-    std::vector<int> * getLeaves();
+    std::vector<int> * getLeavesP();
     void setLeaves(std::vector<int>);
     int getNumInternalNodes();
     void setNumInternalNodes(int);
@@ -58,8 +58,9 @@ public:
     double evaluateLogPrior();
     double evaluatePairLogLike(Node *, Node *);
     double evaluateSubtreeLogLike();
-    std::list<std::pair<int,int>> getCountsAll(); //TO BE DEPRICATED WITH SMART UPDATE
-    std::pair<int,int> getCountsPair(Node *, Node *);
+    std::pair<int,int> getObservedCountsPair(Node *, Node *);
+    std::pair<int,int> getUnobservedCountsPair(Node *, Node *);
+    std::list<std::pair<std::pair<int,int>,bool>> getUnobservedLinksPair(Node *, Node *);
 
     // getting and updating cached likelihood caches
     double getLogLike();
@@ -78,6 +79,9 @@ public:
     void sortChildren();
     void sortChildren(bool);
     bool isInternalNode();
+
+    std::pair<int,int> predictionResults();
+    std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>> holdoutScores();
 
     // print
     std::string toString();
