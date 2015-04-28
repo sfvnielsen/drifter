@@ -17,6 +17,7 @@ A(1:n+1:n*n) = 0;
 %A = A - diag(diag(A));
 
 [i,j] = find(A);
-M = [i,j];
+M = [j, i];
+M = M -1 ; % zero index 
 %%
 dlmwrite('haggman_edgelist.txt',M,'delimiter',' ');

@@ -17,6 +17,6 @@ $(EXECUTABLE): $(OBJECTS)
 clean: 
 	rm -rf *o $(EXECUTABLE)
 	
-profile: CFLAGS += -pg
+profile: CFLAGS += -pg -g
 profile: $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $(EXECUTABLE)_PROF

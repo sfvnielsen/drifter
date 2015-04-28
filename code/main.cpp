@@ -25,20 +25,18 @@ int main() {
     //data_file_name = "data/celegans_edgelist.txt";
     //data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
+    data_file_name = "data/haggman_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
 
     /**
      * Testing a network
      */
     int num_iterations = 10000;
-<<<<<<< HEAD
+
     int burnin = 1000;
     int thinning = 500;
-=======
-    int burnin = 5000;
-    int thinning = 100;
     double holdoutFraction = 0.05;
->>>>>>> Unknown-Links-and-link-prediction
+
 
     testNetwork(data_file_name,num_iterations,burnin,thinning,holdoutFraction);
 
@@ -75,25 +73,23 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     end = chrono::system_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
     std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-    
+
     Tree mapTree = sampler.getMAPTree();
     cout << "Depth of MAP tree: " << mapTree.getDepth() << endl;
     cout << mapTree.toString() << endl << endl;
-    
+
     sampler.getLastTree().getRoot()->sortChildren();
     sampler.getLastTree().writeJSONFormat("lastTree.json");
     mapTree.writeJSONFormat("mapTree.json");
 
-    
+
     sampler.buildCredibilityTree(mapTree);
-    
+
 
     // Print the last tree.
     //cout << sampler.getLastTree().toGexf() << endl;
-<<<<<<< HEAD
-=======
+
     sampler.writeResults("out");
->>>>>>> Unknown-Links-and-link-prediction
 
     // Print out hyperparameters
     cout << "Hyperparameters: " << endl;
