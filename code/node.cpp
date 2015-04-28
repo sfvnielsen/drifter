@@ -975,6 +975,34 @@ string Node::toJSON(){
     } else {
         return "{\"name\": \"" + to_string(nodeId) +"\", \"size\": \""+to_string(1)+"\"}";
     }
-
-
 }
+string Node::toJSON(vector<pair<int,double>> cred){
+    double c=0;
+    for (auto it = cred.begin(); it != cred.end(); ++it) {
+        if (it->first == nodeId) {
+            c = it->second;
+            break;
+        }
+    }
+    
+    if (!children.empty()) {
+        string s ="{\"name\": \"" + to_string(nodeId) +"\",\"size\": \""+to_string(num_internal_nodes)+"\" ,";
+        
+        //Find the crediblilty
+        s += "\"credibility\": \""+to_string(c)+"\",\n";
+        
+        s += "\"children\": [\n ";
+        for (auto it = children.begin(); (*it) != children.back(); ++it) {
+            s += "\t"+(*it)->toJSON(cred)+",\n";
+        }
+        return s+children.back()->toJSON(cred)+"]\n}";
+        
+    } else {
+        return "{\"name\": \"" + to_string(nodeId) +"\", \"size\": \""+
+                to_string(1)+"\",\"credibility\": \""+to_string(c)+"\"}";
+    }
+    
+    
+}
+
+

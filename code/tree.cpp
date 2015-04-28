@@ -823,6 +823,18 @@ void Tree::writeJSONFormat(string filename) {
     out_file << rootP->toJSON();
 }
 
+void Tree::writeJSONFormat(string filename, vector<pair<int,double>> credibilities) {
+    
+    ofstream out_file(filename.c_str()); // output file
+    
+    out_file << rootP->toJSON(credibilities);
+}
+
+void Tree::writeADJlist(string filename){
+    
+}
+
+
 /** Write out the tree as a gexf file
     for ease use with Gephi
 */

@@ -94,6 +94,7 @@ public:
     
     
     std::string toJSON();
+    std::string toJSON(std::vector<std::pair<int, double>>);
 
 private:
     Node * parentP;
