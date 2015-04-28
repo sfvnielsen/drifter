@@ -1015,6 +1015,38 @@ int Node::getDepth(){
     return 1;
 }
 
+
+void Node::getNodeLayerRelation(vector<vector<int> >& layer_matrix,vector<int>& node_order, int current_depth,int min_leaves, int max_leaves){
+    
+    
+    
+    
+    if (!children.empty()) {
+        int i = min_leaves;
+        for (auto it = children.begin(); it != children.end(); ++it) {
+            int group_id = i+(int)(*it)->getLeavesP()->size()-1;
+            int group_min_leaves=i;
+            for (auto it_leaf = (*it)->getLeavesP()->begin();
+                 it_leaf != (*it)->getLeavesP()->end(); ++it_leaf) {
+                
+                layer_matrix[current_depth][i] =group_id+1;
+                i++;
+            }
+            
+            (*it)->getNodeLayerRelation(layer_matrix, node_order, current_depth+1, group_min_leaves, group_id);
+        }
+    } else {
+        node_order[min_leaves] = nodeId;
+        assert(min_leaves == max_leaves);
+    }
+    
+    
+    
+    
+    
+};
+
+
 string Node::toJSON(){
     if (!children.empty()) {
         string s ="{\"name\": \" " + to_string(nodeId) +"\",\"size\": \""+to_string(num_internal_nodes)+"\" ,\n\"children\": [\n ";

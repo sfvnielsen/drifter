@@ -870,7 +870,53 @@ void Tree::writeJSONFormat(string filename, vector<pair<int,double>> credibiliti
 }
 
 void Tree::writeADJlist(string filename){
+    int max_depth = rootP->getDepth();
+    int max_leaves = (int) rootP->getLeavesP()->size();
     
+    //TODO PRE-ALLOCATE
+    vector<int> leaf_order(max_leaves);
+    vector<vector<int >> leaves_n_layers;
+    leaves_n_layers.reserve(max_depth);
+    for (int i = 0; i < max_depth; i++) {
+        leaves_n_layers.push_back(vector<int>(max_leaves));
+    }
+    
+    
+    rootP->getNodeLayerRelation(leaves_n_layers,leaf_order,0,0,max_leaves);
+    
+    //Write the leaves and layers file
+    ofstream out_file((filename+"_leavesNlayers").c_str());
+    cout << "Leaves n layers: " << endl;
+    for (int i = 0; i<max_depth; ++i) {
+        for (int j = 0; j < max_leaves-1; ++j) {
+            cout << leaves_n_layers[i][j] << "\t";
+            out_file << leaves_n_layers[i][j] << ",\t";
+        }
+        cout << leaves_n_layers[i][max_leaves-1] << endl;
+        out_file << leaves_n_layers[i][max_leaves-1] << endl;
+    }
+    out_file.close();
+    
+    
+    ofstream out_file2((filename+"_leavesOrder").c_str());
+    cout << "Order of leaves: " << endl;
+    for (int i=0; i<max_leaves-1; ++i) {
+        cout << leaf_order[i] << " \t";
+        out_file2 << leaf_order[i] << ", \t";
+    }
+    cout << leaf_order[max_leaves-1] << endl;
+    out_file2 << leaf_order[max_leaves-1];
+    out_file2.close();
+    
+    out_file2.open((filename+"_sortedAdjMatrix").c_str());
+    for (int i = 0; i < max_leaves; ++i) {
+        for (int j = 0; j < max_leaves-1; ++j) {
+            out_file2 << adjacencyListP->isConnected(leaf_order[i], leaf_order[j])<< ", ";
+        }
+        out_file2 << adjacencyListP->isConnected(leaf_order[i], leaf_order[max_leaves-1])<< endl;
+    }
+    out_file2.close();
+
 }
 
 

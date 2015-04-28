@@ -95,7 +95,7 @@ public:
     
     //Statistics
     int getDepth();
-    
+    void getNodeLayerRelation(std::vector<std::vector<int> > & , std::vector<int>& ,int, int, int);
     
     std::string toJSON();
     std::string toJSON(std::vector<std::pair<int, double>>);
