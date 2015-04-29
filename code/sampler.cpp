@@ -503,7 +503,7 @@ list<pair<Node *, pair<int, int>>> Sampler::calcSubtreeCred(Node * target_node,l
  */
 vector<pair<int, double>> Sampler::buildCredibilityTree(Tree T){
     vector<pair<int,double >> credibilities(T.getNumNodes());
-    
+
     //Store a pointer to the root node of every tree from the posterior
     list<Node *> valid_roots;
     for (auto it = chain.begin(); it != chain.end(); ++it) {
@@ -521,7 +521,7 @@ vector<pair<int, double>> Sampler::buildCredibilityTree(Tree T){
         it_vec->first = it->first->getNodeId(); //Node pointer, for identification
         it_vec->second = it->second.first/sampleSize;
         ++it_vec;
-    }    
+    }
     return credibilities;
 
 }
@@ -576,6 +576,13 @@ void Sampler::writeResults(std::string folder) {
     scores.open(filename);
     scores << toString(getMapTree().holdoutScores());
     scores.close();
+
+
+    Tree mapTree = getMAPTree();
+
+    vector<pair<int, double> > cred = buildCredibilityTree(mapTree);
+    mapTree.writeJSONFormat(folder + "/mapTree.json",cred);
+    mapTree.writeADJlist(folder + "/mapStructure");
 }
 
 
