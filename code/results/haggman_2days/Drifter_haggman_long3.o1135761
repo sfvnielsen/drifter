@@ -1,0 +1,408 @@
+Writing results to: long3
+Running on: data/haggman_edgelist.txt
+[Burnin: 0% of 5000000] Acceptance ratio: 2.05624e+98 Log-likelihood: -328209
+
+[Burnin: 1% of 5000000] Acceptance ratio: 1.36216e-23 Log-likelihood: -68638
+
+[Burnin: 2% of 5000000] Acceptance ratio: 6.83064e-59 Log-likelihood: -64185.4
+
+[Burnin: 3% of 5000000] Acceptance ratio: 1.54983e-36 Log-likelihood: -61938.2
+
+[Burnin: 4% of 5000000] Acceptance ratio: 2.8224e-187 Log-likelihood: -60940.6
+
+[Burnin: 5% of 5000000] Acceptance ratio: 8.31157e-46 Log-likelihood: -60317.8
+
+[Burnin: 6% of 5000000] Acceptance ratio: 1.0448e-72 Log-likelihood: -59804.2
+
+[Burnin: 7% of 5000000] Acceptance ratio: 2.06457e-128 Log-likelihood: -59462.3
+
+[Burnin: 8% of 5000000] Acceptance ratio: 5.06232e-39 Log-likelihood: -59160.9
+
+[Burnin: 9% of 5000000] Acceptance ratio: 0 Log-likelihood: -58971.2
+
+[Burnin: 10% of 5000000] Acceptance ratio: 1.07297e-98 Log-likelihood: -58816.9
+
+[Burnin: 11% of 5000000] Acceptance ratio: 1.99576e-60 Log-likelihood: -58595
+
+[Burnin: 12% of 5000000] Acceptance ratio: 8.8238e-34 Log-likelihood: -58454.3
+
+[Burnin: 13% of 5000000] Acceptance ratio: 5.74345e-113 Log-likelihood: -58260.2
+
+[Burnin: 14% of 5000000] Acceptance ratio: 8.68966e-17 Log-likelihood: -58193.2
+
+[Burnin: 15% of 5000000] Acceptance ratio: 4.44303e-42 Log-likelihood: -58120.3
+
+[Burnin: 16% of 5000000] Acceptance ratio: 8.22576e-45 Log-likelihood: -58018
+
+[Burnin: 17% of 5000000] Acceptance ratio: 2.553e-272 Log-likelihood: -57952.4
+
+[Burnin: 18% of 5000000] Acceptance ratio: 5.15662e-50 Log-likelihood: -57928.8
+
+[Burnin: 19% of 5000000] Acceptance ratio: 2.57084e-46 Log-likelihood: -57875.1
+
+[Burnin: 20% of 5000000] Acceptance ratio: 7.5224e-69 Log-likelihood: -57797.4
+
+[Burnin: 21% of 5000000] Acceptance ratio: 3.79193e-175 Log-likelihood: -57728.7
+
+[Burnin: 22% of 5000000] Acceptance ratio: 0 Log-likelihood: -57661.6
+
+[Burnin: 23% of 5000000] Acceptance ratio: 1.20231e-263 Log-likelihood: -57622.9
+
+[Burnin: 24% of 5000000] Acceptance ratio: 0 Log-likelihood: -57529.5
+
+[Burnin: 25% of 5000000] Acceptance ratio: 1.65189e-09 Log-likelihood: -57477.3
+
+[Burnin: 26% of 5000000] Acceptance ratio: 3.95362e-102 Log-likelihood: -57370.3
+
+[Burnin: 27% of 5000000] Acceptance ratio: 2.71489e-107 Log-likelihood: -57263
+
+[Burnin: 28% of 5000000] Acceptance ratio: 3.6985e-37 Log-likelihood: -57196.8
+
+[Burnin: 29% of 5000000] Acceptance ratio: 5.14646e-37 Log-likelihood: -57190.8
+
+[Burnin: 30% of 5000000] Acceptance ratio: 4.07184e-71 Log-likelihood: -57147.8
+
+[Burnin: 31% of 5000000] Acceptance ratio: 8.41092e-49 Log-likelihood: -57127.7
+
+[Burnin: 32% of 5000000] Acceptance ratio: 3.55354e-61 Log-likelihood: -57082.9
+
+[Burnin: 33% of 5000000] Acceptance ratio: 1.57242e-17 Log-likelihood: -56980.1
+
+[Burnin: 34% of 5000000] Acceptance ratio: 1.99863e-41 Log-likelihood: -56855.5
+
+[Burnin: 35% of 5000000] Acceptance ratio: 0 Log-likelihood: -56786.6
+
+[Burnin: 36% of 5000000] Acceptance ratio: 3.68622e-49 Log-likelihood: -56760.7
+
+[Burnin: 37% of 5000000] Acceptance ratio: 0 Log-likelihood: -56687.6
+
+[Burnin: 38% of 5000000] Acceptance ratio: 7.55715e-47 Log-likelihood: -56639.6
+
+[Burnin: 39% of 5000000] Acceptance ratio: 1.57369e-57 Log-likelihood: -56629.4
+
+[Burnin: 40% of 5000000] Acceptance ratio: 1.67755e-175 Log-likelihood: -56588.9
+
+[Burnin: 41% of 5000000] Acceptance ratio: 1.62438e-49 Log-likelihood: -56575
+
+[Burnin: 42% of 5000000] Acceptance ratio: 1.61035e-06 Log-likelihood: -56555.3
+
+[Burnin: 43% of 5000000] Acceptance ratio: 0 Log-likelihood: -56498.3
+
+[Burnin: 44% of 5000000] Acceptance ratio: 3.26701e-303 Log-likelihood: -56486.2
+
+[Burnin: 45% of 5000000] Acceptance ratio: 6.26641e-102 Log-likelihood: -56466.1
+
+[Burnin: 46% of 5000000] Acceptance ratio: 3.48932e-91 Log-likelihood: -56458
+
+[Burnin: 47% of 5000000] Acceptance ratio: 4.73564e-71 Log-likelihood: -56444.7
+
+[Burnin: 48% of 5000000] Acceptance ratio: 7.91429e-72 Log-likelihood: -56401.3
+
+[Burnin: 49% of 5000000] Acceptance ratio: 6.84597e-19 Log-likelihood: -56378.2
+
+[Burnin: 50% of 5000000] Acceptance ratio: 1.46668e-59 Log-likelihood: -56384.4
+
+[Burnin: 51% of 5000000] Acceptance ratio: 3.60161e-88 Log-likelihood: -56348.5
+
+[Burnin: 52% of 5000000] Acceptance ratio: 6.15357e-111 Log-likelihood: -56359
+
+[Burnin: 53% of 5000000] Acceptance ratio: 6.42107e-20 Log-likelihood: -56211.7
+
+[Burnin: 54% of 5000000] Acceptance ratio: 7.64611e-92 Log-likelihood: -56184.4
+
+[Burnin: 55% of 5000000] Acceptance ratio: 5.35171e-93 Log-likelihood: -56139.1
+
+[Burnin: 56% of 5000000] Acceptance ratio: 2.21929e-36 Log-likelihood: -56080.1
+
+[Burnin: 57% of 5000000] Acceptance ratio: 2.05651e-119 Log-likelihood: -56093.2
+
+[Burnin: 58% of 5000000] Acceptance ratio: 0 Log-likelihood: -56053.6
+
+[Burnin: 59% of 5000000] Acceptance ratio: 1.27861e-25 Log-likelihood: -56022
+
+[Burnin: 60% of 5000000] Acceptance ratio: 1.28491e-123 Log-likelihood: -55997.2
+
+[Burnin: 61% of 5000000] Acceptance ratio: 6.89664e-94 Log-likelihood: -56006.8
+
+[Burnin: 62% of 5000000] Acceptance ratio: 1.68209e-48 Log-likelihood: -55988.7
+
+[Burnin: 63% of 5000000] Acceptance ratio: 7.54983e-117 Log-likelihood: -55977.1
+
+[Burnin: 64% of 5000000] Acceptance ratio: 1.87435e-28 Log-likelihood: -55944.4
+
+[Burnin: 65% of 5000000] Acceptance ratio: 3.93741e-09 Log-likelihood: -55901.3
+
+[Burnin: 66% of 5000000] Acceptance ratio: 2.01869e-40 Log-likelihood: -55842.9
+
+[Burnin: 67% of 5000000] Acceptance ratio: 7.75875e-122 Log-likelihood: -55843.2
+
+[Burnin: 68% of 5000000] Acceptance ratio: 4.05597e-126 Log-likelihood: -55790.4
+
+[Burnin: 69% of 5000000] Acceptance ratio: 0 Log-likelihood: -55797.7
+
+[Burnin: 70% of 5000000] Acceptance ratio: 2.52435e-55 Log-likelihood: -55768
+
+[Burnin: 71% of 5000000] Acceptance ratio: 0 Log-likelihood: -55752.1
+
+[Burnin: 72% of 5000000] Acceptance ratio: 1.34528e-182 Log-likelihood: -55740.4
+
+[Burnin: 73% of 5000000] Acceptance ratio: 4.76853e-156 Log-likelihood: -55730.2
+
+[Burnin: 74% of 5000000] Acceptance ratio: 1.15427e-142 Log-likelihood: -55697.8
+
+[Burnin: 75% of 5000000] Acceptance ratio: 1.54284e-191 Log-likelihood: -55703.7
+
+[Burnin: 76% of 5000000] Acceptance ratio: 9.4283e-18 Log-likelihood: -55657.2
+
+[Burnin: 77% of 5000000] Acceptance ratio: 4.955e-195 Log-likelihood: -55667.8
+
+[Burnin: 78% of 5000000] Acceptance ratio: 1.44557e-72 Log-likelihood: -55630
+
+[Burnin: 79% of 5000000] Acceptance ratio: 0 Log-likelihood: -55612.2
+
+[Burnin: 80% of 5000000] Acceptance ratio: 4.04153e-52 Log-likelihood: -55601.5
+
+[Burnin: 81% of 5000000] Acceptance ratio: 2.26031e-126 Log-likelihood: -55592.3
+
+[Burnin: 82% of 5000000] Acceptance ratio: 8.41599e-73 Log-likelihood: -55564.1
+
+[Burnin: 83% of 5000000] Acceptance ratio: 1.45732e-203 Log-likelihood: -55553.9
+
+[Burnin: 84% of 5000000] Acceptance ratio: 9.99251e-189 Log-likelihood: -55539.6
+
+[Burnin: 85% of 5000000] Acceptance ratio: 7.99935e-73 Log-likelihood: -55558.8
+
+[Burnin: 86% of 5000000] Acceptance ratio: 7.17105e-48 Log-likelihood: -55553.5
+
+[Burnin: 87% of 5000000] Acceptance ratio: 5.07106e-51 Log-likelihood: -55573.7
+
+[Burnin: 88% of 5000000] Acceptance ratio: 2.29687e-13 Log-likelihood: -55548.5
+
+[Burnin: 89% of 5000000] Acceptance ratio: 2.12353e-23 Log-likelihood: -55523.6
+
+[Burnin: 90% of 5000000] Acceptance ratio: 0 Log-likelihood: -55464.6
+
+[Burnin: 91% of 5000000] Acceptance ratio: 1.37049e-05 Log-likelihood: -55456
+
+[Burnin: 92% of 5000000] Acceptance ratio: 1.11276e-84 Log-likelihood: -55455.3
+
+[Burnin: 93% of 5000000] Acceptance ratio: 3.507e-47 Log-likelihood: -55431.1
+
+[Burnin: 94% of 5000000] Acceptance ratio: 2.32953e-99 Log-likelihood: -55417.3
+
+[Burnin: 95% of 5000000] Acceptance ratio: 3.81666e-62 Log-likelihood: -55382.8
+
+[Burnin: 96% of 5000000] Acceptance ratio: 7.72521e-10 Log-likelihood: -55368.9
+
+[Burnin: 97% of 5000000] Acceptance ratio: 3.05214e-52 Log-likelihood: -55373.1
+
+[Burnin: 98% of 5000000] Acceptance ratio: 7.90786e-176 Log-likelihood: -55366.1
+
+[Burnin: 99% of 5000000] Acceptance ratio: 4.15471e-08 Log-likelihood: -55370.3
+
+[Iteration: 0% of 5000000] Acceptance ratio: 1.23553e-127 Log-likelihood: -55393
+
+[Iteration: 1% of 5000000] Acceptance ratio: 5.41715e-06 Log-likelihood: -55365.1
+
+[Iteration: 2% of 5000000] Acceptance ratio: 2.11189e-09 Log-likelihood: -55329.4
+
+[Iteration: 3% of 5000000] Acceptance ratio: 6.02337e-120 Log-likelihood: -55298.6
+
+[Iteration: 4% of 5000000] Acceptance ratio: 2.39042e-95 Log-likelihood: -55287.8
+
+[Iteration: 5% of 5000000] Acceptance ratio: 1.88853e-164 Log-likelihood: -55263.6
+
+[Iteration: 6% of 5000000] Acceptance ratio: 1.04853e-214 Log-likelihood: -55249.3
+
+[Iteration: 7% of 5000000] Acceptance ratio: 3.25996e-30 Log-likelihood: -55221.7
+
+[Iteration: 8% of 5000000] Acceptance ratio: 2.28134e-276 Log-likelihood: -55189.3
+
+[Iteration: 9% of 5000000] Acceptance ratio: 5.18921e-46 Log-likelihood: -55165.6
+
+[Iteration: 10% of 5000000] Acceptance ratio: 0 Log-likelihood: -55154.2
+
+[Iteration: 11% of 5000000] Acceptance ratio: 1.64784e-49 Log-likelihood: -55150.9
+
+[Iteration: 12% of 5000000] Acceptance ratio: 0 Log-likelihood: -55126.2
+
+[Iteration: 13% of 5000000] Acceptance ratio: 1.75406e-05 Log-likelihood: -55100.4
+
+[Iteration: 14% of 5000000] Acceptance ratio: 5.9073e-36 Log-likelihood: -55092.4
+
+[Iteration: 15% of 5000000] Acceptance ratio: 1.53077e-246 Log-likelihood: -55083.1
+
+[Iteration: 16% of 5000000] Acceptance ratio: 1.91237e-14 Log-likelihood: -55072.1
+
+[Iteration: 17% of 5000000] Acceptance ratio: 2.01884e-45 Log-likelihood: -55067.1
+
+[Iteration: 18% of 5000000] Acceptance ratio: 1.75705e-141 Log-likelihood: -55055.4
+
+[Iteration: 19% of 5000000] Acceptance ratio: 1.02709e-90 Log-likelihood: -55036.3
+
+[Iteration: 20% of 5000000] Acceptance ratio: 4.62769e-18 Log-likelihood: -55033
+
+[Iteration: 21% of 5000000] Acceptance ratio: 5.04935e-81 Log-likelihood: -55028.5
+
+[Iteration: 22% of 5000000] Acceptance ratio: 2.28839e-34 Log-likelihood: -55015.2
+
+[Iteration: 23% of 5000000] Acceptance ratio: 3.34029e-27 Log-likelihood: -54997.5
+
+[Iteration: 24% of 5000000] Acceptance ratio: 1.49053e-75 Log-likelihood: -54992.5
+
+[Iteration: 25% of 5000000] Acceptance ratio: 2.57007e-14 Log-likelihood: -54965.9
+
+[Iteration: 26% of 5000000] Acceptance ratio: 3.65931e-17 Log-likelihood: -54966.2
+
+[Iteration: 27% of 5000000] Acceptance ratio: 1.4375e-216 Log-likelihood: -54961.6
+
+[Iteration: 28% of 5000000] Acceptance ratio: 1.5958e-76 Log-likelihood: -54964
+
+[Iteration: 29% of 5000000] Acceptance ratio: 2.88336e-38 Log-likelihood: -54942.5
+
+[Iteration: 30% of 5000000] Acceptance ratio: 2.41024e-90 Log-likelihood: -54948.9
+
+[Iteration: 31% of 5000000] Acceptance ratio: 7.51385e-100 Log-likelihood: -54945.1
+
+[Iteration: 32% of 5000000] Acceptance ratio: 2.17796e-63 Log-likelihood: -54946
+
+[Iteration: 33% of 5000000] Acceptance ratio: 2.59983e-123 Log-likelihood: -54941.2
+
+[Iteration: 34% of 5000000] Acceptance ratio: 1.28122e-175 Log-likelihood: -54932
+
+[Iteration: 35% of 5000000] Acceptance ratio: 2.12955e-17 Log-likelihood: -54936
+
+[Iteration: 36% of 5000000] Acceptance ratio: 1.79044e-125 Log-likelihood: -54933.9
+
+[Iteration: 37% of 5000000] Acceptance ratio: 1.16265e-50 Log-likelihood: -54922.3
+
+[Iteration: 38% of 5000000] Acceptance ratio: 3.03701e-58 Log-likelihood: -54914.5
+
+[Iteration: 39% of 5000000] Acceptance ratio: 9.43629e-28 Log-likelihood: -54901.2
+
+[Iteration: 40% of 5000000] Acceptance ratio: 7.6031e-20 Log-likelihood: -54898.5
+
+[Iteration: 41% of 5000000] Acceptance ratio: 2.74526e-17 Log-likelihood: -54896.9
+
+[Iteration: 42% of 5000000] Acceptance ratio: 2.52288e-111 Log-likelihood: -54891.2
+
+[Iteration: 43% of 5000000] Acceptance ratio: 1.55026e-70 Log-likelihood: -54892.9
+
+[Iteration: 44% of 5000000] Acceptance ratio: 7.58436e-103 Log-likelihood: -54884.5
+
+[Iteration: 45% of 5000000] Acceptance ratio: 9.09067e-44 Log-likelihood: -54884.8
+
+[Iteration: 46% of 5000000] Acceptance ratio: 8.22221e-37 Log-likelihood: -54879.7
+
+[Iteration: 47% of 5000000] Acceptance ratio: 1.80816e-122 Log-likelihood: -54877
+
+[Iteration: 48% of 5000000] Acceptance ratio: 9.12178e-24 Log-likelihood: -54868.7
+
+[Iteration: 49% of 5000000] Acceptance ratio: 0 Log-likelihood: -54868
+
+[Iteration: 50% of 5000000] Acceptance ratio: 3.38408e-74 Log-likelihood: -54876.8
+
+[Iteration: 51% of 5000000] Acceptance ratio: 4.66491e-26 Log-likelihood: -54868.3
+
+[Iteration: 52% of 5000000] Acceptance ratio: 1.99187e-55 Log-likelihood: -54868.9
+
+[Iteration: 53% of 5000000] Acceptance ratio: 9.52156e-148 Log-likelihood: -54865.7
+
+[Iteration: 54% of 5000000] Acceptance ratio: 6.91142e-63 Log-likelihood: -54859.6
+
+[Iteration: 55% of 5000000] Acceptance ratio: 4.53216e-34 Log-likelihood: -54857.3
+
+[Iteration: 56% of 5000000] Acceptance ratio: 9.95737e-84 Log-likelihood: -54855.3
+
+[Iteration: 57% of 5000000] Acceptance ratio: 2.65865e-91 Log-likelihood: -54841.4
+
+[Iteration: 58% of 5000000] Acceptance ratio: 1.19428e-91 Log-likelihood: -54830
+
+[Iteration: 59% of 5000000] Acceptance ratio: 2.64592e-50 Log-likelihood: -54831.9
+
+[Iteration: 60% of 5000000] Acceptance ratio: 1.28509e-77 Log-likelihood: -54832.5
+
+[Iteration: 61% of 5000000] Acceptance ratio: 0 Log-likelihood: -54826.7
+
+[Iteration: 62% of 5000000] Acceptance ratio: 0 Log-likelihood: -54816.4
+
+[Iteration: 63% of 5000000] Acceptance ratio: 7.09283e-11 Log-likelihood: -54817.3
+
+[Iteration: 64% of 5000000] Acceptance ratio: 1.17712e-83 Log-likelihood: -54808.1
+
+[Iteration: 65% of 5000000] Acceptance ratio: 8.15184e-303 Log-likelihood: -54816
+
+[Iteration: 66% of 5000000] Acceptance ratio: 1.68015e-81 Log-likelihood: -54811.8
+
+[Iteration: 67% of 5000000] Acceptance ratio: 1.1185e-52 Log-likelihood: -54807.6
+
+[Iteration: 68% of 5000000] Acceptance ratio: 1.04647e-64 Log-likelihood: -54805.7
+
+[Iteration: 69% of 5000000] Acceptance ratio: 9.30807e-132 Log-likelihood: -54804.5
+
+[Iteration: 70% of 5000000] Acceptance ratio: 6.7839e-29 Log-likelihood: -54789
+
+[Iteration: 71% of 5000000] Acceptance ratio: 1.5331e-120 Log-likelihood: -54788.1
+
+[Iteration: 72% of 5000000] Acceptance ratio: 2.58101e-55 Log-likelihood: -54772.5
+
+[Iteration: 73% of 5000000] Acceptance ratio: 1.49285e-81 Log-likelihood: -54771.2
+
+[Iteration: 74% of 5000000] Acceptance ratio: 2.67369e-58 Log-likelihood: -54769.7
+
+[Iteration: 75% of 5000000] Acceptance ratio: 5.29241e-309 Log-likelihood: -54769.5
+
+[Iteration: 76% of 5000000] Acceptance ratio: 1.25338e-26 Log-likelihood: -54766.7
+
+[Iteration: 77% of 5000000] Acceptance ratio: 1.12846e-25 Log-likelihood: -54763.9
+
+[Iteration: 78% of 5000000] Acceptance ratio: 2.52896e-80 Log-likelihood: -54763.6
+
+[Iteration: 79% of 5000000] Acceptance ratio: 3.41116e-66 Log-likelihood: -54747.2
+
+[Iteration: 80% of 5000000] Acceptance ratio: 1.11366e-248 Log-likelihood: -54750.9
+
+[Iteration: 81% of 5000000] Acceptance ratio: 1.979e-25 Log-likelihood: -54743.3
+
+[Iteration: 82% of 5000000] Acceptance ratio: 8.04482e-306 Log-likelihood: -54739.4
+
+[Iteration: 83% of 5000000] Acceptance ratio: 1.62813e-169 Log-likelihood: -54737.7
+
+[Iteration: 84% of 5000000] Acceptance ratio: 5.06837e-63 Log-likelihood: -54731.4
+
+[Iteration: 85% of 5000000] Acceptance ratio: 1.52309e-210 Log-likelihood: -54724.4
+
+[Iteration: 86% of 5000000] Acceptance ratio: 5.10415e-94 Log-likelihood: -54722.5
+
+[Iteration: 87% of 5000000] Acceptance ratio: 4.30333e-52 Log-likelihood: -54724.2
+
+[Iteration: 88% of 5000000] Acceptance ratio: 0 Log-likelihood: -54730.6
+
+[Iteration: 89% of 5000000] Acceptance ratio: 4.18206e-190 Log-likelihood: -54730.5
+
+[Iteration: 90% of 5000000] Acceptance ratio: 6.77105e-275 Log-likelihood: -54733.8
+
+[Iteration: 91% of 5000000] Acceptance ratio: 1.30004e-92 Log-likelihood: -54723.1
+
+[Iteration: 92% of 5000000] Acceptance ratio: 2.69246e-44 Log-likelihood: -54728.9
+
+[Iteration: 93% of 5000000] Acceptance ratio: 9.01273e-81 Log-likelihood: -54727.1
+
+[Iteration: 94% of 5000000] Acceptance ratio: 7.97635e-84 Log-likelihood: -54722.9
+
+[Iteration: 95% of 5000000] Acceptance ratio: 4.93191e-100 Log-likelihood: -54724.1
+
+[Iteration: 96% of 5000000] Acceptance ratio: 7.38131e-49 Log-likelihood: -54723.7
+
+[Iteration: 97% of 5000000] Acceptance ratio: 3.47042e-50 Log-likelihood: -54721.7
+
+[Iteration: 98% of 5000000] Acceptance ratio: 4.6233e-139 Log-likelihood: -54716.3
+
+[Iteration: 99% of 5000000] Acceptance ratio: 2.91778e-30 Log-likelihood: -54715
+
+finished computation at Fri May  1 13:53:53 2015
+elapsed time: 175217 sec.
+mean elapsed time per regraft: 0.0350434 sec.
+Iterations per second: 57.072 ips
+Prediction accuracy of the last tree was: 96.4927 % correct
+Writing results to long3...Writing hypers to long3...done!
