@@ -46,6 +46,20 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, doub
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus, double holdoutFrac)
+            : Sampler(data_graph, alpha, beta, rho_plus, rho_minus, holdoutFrac, true, true,true, true) {}
+
+/**
+* Initialize with the naive tree building in the adjacency matrix.
+*/
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus, double holdoutFrac,bool sampleHypers)
+            : Sampler(data_graph, alpha, beta, rho_plus, rho_minus, holdoutFrac, sampleHypers, sampleHypers,sampleHypers, sampleHypers) {}
+
+
+
+/**
+* Initialize with the naive tree building in the adjacency matrix.
+*/
 Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus, double holdoutFraction, bool samp_alpha,
                  bool samp_beta, bool samp_rho_plus, bool samp_rho_minus)
             : alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus), sample_alpha(samp_alpha), sample_beta(samp_beta),
