@@ -92,6 +92,9 @@ public:
     std::string toString();
     void writeMatlabFormat(std::string);
     void writeJSONFormat(std::string);
+    void writeJSONFormat(std::string, std::vector<std::pair<int, double>>);
+    void writeADJlist(std::string);
+
     void writeGexf(std::string);
     std::string toGexf();
 };

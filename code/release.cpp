@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
                                     "Syntax:\n"
                                     "   drifter datafile [#Iterations = 100] [#Thinning = 10] [output-dir] [holdoutFraction] [sample hyperparameters?]\n"
                                     "\n"
-                                    "Ex. drifter data/network.txt 10000 10 results/outfiles";
+                                    "Ex. drifter data/network.txt 10000 10 results/outfiles 0.05 0";
         cout << to_few_arguments << endl;
         return 0;
         //throw runtime_error(to_few_arguments);

@@ -22,7 +22,7 @@ class Sampler
         Sampler();
         Sampler(Tree,double,double,double,double);
         Sampler(std::list<std::pair<int,int>>,double,double,double,double);
-        Sampler(std::list<std::pair<int,int>>,double,double,double,double,double,bool,bool,bool,bool);
+        Sampler(std::list<std::pair<int,int>>,double,double,double,double,double,bool);
 
 
         // Various Run methods.
@@ -37,8 +37,8 @@ class Sampler
         Tree getMapTree();
         double getLastLogLikelihood();
         Tree getMAPTree();
-        std::vector<std::pair<Node *, double>>buildCredibilityTree(Tree);
-
+        std::vector<std::pair<int, double>>buildCredibilityTree(Tree);
+        
 
         std::string toString(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
         std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>> meanScores(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
@@ -54,8 +54,8 @@ class Sampler
 
     private:
         std::list<std::pair<Node *, std::pair<int,int> > > calcSubtreeCred(Node *,std::list<Node*>,int);
-
-
+    
+    
         // Data storage
         Adj_list adjacencyList;
         double lastLogLik;

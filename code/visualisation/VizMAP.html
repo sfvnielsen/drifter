@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.space {
+  position: absolute;
+}
+
+.space div {
+  position: absolute;
+  top: 0;
+  left: 10px;
+}
+
+</style>
+
+<body>
+
+<script src="d3.min.js"></script>
+<script>
+
+
+
+filename="mapFootball1m2m"
+//filename="mapFootball2"
+//filename="mapFootball"
+//filename="mapFacebook"
+//filename="mapCelegans"
+//filename="mapTree"
+filename="mapHaggman"
+
+var diameter = 1080;
+
+var tree = d3.layout.tree()
+    .size([360, diameter / 2 - 160])
+    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 1.5)/(2*Math.PI); });
+    //Math.sqrt(a.depth)
+
+var diagonal = d3.svg.diagonal.radial()
+    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+
+
+var color = d3.scale.linear()
+    .range(['lightgrey','blue'])
+    .interpolate(d3.interpolateLab);
+
+console.log("Start Drifter");    
+
+//Begin drawing the tree
+var svg = d3.select("body").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter - 150)
+  .append("g")
+    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+//d3.json("mapFootball1m2m.json", function(error, root) {
+d3.json(filename+".json", function(error, root) {
+  var nodes = tree.nodes(root),
+      links = tree.links(nodes);
+
+  var link = svg.selectAll(".link")
+      .data(links)
+      .enter().append("g")
+      .attr("class", "link")
+
+
+  link.append("path")
+      .attr("fill", "none")
+      .style("stroke", function(d){
+        return color(d.target.credibility)
+      })
+      .attr("stroke-width", function(d){
+        //return "5.5px"
+        return (d.target.credibility*2+3.5)+"px"
+      })
+      .attr("d", diagonal);
+
+
+  var node = svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+
+  node.append("circle")
+      .attr("r", function(d){
+        if (d.credibility == 0) {
+          return 10 };
+        return 2.5
+      });
+
+  node.append("text")
+      .attr("dy", ".31em")
+      //.attr("dx",".31em")
+      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+      .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
+      .text(function(d) { if (d.name < 0){return " "} return d.name; });
+});
+
+d3.select(self.frameElement).style("height", diameter - 150 + "px");
+
+
+var spaces = [
+  {name: "Lab", interpolate: d3.interpolateLab},
+];
+
+var y = d3.scale.ordinal()
+    .domain('Lab')
+    .rangeRoundBands([0 , 100], .09);
+
+var margin = diameter/4,
+    width = diameter/2,
+    height = 40;
+
+var color2 = d3.scale.linear()
+    .domain([0, 1])
+    .range(["hsl(62,100%,90%)", "hsl(222,30%,20%)"]);
+
+var space = d3.select("body").selectAll(".space")
+    .data(spaces)
+  .enter().append("div")
+    .attr("class", "space")
+    .style("width", width + "px")
+    .style("height", height + "px")
+    .style("left", margin + "px")
+    .style("top", function(d, i) { return y + "px"; });
+
+space.append("canvas")
+    .attr("width", width)
+    .attr("height", 1)
+    .style("width", width + "px")
+    .style("height", height + "px")
+    .each(render);
+
+var colorText = '#ffffff';
+space.append("div")
+    .style("line-height", height + "px")
+    .style('color',colorText)
+    .style('font-size',"16px")  
+    .text("Less credible stucture");
+
+
+space.append("div")
+    .style("line-height", height + "px")
+    .style("left", width-155+"px")
+    .style('color',colorText)
+    .style('font-size',"16px")
+    .text("More credible structure");
+    
+    //.style("text-anchor","right")//.style("line-height", height + "px")//,"line-width",width/2+"px")
+    
+
+
+
+function render(d) {
+  var context = this.getContext("2d"),
+      image = context.createImageData(width, 1);
+  color.interpolate( d3.interpolateLab);
+  for (var i = 0, j = -1, c; i <= 1; i=i+1/width) {
+    c = d3.rgb(color(i));
+    image.data[++j] = c.r;
+    image.data[++j] = c.g;
+    image.data[++j] = c.b;
+    image.data[++j] = 255;
+  }
+  context.putImageData(image, 0, 0);
+}
+
+</script>
