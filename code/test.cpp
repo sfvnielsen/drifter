@@ -25,6 +25,7 @@ void testCoinFlip();
 int testLikelihood(double,double,int,int);
 Tree debuggingTree();
 void testSamplerDistribution(string,int,int,double,double,int,int);
+void testHyperSamplerDistribution(string,int,int,double,double,int,int);
 list<pair<Tree, double>> unique_4_tree;
 
 int main()
@@ -33,8 +34,8 @@ int main()
 
     double alpha = .5;//1.0/8;
     double beta = .5;//1.0/4;
-    int rho_plus = 1;
-    int rho_minus = 1;
+    double rho_plus = 1.0;
+    double rho_minus = 1.0;
     srand((unsigned int) time(NULL));
 
     pair<int,int> g1 (0,1);
@@ -62,12 +63,48 @@ int main()
 
 
     cout << "Debugging sampler" << endl;
-    testSamplerDistribution("test/ValidateSampler",200000,50000,alpha, beta, rho_plus , rho_minus);
+      testHyperSamplerDistribution("test/ValidateHyperSampler",200000,50000,alpha, beta, rho_plus ,rho_minus);
+//    testSamplerDistribution("test/ValidateSampler",200000,50000,alpha, beta, rho_plus , rho_minus);
 //    testSamplerDistribution("test/ValidateSampler",1500000,500000);
 //    testCoinFlip();
 
     cout << "------- END -------" << endl;
     return 0;
+}
+
+
+void testHyperSamplerDistribution(string folder,int num_samples, int num_burn,double alpha, double beta
+                             , int rho_plus,int rho_minus){
+
+//Same network as used for testing that the likelihood is correct.
+    pair<int,int> g1 (0,1);
+    pair<int,int> g2 (1,2);
+    pair<int,int> g3 (0,3);
+    pair<int,int> g4 (1,3);
+    pair<int,int> g5 (2,3);
+    list<pair<int,int>> data_edge_list = {g1,g2,g3,g4,g5};
+
+    //Initialisation
+
+    // Sample alpha
+    Sampler sampler = Sampler(data_edge_list,alpha,beta,rho_plus,rho_minus,0.0,true,false,false,false);
+    sampler.run(num_samples, num_burn,1,1);
+    sampler.writeHypers(folder);
+
+    // Sample beta
+    Sampler sampler2 = Sampler(data_edge_list,alpha,beta,rho_plus,rho_minus,0.0,false,true,false,false);
+    sampler2.run(num_samples, num_burn,1,1);
+    sampler2.writeHypers(folder);
+
+    // Sample rho_plus
+    Sampler sampler3 = Sampler(data_edge_list,alpha,beta,rho_plus,rho_minus,0.0,false,false,true,false);
+    sampler3.run(num_samples, num_burn,1,1);
+    sampler3.writeHypers(folder);
+
+    // Sample rho_minus
+    Sampler sampler4 = Sampler(data_edge_list,alpha,beta,rho_plus,rho_minus,0.0,false,false,false,true);
+    sampler4.run(num_samples, num_burn,1,1);
+    sampler4.writeHypers(folder);
 }
 
 /**

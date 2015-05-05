@@ -23,7 +23,7 @@ int main() {
 
     string data_file_name = "data/karate_edgelist.txt";
     //data_file_name = "data/celegans_edgelist.txt";
-    data_file_name = "data/football_edgelist.txt";
+    //data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
 //    data_file_name = "data/haggman_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
@@ -59,7 +59,7 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
 
 
     // Constructing the sampler.
-    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1, holdoutFraction, true);
+    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1, holdoutFraction);
 //    Sampler sampler = Sampler(data_edge_list, 0.5, 0.5, 1, 1);
 
     // Start timing

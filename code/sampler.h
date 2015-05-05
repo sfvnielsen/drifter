@@ -22,13 +22,16 @@ class Sampler
         Sampler();
         Sampler(Tree,double,double,double,double);
         Sampler(std::list<std::pair<int,int>>,double,double,double,double);
+        Sampler(std::list<std::pair<int,int>>,double,double,double,double,double);
         Sampler(std::list<std::pair<int,int>>,double,double,double,double,double,bool);
+        Sampler(std::list<std::pair<int,int>>,double,double,double,double,double,bool,bool,bool,bool);
 
 
         // Various Run methods.
         void run(int);
         void run(int,int);
         void run(int,int,int);
+        void run(int,int,int,int);
         Tree sampleHyperparameters();
 
         // Accessing the end of the chain.
@@ -37,7 +40,7 @@ class Sampler
         double getLastLogLikelihood();
         Tree getMAPTree();
         std::vector<std::pair<int, double>>buildCredibilityTree(Tree);
-        
+
 
         std::string toString(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
         std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>> meanScores(std::list<std::pair<std::pair<int,int>,std::pair<double,bool>>>);
@@ -53,8 +56,8 @@ class Sampler
 
     private:
         std::list<std::pair<Node *, std::pair<int,int> > > calcSubtreeCred(Node *,std::list<Node*>,int);
-    
-    
+
+
         // Data storage
         Adj_list adjacencyList;
         double lastLogLik;
@@ -64,7 +67,10 @@ class Sampler
         double beta;
         double rho_plus;
         double rho_minus;
-        bool sample_hypers;
+        bool sample_alpha;
+        bool sample_beta;
+        bool sample_rho_plus;
+        bool sample_rho_minus;
 };
 
 #endif // SAMPLER_H

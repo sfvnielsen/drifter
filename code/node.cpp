@@ -519,7 +519,7 @@ double Node::evaluateLogPrior(){
     }
 
     // Special case if alpha is zero
-    if (alpha == 0.0){
+    if (alpha < 1e-12){
         // - First term in prior contribution - each child
         for (auto it = num_leaves_each_child.begin();
              it!= num_leaves_each_child.end(); ++it){
@@ -542,8 +542,9 @@ double Node::evaluateLogPrior(){
                   lgamma_ratio(num_leaves_total,-alpha))
         + lgamma(num_children+beta/alpha) - lgamma(2+beta/alpha);
     }
-
     assert(isfinite(log_prior));
+
+
     return log_prior;
 }
 
