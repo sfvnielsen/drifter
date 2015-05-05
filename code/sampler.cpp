@@ -30,20 +30,26 @@ Sampler::Sampler(Tree T, double alpha, double beta, double rho_plus, double rho_
     chain.push_back(T);
     lastLogLik = T.evaluateLogLikeTimesPrior();
     likelihoods.push_back(lastLogLik);
-    sample_hypers = true;
+    sample_alpha = true;
+    sample_beta = true;
+    sample_rho_plus = true;
+    sample_rho_minus = true;
+
 }
 
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
 Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus)
-            : Sampler(data_graph, alpha, beta, rho_plus, rho_minus, 0.0, false) {}
+            : Sampler(data_graph, alpha, beta, rho_plus, rho_minus, 0.0, true, true,true, true) {}
 
 /**
 * Initialize with the naive tree building in the adjacency matrix.
 */
-Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus, double holdoutFraction, bool sample_hypers)
-            : alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus), sample_hypers(sample_hypers){
+Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, double rho_plus, double rho_minus, double holdoutFraction, bool samp_alpha,
+                 bool samp_beta, bool samp_rho_plus, bool samp_rho_minus)
+            : alpha(alpha), beta(beta), rho_plus(rho_plus), rho_minus(rho_minus), sample_alpha(samp_alpha), sample_beta(samp_beta),
+            sample_rho_plus(samp_rho_plus), sample_rho_minus(samp_rho_minus){
     // Constructing the adjacency list
     adjacencyList = Adj_list(data_graph,holdoutFraction);
 
@@ -80,7 +86,7 @@ void Sampler::run(int L){
 
         // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
-        if (((i+1) % step)==0 && sample_hypers) {
+        if (((i+1) % step)==0 && (sample_alpha || sample_beta || sample_rho_plus || sample_rho_minus)) {
             proposal = sampleHyperparameters();
         }
         // Regraft and return move ratio
@@ -129,7 +135,7 @@ void Sampler::run(int L, int thinning ){
     for (int i=0; i<L; i++){
         // Take back of chain and sample hyperparameters each 1% of the run
         Tree proposal = chain.back();
-        if ((i % step)==0 && sample_hypers) {
+        if ((i % step)==0 && (sample_alpha || sample_beta || sample_rho_plus || sample_rho_minus)) {
            proposal = sampleHyperparameters();
         }
         double move_ratio = proposal.regraft(); //Try a move
@@ -177,7 +183,7 @@ void Sampler::run(int L, int burn_in, int thinning){
     Tree oldTree = chain.back();
     Tree proposal = oldTree;
 
-    // Initialize the random generator
+    // Initialize the random generators
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<> dis(0, 1);
@@ -188,7 +194,7 @@ void Sampler::run(int L, int burn_in, int thinning){
     for (int i=0; i<burn_in; i++){
         // Sample hyperparameters each 1% of the run
 
-        if ((i % bstep)==0 && sample_hypers) {
+        if ((i % bstep)==0 && (sample_alpha || sample_beta || sample_rho_plus || sample_rho_minus)) {
             Tree proposal = sampleHyperparameters();
         }
 
@@ -229,6 +235,113 @@ void Sampler::run(int L, int burn_in, int thinning){
     run(L,thinning);
 }
 
+/**
+* Running the Metropolis hastings sampler with burnin, thinning and
+* a specified number of iterations between hyperparameter sampling
+* @param L: number of iterations
+* NB! Calls above run method after burn-in
+*/
+void Sampler::run(int L, int burn_in, int thinning, int hyper_thinning){
+    Tree oldTree = chain.back();
+    Tree proposal = oldTree;
+
+    // Initialize the random generator
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> dis(0, 1);
+
+    // The number of iterations corresponding to 1% of the run.
+    int bstep = max((int) burn_in/100,10);
+
+    for (int i=0; i<burn_in; i++){
+        // Sample hyperparameters each 1% of the run
+
+        if ((i % hyper_thinning)==0 && (sample_alpha || sample_beta || sample_rho_plus || sample_rho_minus)) {
+            Tree proposal = sampleHyperparameters();
+        }
+
+        // Propose new tree
+        double move_ratio = proposal.regraft();
+
+        // Get Likelihoods times priors
+        double propLogLik = proposal.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-lastLogLik)*move_ratio;
+        // Following asserts do not work for some compilers
+        //assert(!isnan(a));
+        //assert(!isinf(propLogLik) );
+        //assert(!isinf(lastLogLik) );
+
+        // Update the chain based on accept or reject.
+        if(a>dis(gen)){
+            oldTree = proposal;
+            lastLogLik = propLogLik;
+        }else{
+            proposal = oldTree;
+        }
+
+        // Print status information
+        if (((i) % bstep)==0){
+            cout << "[Burnin: "<< (int)(i*100)/burn_in << "% of " << burn_in << "] Acceptance ratio: " << a
+            << " Log-likelihood: "<< lastLogLik << endl << endl <<flush ;
+        }
+    }
+
+    // Set the chain to start at the end of burn-in.
+    likelihoods.clear();
+    likelihoods.push_back(lastLogLik);
+    chain.clear();
+    chain.push_back(oldTree);
+    Tree lastTree = chain.back();
+
+     // The number of iterations corresponding to 1% of the run.
+    int step = max((int) L/100,10);
+
+    for (int i=0; i<L; i++){
+        // Take back of chain and sample hyperparameters each 1% of the run
+        Tree proposal = chain.back();
+        if ((i % hyper_thinning)==0 && (sample_alpha || sample_beta || sample_rho_plus || sample_rho_minus)) {
+           proposal = sampleHyperparameters();
+        }
+        double move_ratio = proposal.regraft(); //Try a move
+
+        // Get Likelihoods times priors
+        double propLogLik = proposal.evaluateLogLikeTimesPrior();
+
+        // calculate the acceptance ratio
+        double a = exp(propLogLik-lastLogLik)*move_ratio;
+        // Following asserts do not work for some compilers
+        //assert(!isnan(a));
+        //assert(!isinf(propLogLik) );
+        //assert(!isinf(lastLogLik) );
+
+        // Update the chain based on accept or reject.
+        if(a>dis(gen)){
+            if ( (i%thinning) == 0) {
+                chain.push_back(proposal);
+                likelihoods.push_back(propLogLik);
+            }
+            lastLogLik = propLogLik;
+            lastTree = proposal;
+        }else{
+            if ( (i%thinning) == 0) {
+                chain.push_back(lastTree);
+                likelihoods.push_back(lastLogLik);
+            }
+        }
+
+        // Print status information
+        if (((i) % step)==0){
+            cout << "[Iteration: "<< (int)(i*100)/L << "% of " << L << "] Acceptance ratio: " << a
+            << " Log-likelihood: "<< lastLogLik << endl << flush;
+            cout << "Alpha: " << lastTree.alpha << " Beta: " << lastTree.beta << " Rho_Plus: "
+            << lastTree.rho_plus << " Rho_minus: " << lastTree.rho_minus << endl << flush ;
+        }
+    }
+}
+
+
 
 /**
 * Sample hyperparameters
@@ -236,119 +349,152 @@ void Sampler::run(int L, int burn_in, int thinning){
 
 Tree Sampler::sampleHyperparameters() {
     // Number of sampling steps for each hyperparameter
-    int n_resamples = 10;
+    int n_resamples = 100;
+    double stepsize = 1; // step size in random walker
 
     // Initialize the random generator
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<> u_dis(0, 1);
-    normal_distribution<> n_dis(0, 1);
+    uniform_real_distribution<> n_dis(-1, 1);
 
     // Get latest tree
     Tree currentTree = chain.back();
     double previousLogLik = lastLogLik;
+    double propLogLik = -INFINITY;
 
     // Sample alpha
-    double old_alpha = currentTree.alpha;
-    for (int n = 0; n != n_resamples; ++n) {
-        // Propose new parameter by random walk
-        double new_alpha = exp(log(currentTree.alpha)+0.1*n_dis(gen));
-        currentTree.alpha = new_alpha;
+    if (sample_alpha)
+    {
+        double old_alpha = currentTree.alpha;
+        for (int n = 0; n != n_resamples; ++n)
+        {
+            // Propose new parameter by random walk
+            double new_alpha = currentTree.alpha+stepsize*n_dis(gen);
+            currentTree.alpha = new_alpha;
+            if ( (new_alpha > 1) || (new_alpha < 0) ) {
+                propLogLik = -INFINITY;
+            } else {
+                // Recalculate log-likelihood
+                currentTree.initializeLogPrior();
+                propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            }
 
-        // Recalculate log-likelihood
-        currentTree.initializeLogPrior();
-        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            // calculate the acceptance ratio
+            double a = exp(propLogLik-previousLogLik);
 
-        // calculate the acceptance ratio
-        double a = exp(propLogLik-previousLogLik);
-
-        // Update parameter based acceptance ratio
-        if(a>u_dis(gen)){
-            previousLogLik = propLogLik;
-            old_alpha = new_alpha;
-        }else{
-            currentTree.alpha = old_alpha;
+            // Update parameter based acceptance ratio
+            if(a>u_dis(gen))
+            {
+                previousLogLik = propLogLik;
+                old_alpha = new_alpha;
+            }
+            else
+            {
+                currentTree.alpha = old_alpha;
+            }
         }
+        // if last sample is rejected recalculate caches
+        currentTree.initializeLogPrior();
+
     }
-    // if last sample is rejected recalculate caches
-    currentTree.initializeLogPrior();
 
     // Sample beta
-    double old_beta = currentTree.beta;
-    for (int n = 0; n != n_resamples; ++n) {
-        // Propose new parameter by random walk
-        double new_beta = exp(log(currentTree.beta)+0.1*n_dis(gen));
-        currentTree.beta = new_beta;
+    if (sample_beta){
+        double old_beta = currentTree.beta;
+        for (int n = 0; n != n_resamples; ++n) {
+            // Propose new parameter by random walk
+            double new_beta = currentTree.beta+stepsize*n_dis(gen);
+            currentTree.beta = new_beta;
 
-        // Recalculate log-likelihood
-        currentTree.initializeLogPrior();
-        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            if ( (new_beta + currentTree.alpha < 0) ){ // beta + alpha > 0 must always hold
+                propLogLik = -INFINITY;
+            } else {
+                // Recalculate log-likelihood
+                currentTree.initializeLogPrior();
+                propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            }
 
-        // calculate the acceptance ratio
-        double a = exp(propLogLik-previousLogLik);
+            // calculate the acceptance ratio
+            double a = exp(propLogLik-previousLogLik);
 
-        // Update parameter based acceptance ratio
-        if(a>u_dis(gen)){
-            previousLogLik = propLogLik;
-            old_beta = new_beta;
-        }else{
-            currentTree.beta = old_beta;
-
+            // Update parameter based acceptance ratio
+            if(a>u_dis(gen)){
+                previousLogLik = propLogLik;
+                old_beta = new_beta;
+            }else{
+                currentTree.beta = old_beta;
+            }
         }
+        // if last sample is rejected recalculate caches
+        currentTree.initializeLogPrior();
     }
-    // if last sample is rejected recalculate caches
-    currentTree.initializeLogPrior();
+
 
     // Sample rho_plus
-    double old_rho_plus = currentTree.rho_plus;
-    for (int n = 0; n != n_resamples; ++n) {
-        // Propose new parameter by random walk
-        double new_rho_plus = exp(log(currentTree.rho_plus)+0.1*n_dis(gen));
-        currentTree.rho_plus = new_rho_plus;
+    if (sample_rho_plus) {
+        double old_rho_plus = currentTree.rho_plus;
+        for (int n = 0; n != n_resamples; ++n) {
+            // Propose new parameter by random walk
+            double new_rho_plus = currentTree.rho_plus+stepsize*n_dis(gen);
+            currentTree.rho_plus = new_rho_plus;
+            if (new_rho_plus < 0) {
+                    propLogLik = -INFINITY;
+            }else {
+                // Recalculate log-likelihood
+                    currentTree.initializeLogLike();
+                    propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            }
 
-        // Recalculate log-likelihood
-        currentTree.initializeLogLike();
-        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            // calculate the acceptance ratio
+            double a = exp(propLogLik-previousLogLik);
 
-        // calculate the acceptance ratio
-        double a = exp(propLogLik-previousLogLik);
+            // Update parameter based acceptance ratio
+            if(a>u_dis(gen)){
+                previousLogLik = propLogLik;
+                old_rho_plus = new_rho_plus;
+            }else{
+                currentTree.rho_plus = old_rho_plus;
 
-        // Update parameter based acceptance ratio
-        if(a>u_dis(gen)){
-            previousLogLik = propLogLik;
-            old_rho_plus = new_rho_plus;
-        }else{
-            currentTree.rho_plus = old_rho_plus;
-
+            }
         }
+        // if last sample is rejected recalculate caches
+        currentTree.initializeLogLike();
+
     }
-    // if last sample is rejected recalculate caches
-    currentTree.initializeLogLike();
+
 
     // Sample rho_minus
-    double old_rho_minus = currentTree.rho_minus;
-    for (int n = 0; n != n_resamples; ++n) {
-        // Propose new parameter by random walk
-        double new_rho_minus = exp(log(currentTree.rho_minus)+0.1*n_dis(gen));
-        currentTree.rho_minus = new_rho_minus;
+    if (sample_rho_minus) {
+        double old_rho_minus = currentTree.rho_minus;
+        for (int n = 0; n != n_resamples; ++n) {
+            // Propose new parameter by random walk
+            double new_rho_minus = currentTree.rho_minus+stepsize*n_dis(gen);
+            currentTree.rho_minus = new_rho_minus;
 
-        // Recalculate log-likelihood
-        currentTree.initializeLogLike();
-        double propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            if (new_rho_minus < 0){
+                propLogLik = -INFINITY;
+            }else  {
+                    // Recalculate log-likelihood
+                currentTree.initializeLogLike();
+                propLogLik = currentTree.evaluateLogLikeTimesPrior();
+            }
 
-        // calculate the acceptance ratio
-        double a = exp(propLogLik-previousLogLik);
+            // calculate the acceptance ratio
+            double a = exp(propLogLik-previousLogLik);
 
-        // Update parameter based acceptance ratio
-        if(a>u_dis(gen)){
-            previousLogLik = propLogLik;
-            old_rho_minus = new_rho_minus;
-        }else{
-            currentTree.rho_minus = old_rho_minus;
+            // Update parameter based acceptance ratio
+            if(a>u_dis(gen)){
+                previousLogLik = propLogLik;
+                old_rho_minus = new_rho_minus;
+            }else{
+                currentTree.rho_minus = old_rho_minus;
+            }
         }
+        // if last sample is rejected recalculate caches
+        currentTree.initializeLogLike();
     }
-    // if last sample is rejected recalculate caches
-    currentTree.initializeLogLike();
+
     return currentTree;
 }
 
@@ -603,42 +749,65 @@ void Sampler::writeLogLikelihood(string folder){
 /**
 * Write hyper parameters to file
 */
-void Sampler::writeHypers(string folder){
+void Sampler::writeHypers(string folder)
+{
     // If folder doesnt exist - create it
     DIR *dir;
-    if ((dir = opendir (folder.c_str())) == NULL) {
+    if ((dir = opendir (folder.c_str())) == NULL)
+    {
         throw runtime_error("Target directory for writing results not found");
     }
 
     // Write alpha
-    string filename = folder + "/hyper_alpha.txt";
-    ofstream out_file(filename);
+    if (sample_alpha)
+    {
+        string filename = folder + "/hyper_alpha.txt";
+        ofstream out_file(filename);
 
-    for (auto it = chain.begin(); it != chain.end(); ++it){
-        out_file << it->alpha << " ";
+        for (auto it = chain.begin(); it != chain.end(); ++it)
+        {
+            out_file << it->alpha << " ";
+        }
     }
 
-    // Write beta
-    filename = folder + "/hyper_beta.txt";
-    ofstream out_file2(filename);
 
-    for (auto it = chain.begin(); it != chain.end(); ++it){
-        out_file2 << it->beta << " ";
+    // Write beta
+    if (sample_beta)
+    {
+        string filename = folder + "/hyper_beta.txt";
+        ofstream out_file2(filename);
+
+        for (auto it = chain.begin(); it != chain.end(); ++it)
+        {
+            out_file2 << it->beta << " ";
+
+
+        }
     }
 
     // Write rho_plus
-    filename = folder + "/hyper_rhop.txt";
-    ofstream out_file3(filename);
+    if (sample_rho_plus)
+    {
+        string filename = folder + "/hyper_rhop.txt";
+        ofstream out_file3(filename);
 
-    for (auto it = chain.begin(); it != chain.end(); ++it){
-        out_file3 << it->rho_plus << " ";
+        for (auto it = chain.begin(); it != chain.end(); ++it)
+        {
+            out_file3 << it->rho_plus << " ";
+        }
+
     }
 
     // Write rho_minus
-    filename = folder + "/hyper_rhom.txt";
-    ofstream out_file4(filename);
+    if (sample_rho_minus)
+    {
+        string filename = folder + "/hyper_rhom.txt";
+        ofstream out_file4(filename);
 
-    for (auto it = chain.begin(); it != chain.end(); ++it){
-        out_file4 << it->rho_minus << " ";
+        for (auto it = chain.begin(); it != chain.end(); ++it)
+        {
+            out_file4 << it->rho_minus << " ";
+        }
     }
+
 }
