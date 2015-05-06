@@ -1,0 +1,17 @@
+CC=g++
+CFLAGS=-c -Wall -std=c++11 -fexceptions -pg -g 
+LDFLAGS=-lm -std=c++11 -g -pg
+SOURCES=release.cpp adjacency_list.cpp tree.cpp node.cpp sampler.cpp iofilehandler.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=drifter_prof
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(LDFLAGS) -DNDEBUG $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+clean: 
+	rm -rf *o $(EXECUTABLE)
