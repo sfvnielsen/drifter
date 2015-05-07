@@ -49,6 +49,7 @@ class Sampler
         void writeResults(std::string);
         void writeLogLikelihood(std::string);
         void writeHypers(std::string);
+        void writeHoldoutSet(std::string);
 
         // Data storage, publicity need for test function.
         std::list<Tree> chain;  //TODO vector
@@ -61,6 +62,8 @@ class Sampler
         // Data storage
         Adj_list adjacencyList;
         double lastLogLik;
+
+        bool links_held_out;
 
         // Hyperparameters:
         double alpha;

@@ -88,6 +88,8 @@ int main(int argc, char* argv[]) {
         sampling_result.writeResults(out_dir);
         cout << "Writing hypers to " << out_dir << "...";
         sampling_result.writeHypers(out_dir);
+        cout << "Writing holdout set to " << out_dir << "...";
+        sampling_result.writeHoldoutSet(out_dir);
     }
     cout << "done!" << endl;
     return 0;

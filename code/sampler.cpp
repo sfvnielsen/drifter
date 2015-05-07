@@ -34,7 +34,6 @@ Sampler::Sampler(Tree T, double alpha, double beta, double rho_plus, double rho_
     sample_beta = true;
     sample_rho_plus = true;
     sample_rho_minus = true;
-
 }
 
 /**
@@ -66,6 +65,11 @@ Sampler::Sampler(list<pair<int,int>> data_graph, double alpha, double beta, doub
             sample_rho_plus(samp_rho_plus), sample_rho_minus(samp_rho_minus){
     // Constructing the adjacency list
     adjacencyList = Adj_list(data_graph,holdoutFraction);
+
+    links_held_out = false;
+    if(holdoutFraction!=0){
+        links_held_out = true;
+    }
 
     // Initialize the flat tree
     Tree T = Tree(&adjacencyList,alpha, beta, rho_plus, rho_minus);
@@ -827,6 +831,35 @@ void Sampler::writeHypers(string folder)
         for (auto it = chain.begin(); it != chain.end(); ++it)
         {
             out_file4 << it->rho_minus << " ";
+        }
+    }
+
+}
+
+/**
+* Write holdout set to an edgelist file
+*/
+void Sampler::writeHoldoutSet(string folder)
+{
+    // If folder doesnt exist - create it
+    DIR *dir;
+    if ((dir = opendir (folder.c_str())) == NULL)
+    {
+        throw runtime_error("Target directory for writing results not found");
+    }
+
+    // Write alpha
+    if(links_held_out){
+        string filename = folder + "/holdoutSet.txt";
+        ofstream out_file(filename);
+        int N = adjacencyList.getSize();
+
+        for(int i = 0; i < N; i++){
+            for(int j = i+1; j < N; j++){
+                if(!adjacencyList.isObserved(i,j)){
+                    out_file << i << " " << j << endl;
+                }
+            }
         }
     }
 
