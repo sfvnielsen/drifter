@@ -42,7 +42,7 @@ filename="mapFootball1m2m"
 //filename="mapFacebook"
 //filename="mapCelegans"
 //filename="mapTree"
-filename="mapHaggman"
+//filename="mapHaggman"
 
 var diameter = 1080;
 
@@ -109,7 +109,7 @@ d3.json(filename+".json", function(error, root) {
       //.attr("dx",".31em")
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
       .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
-      .text(function(d) { if (d.name < 0){return " "} return d.name; });
+      .text(function(d) { if (d.name < 0){return "";d.name} return d.name; });
 });
 
 d3.select(self.frameElement).style("height", diameter - 150 + "px");

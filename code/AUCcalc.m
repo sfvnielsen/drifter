@@ -1,10 +1,12 @@
 clear
 
-load 'hgm_1_5mil/scoresMAP.txt'
+folder = 'results/haggman_2days'
+
+load([folder '/scoresMAP.txt']);
 [X,Y,T,AUCmap] = perfcurve(scoresMAP(:,2),scoresMAP(:,1),1);
 %plot(X,Y);
 %hold all
-load 'hgm_1_5mil/scoresEnsemble.txt'
+load([folder '/scoresEnsemble.txt']);
 [X,Y,T,AUCensemble] = perfcurve(scoresEnsemble(:,2),scoresEnsemble(:,1),1);
 %plot(X,Y);
 %legend 'MAP' 'Ensemble'

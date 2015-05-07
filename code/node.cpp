@@ -365,7 +365,7 @@ Node *  multinomialSampling(list<Node *> node_list,vector<double> p_vals)  {
     partial_sum(p_vals.begin(),p_vals.end(),cumulative_sum.begin());
 
     // check that p_vals is valid
-    assert(abs(cumulative_sum.back()-1.0 < 1e-12));
+    assert(abs(cumulative_sum.back()-1.0) < 1e-12);
     assert(node_list.size() == p_vals.size());
 
     list<Node *>::iterator it_result = node_list.begin();
