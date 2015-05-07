@@ -40,7 +40,7 @@ filename="mapFootball1m2m"
 filename="mapFootball2"
 filename="mapFootball"
 //filename="mapFacebook"
-//filename="mapCelegans"
+filename="mapCelegans"
 //filename="mapTree"
 //filename="mapHaggman"
 
@@ -64,7 +64,7 @@ var colorText = '#ffffff';
 // ---- Code ----
 
 var tree = d3.layout.tree()
-    .size([360, diameter / 2])
+    .size([360, diameter / 2.1])
     .separation(function(a, b) { return (a.parent == b.parent ? 2 : 3)/(2*Math.PI); });
     //Math.sqrt(a.depth)
 
@@ -82,7 +82,10 @@ var svg = d3.select("body").append("svg")
 
 //d3.json("mapFootball1m2m.json", function(error, root) {
 d3.json(filename+".json", function(error, root) {
-var nodes = tree.nodes(root);
+
+var reduced_root = reduce(root, quantile);
+
+var nodes = tree.nodes(reduced_root);
 var links = tree.links(nodes);
 
 // getting the domain of the credebility variables.
@@ -100,11 +103,9 @@ var link_width = link_width_scale.domain(cred_extent);
 
   var link = svg.selectAll(".link")
       .data(links)
-      .enter().append("g")
-      .attr("class", "link")
-      .attr('visibility', function(d) {
-    			return d.target.credibility<cred_cutoff ? 'hidden' : null;
-		});
+      .enter()
+      .append("g")
+      .attr("class", "link");
 
 
   link.append("path")
@@ -122,10 +123,7 @@ var link_width = link_width_scale.domain(cred_extent);
       .data(nodes)
     .enter().append("g")
       .attr("class", "node")
-      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-      .attr('visibility', function(d) {
-    			return d.credibility<cred_cutoff ? 'hidden' : null;
-		});
+      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; });
       
 
   node.append("circle")
@@ -140,7 +138,7 @@ var link_width = link_width_scale.domain(cred_extent);
       //.attr("dx",".31em")
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
       .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
-      .text(function(d) { if (d.name < 0){return "";d.name} return d.name; });
+      .text(function(d) {return d.children!=null ? "" : d.name});
       
 });
 
@@ -200,4 +198,26 @@ function render(d) {
   context.putImageData(image, 0, 0);
 }
 
+function reduce(root, q){
+	var creds = credibilities(root).sort();
+	var cred_cutoff = d3.quantile(creds, quantile);
+	root.children = root.children.map(function(d){return filterCredibility(d,cred_cutoff);});
+	return root;
+}
+
+function filterCredibility(root,c_min){
+	if(root.children!=null){
+		root.children = root.children
+			.filter(function(d){return d.credibility>c_min;})
+			.map(function(d){return filterCredibility(d,c_min);});
+	}
+	return root;}
+	
+function credibilities(root){
+	var creds = [root.credibility];
+	if(root.children!=null){
+		creds = creds.concat.apply(creds, root.children.map(credibilities));	
+	}
+return creds;}
+	
 </script>
