@@ -699,8 +699,8 @@ void Sampler::writeResults(std::string folder) {
     }
 
     // Write trees
-  /*  int n_sample = 1;
     string filename = "";
+  /*  int n_sample = 1;
     for (auto it = chain.begin(); it != chain.end(); ++it) {
             char buffer [6];
             sprintf (buffer,"%05d", n_sample);
