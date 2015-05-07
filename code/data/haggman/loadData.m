@@ -2,11 +2,16 @@ clear
 close all
 clc
 
-A1 = readGraphml('subjectA1.graphml');
-A2 = readGraphml('subjectA2.graphml');
+readLabelsGraphml('Networks/subjectA1.graphml')
 %%
-% Average
-A = (A1 + A2)/2;
+A1 = readGraphml('Networks/subjectA1.graphml');
+B = readGraphml('Networks/subjectB.graphml');
+C = readGraphml('Networks/subjectC.graphml');
+D = readGraphml('Networks/subjectD.graphml');
+E = readGraphml('Networks/subjectE.graphml');
+%%
+% Sum
+A = (A1 + B + C + D + E);
 
 % transform to undirected
 A = (A+transpose(A))>0;
