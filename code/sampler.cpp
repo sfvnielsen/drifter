@@ -699,7 +699,7 @@ void Sampler::writeResults(std::string folder) {
     }
 
     // Write trees
-    int n_sample = 1;
+  /*  int n_sample = 1;
     string filename = "";
     for (auto it = chain.begin(); it != chain.end(); ++it) {
             char buffer [6];
@@ -708,7 +708,7 @@ void Sampler::writeResults(std::string folder) {
             filename = folder + "/tree_sample" + n_id + ".txt";
             it->writeMatlabFormat(filename);
             n_sample++;
-    }
+    }*/
 
     // Write likelihood
     filename = folder + "/loglikelihood.txt";
