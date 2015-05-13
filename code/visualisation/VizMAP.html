@@ -42,11 +42,11 @@ filename="mapFootball"
 //filename="mapFacebook"
 filename="mapCelegans"
 //filename="mapTree"
-//filename="mapHaggman"
+filename="mapHaggman"
 
 // ---- Parameters ----
 var bar_height = 30;
-var quantile = 0.75;
+var quantile = 0.5;
 
 var w = window.innerWidth;
 var h = window.innerHeight-bar_height;
@@ -58,7 +58,7 @@ var color_scale = d3.scale.linear()
 
 var link_width_scale = d3.scale.linear()
 	.range([3, 4]);
-	
+
 var colorText = '#ffffff';
 
 // ---- Code ----
@@ -71,7 +71,7 @@ var tree = d3.layout.tree()
 var diagonal = d3.svg.diagonal.radial()
     .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-console.log("Start Drifter");    
+console.log("Start Drifter");
 
 //Begin drawing the tree
 var svg = d3.select("body").append("svg")
@@ -124,7 +124,7 @@ var link_width = link_width_scale.domain(cred_extent);
     .enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; });
-      
+
 
   node.append("circle")
       .attr("r", function(d){
@@ -139,7 +139,7 @@ var link_width = link_width_scale.domain(cred_extent);
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
       .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
       .text(function(d) {return d.children!=null ? "" : d.name});
-      
+
 });
 
 var spaces = [
@@ -172,7 +172,7 @@ space.append("canvas")
 space.append("div")
     .style("line-height", bar_height + "px")
     .style('color',colorText)
-    .style('font-size',"16px")  
+    .style('font-size',"16px")
     .text("Less credible stucture");
 
 space.append("div")
@@ -181,9 +181,9 @@ space.append("div")
     .style('color',colorText)
     .style('font-size',"16px")
     .text("More credible structure");
-    
+
     //.style("text-anchor","right")//.style("line-height", height + "px")//,"line-width",width/2+"px")
-    
+
 
 function render(d) {
   var context = this.getContext("2d"),
@@ -212,12 +212,12 @@ function filterCredibility(root,c_min){
 			.map(function(d){return filterCredibility(d,c_min);});
 	}
 	return root;}
-	
+
 function credibilities(root){
 	var creds = [root.credibility];
 	if(root.children!=null){
-		creds = creds.concat.apply(creds, root.children.map(credibilities));	
+		creds = creds.concat.apply(creds, root.children.map(credibilities));
 	}
 return creds;}
-	
+
 </script>
