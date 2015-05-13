@@ -37,56 +37,84 @@
 
 
 filename="mapFootball1m2m"
-//filename="mapFootball2"
-//filename="mapFootball"
+filename="mapFootball2"
+filename="mapFootball"
 //filename="mapFacebook"
-//filename="mapCelegans"
+filename="mapCelegans"
 //filename="mapTree"
 //filename="mapHaggman"
 
-var diameter = 1080;
+// ---- Parameters ----
+var bar_height = 30;
+var quantile = 0.75;
+
+var w = window.innerWidth;
+var h = window.innerHeight-bar_height;
+var diameter = Math.min(w,h);
+
+var color_scale = d3.scale.linear()
+    .range(['lightgrey','blue'])
+    .interpolate(d3.interpolateLab);
+
+var link_width_scale = d3.scale.linear()
+	.range([3, 4]);
+	
+var colorText = '#ffffff';
+
+// ---- Code ----
 
 var tree = d3.layout.tree()
-    .size([360, diameter / 2 - 160])
-    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 1.5)/(2*Math.PI); });
+    .size([360, diameter / 2.1])
+    .separation(function(a, b) { return (a.parent == b.parent ? 2 : 3)/(2*Math.PI); });
     //Math.sqrt(a.depth)
 
 var diagonal = d3.svg.diagonal.radial()
     .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
-
-
-var color = d3.scale.linear()
-    .range(['lightgrey','blue'])
-    .interpolate(d3.interpolateLab);
 
 console.log("Start Drifter");    
 
 //Begin drawing the tree
 var svg = d3.select("body").append("svg")
     .attr("width", diameter)
-    .attr("height", diameter - 150)
+    .attr("height", diameter - bar_height)
   .append("g")
     .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
 //d3.json("mapFootball1m2m.json", function(error, root) {
 d3.json(filename+".json", function(error, root) {
-  var nodes = tree.nodes(root),
-      links = tree.links(nodes);
+
+var reduced_root = reduce(root, quantile);
+
+var nodes = tree.nodes(reduced_root);
+var links = tree.links(nodes);
+
+// getting the domain of the credebility variables.
+var cred_extent = d3.extent(links, function(L){return L.target.credibility});
+
+root.credibility = cred_extent[1];
+
+var link_color = color_scale.domain(cred_extent);
+var link_width = link_width_scale.domain(cred_extent);
+
+ var cred_cutoff = d3.quantile(
+		links.map(function(L){return L.target.credibility})
+			  .sort()
+		, quantile);
 
   var link = svg.selectAll(".link")
       .data(links)
-      .enter().append("g")
-      .attr("class", "link")
+      .enter()
+      .append("g")
+      .attr("class", "link");
 
 
   link.append("path")
       .attr("fill", "none")
       .style("stroke", function(d){
-        return color(d.target.credibility)
+        return link_color(d.target.credibility)
       })
-      .attr("stroke-width", function(d){
-        //return "5.5px"
-        return (d.target.credibility*2+3.5)+"px"
+      .attr("stroke-width",  function(d){
+        return link_width(d.target.credibility)
       })
       .attr("d", diagonal);
 
@@ -95,11 +123,12 @@ d3.json(filename+".json", function(error, root) {
       .data(nodes)
     .enter().append("g")
       .attr("class", "node")
-      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; });
+      
 
   node.append("circle")
       .attr("r", function(d){
-        if (d.credibility == 0) {
+        if (d.parent == null) {
           return 10 };
         return 2.5
       });
@@ -109,11 +138,9 @@ d3.json(filename+".json", function(error, root) {
       //.attr("dx",".31em")
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
       .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
-      .text(function(d) { if (d.name < 0){return "";d.name} return d.name; });
+      .text(function(d) {return d.children!=null ? "" : d.name});
+      
 });
-
-d3.select(self.frameElement).style("height", diameter - 150 + "px");
-
 
 var spaces = [
   {name: "Lab", interpolate: d3.interpolateLab},
@@ -124,19 +151,14 @@ var y = d3.scale.ordinal()
     .rangeRoundBands([0 , 100], .09);
 
 var margin = diameter/4,
-    width = diameter/2,
-    height = 40;
-
-var color2 = d3.scale.linear()
-    .domain([0, 1])
-    .range(["hsl(62,100%,90%)", "hsl(222,30%,20%)"]);
+    width = diameter/2;
 
 var space = d3.select("body").selectAll(".space")
     .data(spaces)
   .enter().append("div")
     .attr("class", "space")
     .style("width", width + "px")
-    .style("height", height + "px")
+    .style("height", bar_height + "px")
     .style("left", margin + "px")
     .style("top", function(d, i) { return y + "px"; });
 
@@ -144,20 +166,18 @@ space.append("canvas")
     .attr("width", width)
     .attr("height", 1)
     .style("width", width + "px")
-    .style("height", height + "px")
+    .style("height", bar_height + "px")
     .each(render);
 
-var colorText = '#ffffff';
 space.append("div")
-    .style("line-height", height + "px")
+    .style("line-height", bar_height + "px")
     .style('color',colorText)
     .style('font-size',"16px")  
     .text("Less credible stucture");
 
-
 space.append("div")
-    .style("line-height", height + "px")
-    .style("left", width-155+"px")
+    .style("line-height", bar_height + "px")
+    .style("left", width-130+"px")
     .style('color',colorText)
     .style('font-size',"16px")
     .text("More credible structure");
@@ -165,14 +185,11 @@ space.append("div")
     //.style("text-anchor","right")//.style("line-height", height + "px")//,"line-width",width/2+"px")
     
 
-
-
 function render(d) {
   var context = this.getContext("2d"),
       image = context.createImageData(width, 1);
-  color.interpolate( d3.interpolateLab);
   for (var i = 0, j = -1, c; i <= 1; i=i+1/width) {
-    c = d3.rgb(color(i));
+    c = d3.rgb(color_scale(i));
     image.data[++j] = c.r;
     image.data[++j] = c.g;
     image.data[++j] = c.b;
@@ -181,4 +198,26 @@ function render(d) {
   context.putImageData(image, 0, 0);
 }
 
+function reduce(root, q){
+	var creds = credibilities(root).sort();
+	var cred_cutoff = d3.quantile(creds, quantile);
+	root.children = root.children.map(function(d){return filterCredibility(d,cred_cutoff);});
+	return root;
+}
+
+function filterCredibility(root,c_min){
+	if(root.children!=null){
+		root.children = root.children
+			.filter(function(d){return d.credibility>c_min;})
+			.map(function(d){return filterCredibility(d,c_min);});
+	}
+	return root;}
+	
+function credibilities(root){
+	var creds = [root.credibility];
+	if(root.children!=null){
+		creds = creds.concat.apply(creds, root.children.map(credibilities));	
+	}
+return creds;}
+	
 </script>
