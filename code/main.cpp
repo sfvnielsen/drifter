@@ -25,16 +25,16 @@ int main() {
     //data_file_name = "data/celegans_edgelist.txt";
     data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
-//    data_file_name = "data/haggman_edgelist.txt";
+    data_file_name = "data/haggman_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
 
     /**
      * Testing a network
      */
-    int num_iterations = 1000000;
+    int num_iterations = 2000000;
 
-    int burnin = 200000;
-    int thinning = 10000;
+    int burnin = 1000000;
+    int thinning = 1000;
     double holdoutFraction = 0.05;
 
 
@@ -59,7 +59,7 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
 
 
     // Constructing the sampler.
-    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1, holdoutFraction);
+    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1, holdoutFraction,false);
 //    Sampler sampler = Sampler(data_edge_list, 0.5, 0.5, 1, 1);
 
     // Start timing
