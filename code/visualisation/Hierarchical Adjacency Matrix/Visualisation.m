@@ -2,9 +2,9 @@ clear; close all; clc
 %Minimum group size, splits into smaller groups are ignored
 % (Easier visualisation)
 min_group_size = 5; 
-
-problemName = 'football_';
-%problemName = '';
+football = 1;
+problemName = '../../results/football_20m/';
+%problemName = '../../results/long4/'; %Four day Hagmann
 
 %%
 leavesNlayers = csvread(strcat(problemName,'mapStructure_leavesNlayers'));
@@ -15,7 +15,7 @@ adj = csvread(strcat(problemName,'mapStructure_sortedAdjMatrix'));
 leavesOrder=leavesOrder+1; %One index
 
 %Assign text labels
-if strcmp(problemName,'football_'),
+if football,
     aux_variables = readtable('football_labels.csv','ReadVariableNames',false);
     labels_Y = table2cell(aux_variables(:,2)); %zero or one index TODO
     labels_X = table2cell(aux_variables(:,3));
@@ -180,11 +180,14 @@ for i = 1:size(leavesNlayers,1)
         
         [names dist] =getLabelDistribution(labelsY(idx(g,:)),label_groups_Y);
         labY{g} = sprintf('%s (%3.2f%%)',names{1},dist(1)*100);
-    end    
+    end 
+    
     set(gca,'XTick',labXpos,'XLim',[1 N]);
     set(gca,'XTickLabel',labX);
     set(gca,'XTickLabelRotation',50);
-    
-    set(gca,'YTick',labXpos,'YLim',[1 N]);
-    set(gca,'YTickLabel',labY);
+
+    if ~football
+        set(gca,'YTick',labXpos,'YLim',[1 N]);
+        set(gca,'YTickLabel',labY);
+    end
 end
