@@ -1,13 +1,15 @@
 clear; close all; clc
 %Minimum group size, splits into smaller groups are ignored
 % (Easier visualisation)
-min_group_size = 1; 
-football = true;false;
-irm_results = false;true;
+min_group_size = 20; 
+football = false;
+irm_results = true;%true;
 
-problemName = '../../results/football_20m/';
-%problemName = '../../results/long4/'; %Four day Hagmann
-
+if football,
+    problemName = '../../results/football_20m/';
+else
+    problemName = '../../results/long4/'; %Four day Hagmann
+end
 
 %%
 leavesNlayers = csvread(strcat(problemName,'mapStructure_leavesNlayers'));
@@ -17,25 +19,29 @@ adj = csvread(strcat(problemName,'mapStructure_sortedAdjMatrix'));
 leavesOrder=leavesOrder+1; %One index
 
 if irm_results
-   %Reorder the adj matrix into the original Hagmann order
+   %Reorder the adj matrix into the original input order
    [~,idx]=sort(leavesOrder);
    adj = adj(idx,idx);
-    
-   data = load('../../results/irm_hagmann/hagmannIRM_run1_map.mat');
+   data = [];
+   if football,
+        data = load(strcat(problemName,'footballIRM_run1_map.mat'));
+   else
+        data = load(strcat(problemName,'hagmannIRM_run1_map.mat')); 
+   end
    [leavesNlayers, idx] = sort(data.z_map);
    leavesNlayers = leavesNlayers';
-   leavesOrder = data.leavesOrder(idx)+1;
+   leavesOrder = data.leavesOrder(idx)+1; %Hagmann and Football is 0 indexed
    
    %Reorder the adj matrix into the IRM order (groups are placed by
    %eachother)
-   adj = adj(leavesOrder,leavesOrder);
+   adj = adj(leavesOrder,leavesOrder);    
 end
 
 
 [depth, N] = size(leavesNlayers);
 
 
-%Assign text labels
+%% Assign text labels
 if football,
     aux_variables = readtable('football_labels.csv','ReadVariableNames',false);
     labels_Y = table2cell(aux_variables(:,2)); %zero or one index TODO
@@ -161,7 +167,6 @@ title('Hierarchical Tree Structure'); xlabel('Leaves'); ylabel('Depth')
 colormap parula%colorcube
 
 %% Visualize hierarchies
-close all
 img = ones(N,N,1)*0;
 for i = 1:size(leavesNlayers,1)
     %Finds the groups
@@ -190,10 +195,15 @@ for i = 1:size(leavesNlayers,1)
     bgColor = bgColor.*~adj+adj*(-N/10);%colorsRange(g);
     
     figure; imagesc(bgColor);
-    title(sprintf('%2i. layer, %5i groups',i,G))
-    colormap copper%parula%colorcube%copper
-    %set(gca,'YTick',1:2:N,'YLim',[1 N]);
-    %set(gca,'YTickLabel',labels_Y)
+    colormap copper
+    
+    if irm_results,
+        title(sprintf('Structure found by IRM (%i groups)',G),'fontsize',14)
+    else
+        title(sprintf('Structure found by HIRM, %2i. layer (%i groups)',i,G),'fontsize',14)
+    end
+    
+    
     
     labX = {};
     labY = {};
@@ -214,5 +224,7 @@ for i = 1:size(leavesNlayers,1)
     if ~football
         set(gca,'YTick',labXpos,'YLim',[1 N]);
         set(gca,'YTickLabel',labY);
+    else
+        set(gca,'YTickLabel',[]);
     end
 end
