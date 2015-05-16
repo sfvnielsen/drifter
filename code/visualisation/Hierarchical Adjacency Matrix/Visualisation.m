@@ -1,10 +1,10 @@
 clear; close all; clc
 %Minimum group size, splits into smaller groups are ignored
 % (Easier visualisation)
-min_group_size = 5; 
-football = 1;
-problemName = '../../results/football_20m/';
-%problemName = '../../results/long4/'; %Four day Hagmann
+min_group_size = 10; 
+football = 0;
+%problemName = '../../results/football_20m/';
+problemName = '../../results/long4/'; %Four day Hagmann
 
 %%
 leavesNlayers = csvread(strcat(problemName,'mapStructure_leavesNlayers'));
