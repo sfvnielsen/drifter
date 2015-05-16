@@ -1,18 +1,39 @@
 clear; close all; clc
 %Minimum group size, splits into smaller groups are ignored
 % (Easier visualisation)
-min_group_size = 10; 
-football = 0;
-%problemName = '../../results/football_20m/';
-problemName = '../../results/long4/'; %Four day Hagmann
+min_group_size = 1; 
+football = true;false;
+irm_results = false;true;
+
+problemName = '../../results/football_20m/';
+%problemName = '../../results/long4/'; %Four day Hagmann
+
 
 %%
 leavesNlayers = csvread(strcat(problemName,'mapStructure_leavesNlayers'));
 leavesOrder  = csvread(strcat(problemName,'mapStructure_leavesOrder'));
 adj = csvread(strcat(problemName,'mapStructure_sortedAdjMatrix'));
 
-[depth, N] = size(leavesNlayers);
 leavesOrder=leavesOrder+1; %One index
+
+if irm_results
+   %Reorder the adj matrix into the original Hagmann order
+   [~,idx]=sort(leavesOrder);
+   adj = adj(idx,idx);
+    
+   data = load('../../results/irm_hagmann/hagmannIRM_run1_map.mat');
+   [leavesNlayers, idx] = sort(data.z_map);
+   leavesNlayers = leavesNlayers';
+   leavesOrder = data.leavesOrder(idx)+1;
+   
+   %Reorder the adj matrix into the IRM order (groups are placed by
+   %eachother)
+   adj = adj(leavesOrder,leavesOrder);
+end
+
+
+[depth, N] = size(leavesNlayers);
+
 
 %Assign text labels
 if football,
@@ -95,18 +116,20 @@ subplot 122; imagesc(leavesNlayers); title('After leaf padding')
 %% Adjust for min group size (split size)
 %
 %
-for i = 2:size(leavesNlayers,1),    
-    group_idx = unique(leavesNlayers(i,:));
-    G = length(group_idx);
-    idx = logical(zeros(G,N));
-    for g = 1:G,
-        idx(g,:) = leavesNlayers(i,:) == group_idx(g);
-        if sum(idx(g,:)) < min_group_size,
-           parent_group = unique(leavesNlayers(i-1,idx(g,:)) ); %The above group
-           parent_group = parent_group(1);
-           leavesNlayers(i:end,idx(g,:)) = parent_group;
+if ~irm_results,
+    for i = 2:size(leavesNlayers,1),    
+        group_idx = unique(leavesNlayers(i,:));
+        G = length(group_idx);
+        idx = logical(zeros(G,N));
+        for g = 1:G,
+            idx(g,:) = leavesNlayers(i,:) == group_idx(g);
+            if sum(idx(g,:)) < min_group_size,
+               parent_group = unique(leavesNlayers(i-1,idx(g,:)) ); %The above group
+               parent_group = parent_group(1);
+               leavesNlayers(i:end,idx(g,:)) = parent_group;
+            end
+
         end
-        
     end
 end
 %%Place all members of a group next to eachother
@@ -116,6 +139,8 @@ labels_Y = labels_Y(idx);
 labels_X = labels_X(idx);
 labelsX = labelsX(idx);
 labelsY = labelsY(idx);
+leavesOrder = leavesOrder(idx);
+adj = adj(idx,idx);
 
 figure(4); 
 subplot 121; 
