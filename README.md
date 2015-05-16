@@ -12,13 +12,13 @@ Installation and running
 The code includes a makefile. To install run "make" in the '/code' directory and this will create the executable "drifter".
 
 
-From commandline (in the code directory) this can be run by invoking 
+From commandline (in the code directory) this can be run by invoking:
+
 <code>
-Syntax:
-   drifter datafile [#Iterations = 100] [#Thinning = 10] [output-dir] [holdoutFraction] [sample hyperparameters?]
+./drifter datafile [#Iterations = 100] [#Thinning = 10] [output-dir] [holdoutFraction] [sample hyperparameters?]
 </code>
 
-Ex. drifter data/network.txt 10000 10 results/outfiles 0.05 0
+Ex. <code> ./drifter data/network.txt 10000 10 results/outfiles 0.05 0 </code>
 
 "datafile" is the path to your data (formatted as an edgelist)
 Thinning how often you want to save a sample in the chain (after burn-in) (set to 1 to keep all)
