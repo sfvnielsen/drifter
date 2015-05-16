@@ -1,304 +1,235 @@
-{"name": "-1","size": "64" ,"credibility": "0.000000",
+{"name": "-113163518","size": "41" ,"credibility": "0.000000",
 "children": [
- 	{"name": "-184686","size": "7" ,"credibility": "0.761905",
+ 	{"name": "-111671043","size": "6" ,"credibility": "0.113443",
 "children": [
- 	{"name": "63", "size": "1","credibility": "0.761905"},
-	{"name": "-188065","size": "1" ,"credibility": "0.714286",
+ 	{"name": "92", "size": "1","credibility": "0.112944"},
+	{"name": "44", "size": "1","credibility": "0.112944"},
+	{"name": "80", "size": "1","credibility": "0.113443"},
+	{"name": "91", "size": "1","credibility": "0.079460"},
+	{"name": "-114075677","size": "2" ,"credibility": "0.029985",
 "children": [
- 	{"name": "59", "size": "1","credibility": "0.714286"},
-	{"name": "97", "size": "1","credibility": "0.714286"},
-	{"name": "36", "size": "1","credibility": "0.714286"},
-{"name": "58", "size": "1","credibility": "0.714286"}]
-},
-{"name": "-24693","size": "5" ,"credibility": "0.714286",
+ 	{"name": "29", "size": "1","credibility": "0.029985"},
+{"name": "-114290305","size": "1" ,"credibility": "0.005997",
 "children": [
- 	{"name": "101", "size": "1","credibility": "0.714286"},
-	{"name": "-233050","size": "1" ,"credibility": "0.714286",
-"children": [
- 	{"name": "30", "size": "1","credibility": "0.714286"},
-{"name": "19", "size": "1","credibility": "0.714286"}]
-},
-{"name": "-157513","size": "3" ,"credibility": "0.714286",
-"children": [
- 	{"name": "35", "size": "1","credibility": "0.714286"},
-	{"name": "94", "size": "1","credibility": "0.714286"},
-{"name": "-221566","size": "2" ,"credibility": "0.714286",
-"children": [
- 	{"name": "79", "size": "1","credibility": "0.714286"},
-{"name": "-214314","size": "1" ,"credibility": "0.714286",
-"children": [
- 	{"name": "29", "size": "1","credibility": "0.714286"},
-{"name": "55", "size": "1","credibility": "0.714286"}]
-}]
-}]
-}]
+ 	{"name": "94", "size": "1","credibility": "0.005997"},
+{"name": "30", "size": "1","credibility": "0.005997"}]
 }]
 },
-	{"name": "-2164","size": "26" ,"credibility": "0.904762",
+	{"name": "-113537559","size": "1" ,"credibility": "0.079460",
 "children": [
- 	{"name": "-97439","size": "5" ,"credibility": "0.333333",
-"children": [
- 	{"name": "111", "size": "1","credibility": "0.333333"},
-	{"name": "8", "size": "1","credibility": "0.333333"},
-	{"name": "-61185","size": "1" ,"credibility": "0.333333",
-"children": [
- 	{"name": "77", "size": "1","credibility": "0.333333"},
-	{"name": "108", "size": "1","credibility": "0.333333"},
-	{"name": "68", "size": "1","credibility": "0.333333"},
-{"name": "22", "size": "1","credibility": "0.333333"}]
+ 	{"name": "66", "size": "1","credibility": "0.078961"},
+	{"name": "57", "size": "1","credibility": "0.070965"},
+	{"name": "48", "size": "1","credibility": "0.078961"},
+	{"name": "75", "size": "1","credibility": "0.057971"},
+	{"name": "86", "size": "1","credibility": "0.034983"},
+{"name": "112", "size": "1","credibility": "0.034983"}]
 },
-{"name": "-140378","size": "3" ,"credibility": "0.333333",
+{"name": "-113270073","size": "2" ,"credibility": "0.030485",
 "children": [
- 	{"name": "-174148","size": "1" ,"credibility": "0.333333",
+ 	{"name": "82", "size": "1","credibility": "0.030485"},
+	{"name": "55", "size": "1","credibility": "0.029985"},
+	{"name": "19", "size": "1","credibility": "0.012994"},
+	{"name": "101", "size": "1","credibility": "0.018991"},
+{"name": "-114268758","size": "1" ,"credibility": "0.010495",
 "children": [
- 	{"name": "7", "size": "1","credibility": "0.333333"},
-{"name": "78", "size": "1","credibility": "0.333333"}]
-},
-{"name": "-237135","size": "1" ,"credibility": "0.333333",
-"children": [
- 	{"name": "51", "size": "1","credibility": "0.333333"},
-{"name": "21", "size": "1","credibility": "0.333333"}]
+ 	{"name": "79", "size": "1","credibility": "0.010495"},
+{"name": "35", "size": "1","credibility": "0.010495"}]
 }]
 }]
 },
-	{"name": "-38302","size": "6" ,"credibility": "0.904762",
+	{"name": "-114206380","size": "9" ,"credibility": "0.112944",
 "children": [
- 	{"name": "81", "size": "1","credibility": "0.904762"},
-	{"name": "5", "size": "1","credibility": "0.904762"},
-	{"name": "82", "size": "1","credibility": "0.904762"},
-	{"name": "-213927","size": "1" ,"credibility": "0.904762",
+ 	{"name": "-114113010","size": "1" ,"credibility": "0.018991",
 "children": [
- 	{"name": "72", "size": "1","credibility": "0.904762"},
-{"name": "102", "size": "1","credibility": "0.904762"}]
+ 	{"name": "89", "size": "1","credibility": "0.018991"},
+	{"name": "105", "size": "1","credibility": "0.018991"},
+{"name": "25", "size": "1","credibility": "0.018991"}]
 },
-	{"name": "-225303","size": "2" ,"credibility": "0.904762",
+	{"name": "-114250425","size": "3" ,"credibility": "0.112944",
 "children": [
- 	{"name": "40", "size": "1","credibility": "0.904762"},
-{"name": "-182437","size": "1" ,"credibility": "0.904762",
+ 	{"name": "36", "size": "1","credibility": "0.076462"},
+	{"name": "-114203409","size": "1" ,"credibility": "0.047976",
 "children": [
- 	{"name": "84", "size": "1","credibility": "0.904762"},
-{"name": "10", "size": "1","credibility": "0.904762"}]
+ 	{"name": "58", "size": "1","credibility": "0.047976"},
+{"name": "59", "size": "1","credibility": "0.047976"}]
+},
+{"name": "-114273063","size": "1" ,"credibility": "0.061469",
+"children": [
+ 	{"name": "63", "size": "1","credibility": "0.061469"},
+{"name": "97", "size": "1","credibility": "0.061469"}]
 }]
 },
-{"name": "-136482","size": "2" ,"credibility": "0.904762",
+	{"name": "-114214382","size": "1" ,"credibility": "0.018991",
 "children": [
- 	{"name": "3", "size": "1","credibility": "0.904762"},
-	{"name": "98", "size": "1","credibility": "0.904762"},
-{"name": "-167743","size": "1" ,"credibility": "0.904762",
-"children": [
- 	{"name": "107", "size": "1","credibility": "0.904762"},
-	{"name": "52", "size": "1","credibility": "0.904762"},
-{"name": "74", "size": "1","credibility": "0.904762"}]
-}]
-}]
+ 	{"name": "109", "size": "1","credibility": "0.018991"},
+	{"name": "103", "size": "1","credibility": "0.018991"},
+	{"name": "1", "size": "1","credibility": "0.018991"},
+	{"name": "37", "size": "1","credibility": "0.018991"},
+	{"name": "33", "size": "1","credibility": "0.018991"},
+{"name": "45", "size": "1","credibility": "0.018991"}]
 },
-{"name": "-190697","size": "14" ,"credibility": "0.333333",
+{"name": "-113242972","size": "3" ,"credibility": "0.112444",
 "children": [
- 	{"name": "67", "size": "1","credibility": "0.333333"},
-	{"name": "-7899","size": "4" ,"credibility": "0.333333",
+ 	{"name": "65", "size": "1","credibility": "0.107946"},
+	{"name": "17", "size": "1","credibility": "0.103948"},
+	{"name": "27", "size": "1","credibility": "0.112444"},
+	{"name": "56", "size": "1","credibility": "0.112444"},
+	{"name": "76", "size": "1","credibility": "0.103948"},
+	{"name": "70", "size": "1","credibility": "0.094953"},
+	{"name": "96", "size": "1","credibility": "0.105447"},
+	{"name": "87", "size": "1","credibility": "0.094953"},
+	{"name": "-114238889","size": "1" ,"credibility": "0.088956",
 "children": [
- 	{"name": "88", "size": "1","credibility": "0.333333"},
-{"name": "-130249","size": "3" ,"credibility": "0.333333",
-"children": [
- 	{"name": "83", "size": "1","credibility": "0.333333"},
-	{"name": "110", "size": "1","credibility": "0.333333"},
-	{"name": "-186191","size": "1" ,"credibility": "0.333333",
-"children": [
- 	{"name": "73", "size": "1","credibility": "0.333333"},
-{"name": "49", "size": "1","credibility": "0.333333"}]
+ 	{"name": "95", "size": "1","credibility": "0.088956"},
+{"name": "62", "size": "1","credibility": "0.088956"}]
 },
-{"name": "-212008","size": "1" ,"credibility": "0.333333",
+{"name": "-114233670","size": "1" ,"credibility": "0.089955",
 "children": [
- 	{"name": "46", "size": "1","credibility": "0.333333"},
-	{"name": "114", "size": "1","credibility": "0.333333"},
-{"name": "53", "size": "1","credibility": "0.333333"}]
-}]
-}]
-},
-{"name": "-170363","size": "9" ,"credibility": "0.333333",
-"children": [
- 	{"name": "11", "size": "1","credibility": "0.333333"},
-	{"name": "-174529","size": "3" ,"credibility": "0.333333",
-"children": [
- 	{"name": "93", "size": "1","credibility": "0.333333"},
-{"name": "-228260","size": "2" ,"credibility": "0.333333",
-"children": [
- 	{"name": "104", "size": "1","credibility": "0.333333"},
-{"name": "-69813","size": "1" ,"credibility": "0.333333",
-"children": [
- 	{"name": "16", "size": "1","credibility": "0.333333"},
-{"name": "41", "size": "1","credibility": "0.333333"}]
+ 	{"name": "113", "size": "1","credibility": "0.089955"},
+{"name": "20", "size": "1","credibility": "0.089955"}]
 }]
 }]
 },
-	{"name": "-215859","size": "3" ,"credibility": "0.333333",
+{"name": "-114135645","size": "25" ,"credibility": "0.146427",
 "children": [
- 	{"name": "9", "size": "1","credibility": "0.333333"},
-{"name": "-204716","size": "2" ,"credibility": "0.333333",
+ 	{"name": "-113273690","size": "3" ,"credibility": "0.057971",
 "children": [
- 	{"name": "23", "size": "1","credibility": "0.333333"},
-{"name": "-198227","size": "1" ,"credibility": "0.333333",
+ 	{"name": "-113944506","size": "1" ,"credibility": "0.046977",
 "children": [
- 	{"name": "4", "size": "1","credibility": "0.333333"},
-{"name": "0", "size": "1","credibility": "0.333333"}]
+ 	{"name": "2", "size": "1","credibility": "0.044978"},
+	{"name": "100", "size": "1","credibility": "0.045477"},
+	{"name": "60", "size": "1","credibility": "0.045477"},
+{"name": "32", "size": "1","credibility": "0.044978"}]
+},
+{"name": "-113373868","size": "1" ,"credibility": "0.009495",
+"children": [
+ 	{"name": "15", "size": "1","credibility": "0.009495"},
+	{"name": "13", "size": "1","credibility": "0.009495"},
+	{"name": "47", "size": "1","credibility": "0.009495"},
+	{"name": "6", "size": "1","credibility": "0.009495"},
+	{"name": "64", "size": "1","credibility": "0.009495"},
+	{"name": "39", "size": "1","credibility": "0.009495"},
+{"name": "106", "size": "1","credibility": "0.009495"}]
+}]
+},
+	{"name": "-112007189","size": "3" ,"credibility": "0.146427",
+"children": [
+ 	{"name": "18", "size": "1","credibility": "0.146427"},
+	{"name": "61", "size": "1","credibility": "0.146427"},
+	{"name": "54", "size": "1","credibility": "0.146427"},
+	{"name": "14", "size": "1","credibility": "0.125937"},
+	{"name": "34", "size": "1","credibility": "0.146427"},
+	{"name": "26", "size": "1","credibility": "0.133433"},
+	{"name": "31", "size": "1","credibility": "0.145927"},
+	{"name": "99", "size": "1","credibility": "0.100450"},
+	{"name": "71", "size": "1","credibility": "0.099950"},
+	{"name": "-114235635","size": "1" ,"credibility": "0.088456",
+"children": [
+ 	{"name": "43", "size": "1","credibility": "0.088456"},
+{"name": "85", "size": "1","credibility": "0.088456"}]
+},
+{"name": "-114189053","size": "1" ,"credibility": "0.064468",
+"children": [
+ 	{"name": "12", "size": "1","credibility": "0.064468"},
+	{"name": "38", "size": "1","credibility": "0.064468"},
+{"name": "42", "size": "1","credibility": "0.064468"}]
+}]
+},
+{"name": "-114284101","size": "18" ,"credibility": "0.057971",
+"children": [
+ 	{"name": "-112877628","size": "7" ,"credibility": "0.057971",
+"children": [
+ 	{"name": "84", "size": "1","credibility": "0.057971"},
+	{"name": "5", "size": "1","credibility": "0.057971"},
+	{"name": "11", "size": "1","credibility": "0.057971"},
+	{"name": "-114185111","size": "1" ,"credibility": "0.043978",
+"children": [
+ 	{"name": "102", "size": "1","credibility": "0.043978"},
+	{"name": "72", "size": "1","credibility": "0.043978"},
+{"name": "40", "size": "1","credibility": "0.043978"}]
+},
+	{"name": "-114144764","size": "3" ,"credibility": "0.055472",
+"children": [
+ 	{"name": "28", "size": "1","credibility": "0.023988"},
+	{"name": "50", "size": "1","credibility": "0.023988"},
+{"name": "-114285065","size": "2" ,"credibility": "0.038981",
+"children": [
+ 	{"name": "69", "size": "1","credibility": "0.038981"},
+{"name": "-114278837","size": "1" ,"credibility": "0.014493",
+"children": [
+ 	{"name": "24", "size": "1","credibility": "0.014493"},
+{"name": "90", "size": "1","credibility": "0.014493"}]
 }]
 }]
 },
-{"name": "-117534","size": "2" ,"credibility": "0.333333",
+{"name": "-112331309","size": "2" ,"credibility": "0.053973",
 "children": [
- 	{"name": "69", "size": "1","credibility": "0.333333"},
-	{"name": "28", "size": "1","credibility": "0.333333"},
-	{"name": "24", "size": "1","credibility": "0.333333"},
-{"name": "-207788","size": "1" ,"credibility": "0.333333",
+ 	{"name": "52", "size": "1","credibility": "0.038481"},
+	{"name": "10", "size": "1","credibility": "0.053973"},
+	{"name": "81", "size": "1","credibility": "0.016992"},
+	{"name": "3", "size": "1","credibility": "0.053973"},
+	{"name": "74", "size": "1","credibility": "0.053973"},
+{"name": "-114274024","size": "1" ,"credibility": "0.015992",
 "children": [
- 	{"name": "50", "size": "1","credibility": "0.333333"},
-{"name": "90", "size": "1","credibility": "0.333333"}]
-}]
-}]
-}]
-}]
-},
-{"name": "-239568","size": "30" ,"credibility": "0.761905",
-"children": [
- 	{"name": "-33373","size": "12" ,"credibility": "0.761905",
-"children": [
- 	{"name": "14", "size": "1","credibility": "0.761905"},
-	{"name": "-150335","size": "6" ,"credibility": "0.761905",
-"children": [
- 	{"name": "64", "size": "1","credibility": "0.761905"},
-	{"name": "-236760","size": "1" ,"credibility": "0.761905",
-"children": [
- 	{"name": "39", "size": "1","credibility": "0.761905"},
-{"name": "32", "size": "1","credibility": "0.761905"}]
-},
-	{"name": "-242356","size": "1" ,"credibility": "0.238095",
-"children": [
- 	{"name": "15", "size": "1","credibility": "0.238095"},
-{"name": "2", "size": "1","credibility": "0.238095"}]
-},
-{"name": "-192208","size": "3" ,"credibility": "0.238095",
-"children": [
- 	{"name": "106", "size": "1","credibility": "0.238095"},
-	{"name": "-238258","size": "1" ,"credibility": "0.238095",
-"children": [
- 	{"name": "100", "size": "1","credibility": "0.238095"},
-{"name": "60", "size": "1","credibility": "0.238095"}]
-},
-{"name": "-200515","size": "1" ,"credibility": "0.238095",
-"children": [
- 	{"name": "47", "size": "1","credibility": "0.238095"},
-	{"name": "13", "size": "1","credibility": "0.238095"},
-{"name": "6", "size": "1","credibility": "0.238095"}]
+ 	{"name": "107", "size": "1","credibility": "0.015992"},
+{"name": "98", "size": "1","credibility": "0.015992"}]
 }]
 }]
 },
-{"name": "-37165","size": "5" ,"credibility": "0.761905",
+{"name": "-70149681","size": "10" ,"credibility": "0.057971",
 "children": [
- 	{"name": "85", "size": "1","credibility": "0.142857"},
-	{"name": "-232679","size": "1" ,"credibility": "0.761905",
+ 	{"name": "67", "size": "1","credibility": "0.057971"},
+	{"name": "-114243597","size": "1" ,"credibility": "0.032484",
 "children": [
- 	{"name": "54", "size": "1","credibility": "0.761905"},
-{"name": "34", "size": "1","credibility": "0.761905"}]
+ 	{"name": "9", "size": "1","credibility": "0.032484"},
+{"name": "23", "size": "1","credibility": "0.032484"}]
 },
-	{"name": "-118689","size": "1" ,"credibility": "0.761905",
+	{"name": "-113867259","size": "1" ,"credibility": "0.057971",
 "children": [
- 	{"name": "42", "size": "1","credibility": "0.761905"},
-	{"name": "71", "size": "1","credibility": "0.761905"},
-{"name": "12", "size": "1","credibility": "0.761905"}]
+ 	{"name": "8", "size": "1","credibility": "0.057971"},
+	{"name": "111", "size": "1","credibility": "0.057971"},
+	{"name": "22", "size": "1","credibility": "0.057971"},
+{"name": "108", "size": "1","credibility": "0.057971"}]
 },
-{"name": "-134535","size": "2" ,"credibility": "0.142857",
+	{"name": "-114229258","size": "1" ,"credibility": "0.032484",
 "children": [
- 	{"name": "38", "size": "1","credibility": "0.142857"},
-	{"name": "99", "size": "1","credibility": "0.142857"},
-	{"name": "18", "size": "1","credibility": "0.142857"},
-	{"name": "61", "size": "1","credibility": "0.142857"},
-{"name": "-1842","size": "1" ,"credibility": "0.142857",
-"children": [
- 	{"name": "26", "size": "1","credibility": "0.142857"},
-	{"name": "43", "size": "1","credibility": "0.142857"},
-{"name": "31", "size": "1","credibility": "0.142857"}]
-}]
-}]
-}]
+ 	{"name": "16", "size": "1","credibility": "0.009995"},
+	{"name": "104", "size": "1","credibility": "0.015492"},
+	{"name": "41", "size": "1","credibility": "0.032484"},
+	{"name": "93", "size": "1","credibility": "0.009995"},
+	{"name": "0", "size": "1","credibility": "0.028986"},
+{"name": "4", "size": "1","credibility": "0.024988"}]
 },
-{"name": "-5136","size": "17" ,"credibility": "0.761905",
+	{"name": "-114256548","size": "3" ,"credibility": "0.057971",
 "children": [
- 	{"name": "-212775","size": "3" ,"credibility": "0.047619",
+ 	{"name": "-114211875","size": "1" ,"credibility": "0.057971",
 "children": [
- 	{"name": "-234898","size": "1" ,"credibility": "0.047619",
-"children": [
- 	{"name": "89", "size": "1","credibility": "0.047619"},
-{"name": "25", "size": "1","credibility": "0.047619"}]
+ 	{"name": "7", "size": "1","credibility": "0.057971"},
+{"name": "51", "size": "1","credibility": "0.057971"}]
 },
-{"name": "-210857","size": "1" ,"credibility": "0.047619",
+{"name": "-114062361","size": "1" ,"credibility": "0.057971",
 "children": [
- 	{"name": "33", "size": "1","credibility": "0.047619"},
-{"name": "109", "size": "1","credibility": "0.047619"}]
+ 	{"name": "21", "size": "1","credibility": "0.057971"},
+	{"name": "78", "size": "1","credibility": "0.057971"},
+	{"name": "77", "size": "1","credibility": "0.057971"},
+{"name": "68", "size": "1","credibility": "0.057971"}]
 }]
 },
-	{"name": "-54205","size": "3" ,"credibility": "0.047619",
+{"name": "-113986113","size": "3" ,"credibility": "0.057971",
 "children": [
- 	{"name": "103", "size": "1","credibility": "0.047619"},
-	{"name": "-202418","size": "1" ,"credibility": "0.047619",
+ 	{"name": "88", "size": "1","credibility": "0.013493"},
+	{"name": "73", "size": "1","credibility": "0.042979"},
+	{"name": "-114271144","size": "1" ,"credibility": "0.016992",
 "children": [
- 	{"name": "37", "size": "1","credibility": "0.047619"},
-{"name": "45", "size": "1","credibility": "0.047619"}]
+ 	{"name": "49", "size": "1","credibility": "0.016992"},
+	{"name": "46", "size": "1","credibility": "0.016992"},
+{"name": "53", "size": "1","credibility": "0.016992"}]
 },
-{"name": "-249256","size": "1" ,"credibility": "0.047619",
+{"name": "-114164469","size": "1" ,"credibility": "0.011494",
 "children": [
- 	{"name": "1", "size": "1","credibility": "0.047619"},
-{"name": "105", "size": "1","credibility": "0.047619"}]
-}]
-},
-	{"name": "-30340","size": "5" ,"credibility": "0.761905",
-"children": [
- 	{"name": "80", "size": "1","credibility": "0.761905"},
-	{"name": "-129084","size": "1" ,"credibility": "0.761905",
-"children": [
- 	{"name": "44", "size": "1","credibility": "0.761905"},
-{"name": "92", "size": "1","credibility": "0.761905"}]
-},
-{"name": "-49565","size": "3" ,"credibility": "0.761905",
-"children": [
- 	{"name": "48", "size": "1","credibility": "0.761905"},
-	{"name": "112", "size": "1","credibility": "0.761905"},
-	{"name": "86", "size": "1","credibility": "0.761905"},
-	{"name": "-202801","size": "1" ,"credibility": "0.761905",
-"children": [
- 	{"name": "57", "size": "1","credibility": "0.761905"},
-{"name": "66", "size": "1","credibility": "0.761905"}]
-},
-{"name": "-171868","size": "1" ,"credibility": "0.761905",
-"children": [
- 	{"name": "91", "size": "1","credibility": "0.761905"},
-{"name": "75", "size": "1","credibility": "0.761905"}]
-}]
-}]
-},
-{"name": "-150716","size": "5" ,"credibility": "0.761905",
-"children": [
- 	{"name": "20", "size": "1","credibility": "0.523810"},
-	{"name": "70", "size": "1","credibility": "0.761905"},
-	{"name": "-234158","size": "1" ,"credibility": "0.428571",
-"children": [
- 	{"name": "96", "size": "1","credibility": "0.428571"},
-	{"name": "87", "size": "1","credibility": "0.428571"},
-{"name": "17", "size": "1","credibility": "0.428571"}]
-},
-{"name": "-84031","size": "3" ,"credibility": "0.428571",
-"children": [
- 	{"name": "76", "size": "1","credibility": "0.285714"},
-	{"name": "65", "size": "1","credibility": "0.428571"},
-	{"name": "27", "size": "1","credibility": "0.428571"},
-	{"name": "113", "size": "1","credibility": "0.428571"},
-{"name": "-242912","size": "2" ,"credibility": "0.190476",
-"children": [
- 	{"name": "95", "size": "1","credibility": "0.190476"},
-{"name": "-247821","size": "1" ,"credibility": "0.190476",
-"children": [
- 	{"name": "62", "size": "1","credibility": "0.190476"},
-{"name": "56", "size": "1","credibility": "0.190476"}]
-}]
+ 	{"name": "114", "size": "1","credibility": "0.011494"},
+	{"name": "83", "size": "1","credibility": "0.011494"},
+{"name": "110", "size": "1","credibility": "0.011494"}]
 }]
 }]
 }]
