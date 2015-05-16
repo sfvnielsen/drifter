@@ -1,9 +1,9 @@
 clear; close all; clc
 %Minimum group size, splits into smaller groups are ignored
 % (Easier visualisation)
-min_group_size = 10; 
+min_group_size = 2; 
 football = false;true;
-irm_results = true;%true;
+irm_results = false;%true;
 
 if football,
     problemName = '../../results/football_20m/';
@@ -134,7 +134,6 @@ if ~irm_results,
                parent_group = parent_group(1);
                leavesNlayers(i:end,idx(g,:)) = parent_group;
             end
-
         end
     end
 end
@@ -167,37 +166,46 @@ title('Hierarchical Tree Structure'); xlabel('Leaves'); ylabel('Depth')
 colormap parula%colorcube
 
 %% Visualize hierarchies
-img = ones(N,N,1)*0;
-for i = 1:size(leavesNlayers,1)
-    %Finds the groups
-    group_idx = unique(leavesNlayers(i,:));
+img = zeros(N);
+%for i = 1:size(leavesNlayers,1)
+    %Finds the groups    
     bgColor = img;
-    
-    G = length(group_idx);
-    colorsRange = linspace(20,N,G);%ceil(((1:G)/G)*2000);
-    %colorsRange = [colorsRange(1:2:end) colorsRange(2:2:end)];
-    %Plot diagonal and find group index
-    idx = logical(zeros(G,N));
-    for g = 1:G,
-        idx(g,:) = leavesNlayers(i,:) == group_idx(g);
-        %BG
-        bgColor(idx(g,:),idx(g,:)) = colorsRange(g);%+20;
-    end
-    
-    for g1 = 1:G,
-        for g2 = g1:G
-            bgColor(idx(g1,:),idx(g2,:)) = N-colorsRange(g1)+colorsRange(g2)/2;
-            bgColor(idx(g2,:),idx(g1,:)) = N-colorsRange(g1)+colorsRange(g2)/2;
+        
+    for i=1:N
+        for j=1:N
+            Li = leavesNlayers(:,i);
+            Lj = leavesNlayers(:,j);
+            k = find(Li==Lj, 1, 'last');
+            if(~isempty(k))
+                bgColor(i,j) = k;
+            end
         end
     end
-    
+    %bgColor = bgColor^2;
+%%
+    b = (bgColor);
+    b = ones(N)*max(max(b))-b;
     %Links
-    bgColor = bgColor.*~adj+adj*(-N/10);%colorsRange(g);
+    %%bgColor = bgColor.*~adj+adj*(-N/10);%colorsRange(g);
     
     hFig = figure;
     set(hFig, 'Position', [0 0 800 700])
-    imagesc(bgColor);
-    colormap copper
+    imagesc(b);
+    colormap gray
+    hold on
+    [i,j] = find(adj);
+    
+    plot(i,j,'sk','MarkerSize',1);
+
+    i = 3;
+    group_idx = unique(leavesNlayers(i,:));
+
+    G = length(group_idx);
+
+     idx = logical(zeros(G,N));
+    for g = 1:G,
+        idx(g,:) = leavesNlayers(i,:) == group_idx(g);
+    end
     
     if irm_results,
         title(sprintf('Structure found by IRM (%i groups)',G),'fontsize',14)
@@ -229,4 +237,4 @@ for i = 1:size(leavesNlayers,1)
     else
         set(gca,'YTickLabel',[]);
     end
-end
+%end
