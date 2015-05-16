@@ -23,19 +23,19 @@ int main() {
 
     string data_file_name = "data/karate_edgelist.txt";
     //data_file_name = "data/celegans_edgelist.txt";
-    //data_file_name = "data/football_edgelist.txt";
+    data_file_name = "data/football_edgelist.txt";
     //data_file_name = "data/facebook100_edgelist.txt";
-//    data_file_name = "data/haggman_edgelist.txt";
+    //data_file_name = "data/haggman_edgelist.txt";
     //data_file_name = "data/uspower_edgelist.txt";
 
     /**
      * Testing a network
      */
-    int num_iterations = 500000;
+    int num_iterations = 20000;
 
-    int burnin = 200000;
-    int thinning = 500;
-    double holdoutFraction = 0.00;
+    int burnin = 10000;
+    int thinning = 1000;
+    double holdoutFraction = 0.05;
 
 
     testNetwork(data_file_name,num_iterations,burnin,thinning,holdoutFraction);
@@ -59,7 +59,7 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
 
 
     // Constructing the sampler.
-    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1, holdoutFraction);
+    Sampler sampler = Sampler(data_file.getDataEl(), 0.5, 0.5, 1, 1, holdoutFraction,false);
 //    Sampler sampler = Sampler(data_edge_list, 0.5, 0.5, 1, 1);
 
     // Start timing
@@ -92,8 +92,13 @@ void testNetwork(string data_file_name, int num_of_iterations, int burnin, int t
     mapTree.writeADJlist("mapStructure");
     // Print the last tree.
     //cout << sampler.getLastTree().toGexf() << endl;
+    
+    try {
+        sampler.writeResults("out");
+    } catch (exception e) {
+        cout << "Directory \"out\" not found" << endl;
+    }
 
-    sampler.writeResults("out");
 
     // Print out hyperparameters
     cout << "Hyperparameters: " << endl;
