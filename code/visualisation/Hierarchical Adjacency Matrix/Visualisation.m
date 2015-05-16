@@ -1,8 +1,8 @@
 clear; close all; clc
 %Minimum group size, splits into smaller groups are ignored
 % (Easier visualisation)
-min_group_size = 20; 
-football = false;
+min_group_size = 10; 
+football = false;true;
 irm_results = true;%true;
 
 if football,
@@ -26,7 +26,7 @@ if irm_results
    if football,
         data = load(strcat(problemName,'footballIRM_run1_map.mat'));
    else
-        data = load(strcat(problemName,'hagmannIRM_run1_map.mat')); 
+        data = load(strcat(problemName,'hagmannIRM_run2_map.mat')); 
    end
    [leavesNlayers, idx] = sort(data.z_map);
    leavesNlayers = leavesNlayers';
@@ -53,7 +53,7 @@ else
     for i = 1:N,
        area = strsplit(labels_Y{i},' '); % Remove number
        area = area{1};
-       if i < 501 %The switch between LH and RH in Hagmann data
+       if i > 500 %The switch between LH and RH in Hagmann data
             labels_X{i} = 'Left Hemisphere';
             labels_Y{i} = strcat(area,' LH');
        else
@@ -194,7 +194,9 @@ for i = 1:size(leavesNlayers,1)
     %Links
     bgColor = bgColor.*~adj+adj*(-N/10);%colorsRange(g);
     
-    figure; imagesc(bgColor);
+    hFig = figure;
+    set(hFig, 'Position', [0 0 800 700])
+    imagesc(bgColor);
     colormap copper
     
     if irm_results,
